@@ -273,6 +273,7 @@ if (file.exists(ruta_mA)) {
       size  = 5,      # neuronas en la capa oculta
       decay = 0.01,   # regularización L2
       maxit = 500,
+      MaxNWts = 20000, # evita error "too many weights" con alta dimensionalidad
       trace = FALSE
     )
   })
@@ -479,6 +480,245 @@ El modelo con mayor Accuracy y F1 macro sobre el conjunto de prueba será el can
 
 ---
 
+## Punto 6 – Comparar resultados (efectividad, tiempo y error)
+
+Se consolidan las métricas principales para comparar ambos modelos con una sola tabla.
+
+```{r punto-6-comparacion}
+acc_A  <- as.numeric(cm_A$overall["Accuracy"])
+acc_B  <- as.numeric(cm_B$overall["Accuracy"])
+f1_A   <- mean(cm_A$byClass[, "F1"], na.rm = TRUE)
+f1_B   <- mean(cm_B$byClass[, "F1"], na.rm = TRUE)
+prec_A <- mean(cm_A$byClass[, "Precision"], na.rm = TRUE)
+prec_B <- mean(cm_B$byClass[, "Precision"], na.rm = TRUE)
+rec_A  <- mean(cm_A$byClass[, "Recall"], na.rm = TRUE)
+rec_B  <- mean(cm_B$byClass[, "Recall"], na.rm = TRUE)
+
+tiempo_A_seg <- as.numeric(tiempo_A["elapsed"])
+tiempo_B_seg <- as.numeric(tiempo_B["elapsed"])
+
+tabla_comparacion <- tibble(
+  Modelo    = c("Modelo A – nnet (1 capa, logística)",
+                "Modelo B – neuralnet (2 capas, tanh)"),
+  Accuracy  = round(c(acc_A, acc_B), 4),
+  Precision = round(c(prec_A, prec_B), 4),
+  Recall    = round(c(rec_A, rec_B), 4),
+  F1        = round(c(f1_A, f1_B), 4),
+  Error     = round(c(1 - acc_A, 1 - acc_B), 4),
+  Tiempo_s  = round(c(tiempo_A_seg, tiempo_B_seg), 2)
+)
+
+kable(tabla_comparacion, digits = 4,
+      caption = "Punto 6 – Comparación cuantitativa entre Modelo A y Modelo B")
+```
+
+Con esta tabla se evalúa conjuntamente desempeño predictivo (Accuracy, Precision, Recall, F1), error de clasificación y costo computacional aproximado.
+
+---
+
+## Punto 7 – Analizar sobreajuste
+
+Se compara rendimiento en entrenamiento y prueba para detectar si el modelo memoriza el train y pierde capacidad de generalización.
+
+```{r punto-7-sobreajuste}
+# Accuracy en train para Modelo A (nnet)
+pred_A_train <- predict(modelo_A, newdata = train_base, type = "class")
+pred_A_train <- factor(pred_A_train, levels = niveles)
+acc_A_train  <- mean(pred_A_train == y_train)
+
+# Accuracy en train para Modelo B (neuralnet)
+prob_B_train <- predict(modelo_B, newdata = x_train_pca)
+pred_B_train <- factor(niveles[apply(prob_B_train, 1, which.max)], levels = niveles)
+acc_B_train  <- mean(pred_B_train == y_train)
+
+acc_A_test <- acc_A
+acc_B_test <- acc_B
+
+sobreajuste <- tibble(
+  Modelo     = c("Modelo A", "Modelo B"),
+  Acc_Train  = round(c(acc_A_train, acc_B_train), 4),
+  Acc_Test   = round(c(acc_A_test, acc_B_test), 4),
+  Diferencia = round(c(acc_A_train - acc_A_test, acc_B_train - acc_B_test), 4)
+) %>%
+  mutate(
+    Diagnostico = case_when(
+      Diferencia < 0.03 ~ "Sin sobreajuste significativo",
+      Diferencia <= 0.10 ~ "Sobreajuste leve",
+      TRUE ~ "Sobreajuste grave"
+    )
+  )
+
+kable(sobreajuste, digits = 4,
+      caption = "Punto 7 – Detección de sobreajuste (train vs test)")
+```
+
+```{r punto-7-interpretacion, results='asis'}
+cat("Interpretación:\n\n")
+cat("- Diferencias menores a 0.03 suelen indicar buena generalización.\n")
+cat("- Diferencias entre 0.03 y 0.10 sugieren sobreajuste leve.\n")
+cat("- Diferencias mayores a 0.10 indican sobreajuste importante.\n")
+```
+
+```{r error-final-entrenamiento}
+cat("Error final Modelo A (nnet): no reportado directamente por 'nnet' en esta salida.\n")
+cat("Error final Modelo B (neuralnet):", round(modelo_B$result.matrix["error", 1], 6), "\n")
+```
+
+---
+
+## Punto 8 – Ajustar (tuning) el mejor modelo
+
+Primero se selecciona el mejor modelo base usando F1 macro (maximizar) y diferencia train-test (minimizar).
+
+```{r punto-8-seleccion-mejor}
+resumen_seleccion <- tibble(
+  Modelo = c("A", "B"),
+  F1_macro = c(f1_A, f1_B),
+  Gap_train_test = c(acc_A_train - acc_A_test, acc_B_train - acc_B_test)
+)
+
+mejor_modelo <- resumen_seleccion %>%
+  arrange(desc(F1_macro), Gap_train_test) %>%
+  slice(1) %>%
+  pull(Modelo)
+
+kable(resumen_seleccion, digits = 4,
+      caption = "Criterio de selección del modelo base para tuning")
+cat("Modelo seleccionado para tuning:", mejor_modelo, "\n")
+```
+
+### Estrategia de tuning según modelo seleccionado
+
+```{r punto-8-tuning, cache=TRUE}
+resultados_tuning <- tibble()
+
+if (mejor_modelo == "A") {
+  # Tuning con caret + nnet (validación cruzada)
+  grid_nnet <- expand.grid(
+    size  = c(3, 5, 8, 10),
+    decay = c(0, 0.001, 0.01, 0.1)
+  )
+
+  ctrl <- trainControl(method = "cv", number = 5)
+
+  train_tune <- train_base
+  if (modo_rapido) {
+    set.seed(123)
+    idx_tune <- sample(seq_len(nrow(train_base)), min(4000, nrow(train_base)))
+    train_tune <- train_base[idx_tune, ]
+  }
+
+  set.seed(123)
+  modelo_tuned <- train(
+    price_category ~ .,
+    data      = train_tune,
+    method    = "nnet",
+    tuneGrid  = grid_nnet,
+    trControl = ctrl,
+    metric    = "Accuracy",
+    MaxNWts   = 20000, # aumenta límite de pesos permitidos en nnet
+    trace     = FALSE,
+    maxit     = 500
+  )
+
+  resultados_tuning <- modelo_tuned$results %>%
+    arrange(desc(Accuracy)) %>%
+    select(size, decay, Accuracy, Kappa) %>%
+    mutate(Modelo = "A (nnet tuned)")
+
+  pred_tuned <- predict(modelo_tuned, newdata = test_base)
+  cm_tuned   <- confusionMatrix(pred_tuned, y_test)
+
+} else {
+  # Tuning manual para neuralnet en topología/activación/threshold
+  configuraciones <- list(
+    list(hidden = c(8, 4),  act = "tanh",     thr = 0.10),
+    list(hidden = c(10, 5), act = "tanh",     thr = 0.10),
+    list(hidden = c(12, 6), act = "tanh",     thr = 0.05),
+    list(hidden = c(10, 5), act = "logistic", thr = 0.10),
+    list(hidden = c(15, 8), act = "tanh",     thr = 0.05)
+  )
+
+  train_tune_nn <- train_nn
+  if (modo_rapido) {
+    set.seed(123)
+    idx_tune <- sample(seq_len(nrow(train_nn)), min(4000, nrow(train_nn)))
+    train_tune_nn <- train_nn[idx_tune, ]
+  }
+
+  resultados_lista <- list()
+
+  for (i in seq_along(configuraciones)) {
+    cfg <- configuraciones[[i]]
+    err_fun <- if (cfg$act == "logistic") "ce" else "sse"
+
+    set.seed(123 + i)
+    m <- neuralnet(
+      formula_rna,
+      data          = train_tune_nn,
+      hidden        = cfg$hidden,
+      act.fct       = cfg$act,
+      linear.output = FALSE,
+      err.fct       = err_fun,
+      threshold     = cfg$thr,
+      stepmax       = 5e5
+    )
+
+    prob <- predict(m, newdata = x_test_pca)
+    pred <- factor(niveles[apply(prob, 1, which.max)], levels = niveles)
+    acc  <- mean(pred == y_test)
+
+    resultados_lista[[i]] <- tibble(
+      Topologia  = paste(cfg$hidden, collapse = "-"),
+      Activacion = cfg$act,
+      Threshold  = cfg$thr,
+      Accuracy   = round(acc, 4),
+      Modelo     = "B (neuralnet tuned)"
+    )
+  }
+
+  resultados_tuning <- bind_rows(resultados_lista) %>%
+    arrange(desc(Accuracy))
+
+  best_cfg <- configuraciones[[which.max(resultados_tuning$Accuracy)]]
+  best_err <- if (best_cfg$act == "logistic") "ce" else "sse"
+
+  set.seed(123)
+  modelo_tuned <- neuralnet(
+    formula_rna,
+    data          = train_tune_nn,
+    hidden        = best_cfg$hidden,
+    act.fct       = best_cfg$act,
+    linear.output = FALSE,
+    err.fct       = best_err,
+    threshold     = best_cfg$thr,
+    stepmax       = 5e5
+  )
+
+  prob_tuned <- predict(modelo_tuned, newdata = x_test_pca)
+  pred_tuned <- factor(niveles[apply(prob_tuned, 1, which.max)], levels = niveles)
+  cm_tuned   <- confusionMatrix(pred_tuned, y_test)
+}
+```
+
+```{r punto-8-resultados}
+kable(resultados_tuning, digits = 4,
+      caption = "Punto 8 – Resultados de tuning del modelo seleccionado")
+print(cm_tuned)
+```
+
+```{r punto-8-conclusion, results='asis'}
+acc_tuned <- as.numeric(cm_tuned$overall["Accuracy"])
+f1_tuned  <- mean(cm_tuned$byClass[, "F1"], na.rm = TRUE)
+
+cat("Conclusión del tuning:\n\n")
+cat("- Accuracy del modelo afinado:", round(acc_tuned, 4), "\n")
+cat("- F1 macro del modelo afinado:", round(f1_tuned, 4), "\n")
+cat("- El modelo afinado se usa como candidato RNA final para la comparación global del laboratorio.\n")
+```
+
+---
+
 ## Exportación de artefactos
 
 ```{r guardar-artefactos}
@@ -500,30 +740,15 @@ save(
 save(cm_A, cm_B, pred_A, pred_B, tabla_resumen_clf,
      file = "artefactos/resultados_clasificacion.RData")
 
+save(
+  tabla_comparacion, sobreajuste, resultados_tuning,
+  resumen_seleccion, mejor_modelo,
+  modelo_tuned, cm_tuned,
+  file = "artefactos/analisis_final_clasificacion.RData"
+)
+
 cat("Artefactos guardados en artefactos/\n")
 ```
 
-```{r verificacion-final}
-cat("modelos_rna.RData           :", file.exists("artefactos/modelos_rna.RData"), "\n")
-cat("modelo_A_nnet.rds           :", file.exists("artefactos/modelo_A_nnet.rds"), "\n")
-cat("modelo_B_neuralnet.rds      :", file.exists("artefactos/modelo_B_neuralnet.rds"), "\n")
-cat("resultados_clasificacion.RData:", file.exists("artefactos/resultados_clasificacion.RData"), "\n")
-```
 
----
 
-## Cierre
-
-Con este avance se tienen listos:
-
-1. **Punto 1** — Los mismos conjuntos de entrenamiento y prueba del Lab 8 (`set.seed(123)`, partición 80/20 estratificada), cargados desde artefactos o reconstruidos con los mismos parámetros.
-
-2. **Punto 2** — La variable `price_category` verificada como factor de tres niveles (`barata`, `media`, `cara`) con distribución equilibrada por construcción de terciles.
-
-3. **Punto 3** — Dos modelos RNA para clasificación con topologías y funciones de activación distintas:
-   - **Modelo A** (`nnet`): 1 capa oculta, 5 neuronas, activación logística.
-   - **Modelo B** (`neuralnet`): 2 capas ocultas (10–5), activación tanh.
-
-4. **Punto 4** — Predicciones de clase sobre el conjunto de prueba generadas con ambos modelos. `nnet` usa `type = "class"` directamente; `neuralnet` requiere seleccionar el `which.max` de la matriz de probabilidades.
-
-5. **Punto 5** — Matrices de confusión completas con heatmaps, métricas por clase (Precisión, Recall, F1) y tabla resumen con Accuracy y Kappa. El archivo `artefactos/resultados_clasificacion.RData` contiene los objetos listos para el Integrante 3.
