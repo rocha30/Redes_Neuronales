@@ -3,12 +3,12 @@ title: "Laboratorio 9 – Redes Neuronales Artificiales"
 subtitle: "Clasificación de precios Airbnb | Integrante 1: Datos y Modelos RNA"
 date: "`r Sys.Date()`"
 output:
-  html_document:
-    toc: true
-    toc_depth: 3
   pdf_document:
     toc: true
     toc_depth: '3'
+  html_document:
+    toc: true
+    toc_depth: 3
 ---
 
 ```{r setup, include=FALSE}
@@ -353,6 +353,132 @@ tibble(
 
 ---
 
+## Punto 4 – Predicción de la variable respuesta
+
+Se aplican ambos modelos al conjunto de prueba para obtener la clase predicha de `price_category`.
+
+### Predicciones del Modelo A (`nnet`)
+
+`nnet` devuelve directamente la clase con mayor probabilidad mediante `type = "class"`.
+
+```{r predicciones-A}
+x_test_base <- test_base %>% select(-price_category)
+
+pred_A <- predict(modelo_A, newdata = x_test_base, type = "class")
+pred_A <- factor(pred_A, levels = niveles)
+
+cat("Predicciones Modelo A – primeras 10 observaciones:\n")
+head(data.frame(Real = y_test, Pred_A = pred_A), 10)
+```
+
+### Predicciones del Modelo B (`neuralnet`)
+
+`neuralnet` devuelve una matriz de probabilidades por clase (una columna por neurona de salida). Se selecciona la clase con mayor activación.
+
+```{r predicciones-B}
+prob_B <- predict(modelo_B, newdata = x_test_pca)
+
+# Cada columna corresponde a: precio_barata, precio_media, precio_cara
+idx_max <- apply(prob_B, 1, which.max)
+pred_B  <- factor(niveles[idx_max], levels = niveles)
+
+cat("Predicciones Modelo B – primeras 10 observaciones:\n")
+head(data.frame(Real = y_test, Pred_B = pred_B), 10)
+```
+
+### Verificación cruzada
+
+```{r verificacion-predicciones}
+cat("Distribución de predicciones – Modelo A:\n")
+print(table(pred_A))
+
+cat("\nDistribución de predicciones – Modelo B:\n")
+print(table(pred_B))
+
+cat("\nDistribución real (test):\n")
+print(table(y_test))
+```
+
+---
+
+## Punto 5 – Matrices de confusión
+
+### Matriz de confusión – Modelo A
+
+```{r cm-A}
+cm_A <- confusionMatrix(pred_A, y_test)
+print(cm_A)
+```
+
+### Matriz de confusión – Modelo B
+
+```{r cm-B}
+cm_B <- confusionMatrix(pred_B, y_test)
+print(cm_B)
+```
+
+### Visualización como heatmap
+
+```{r heatmaps-cm}
+plot_cm <- function(cm, titulo) {
+  df <- as.data.frame(cm$table)
+  ggplot(df, aes(x = Reference, y = Prediction, fill = Freq)) +
+    geom_tile(color = "white") +
+    geom_text(aes(label = Freq), color = "white", size = 6, fontface = "bold") +
+    scale_fill_gradient(low = "#2E86AB", high = "#1B3A4B") +
+    labs(title = titulo, x = "Clase real", y = "Clase predicha", fill = "Frecuencia") +
+    theme_minimal(base_size = 13) +
+    theme(plot.title = element_text(face = "bold"))
+}
+
+plot_cm(cm_A, "Matriz de Confusión – Modelo A (1 capa, logística)")
+plot_cm(cm_B, "Matriz de Confusión – Modelo B (2 capas, tanh)")
+```
+
+### Métricas por clase
+
+```{r metricas-por-clase}
+metricas_A <- as.data.frame(cm_A$byClass[, c("Precision", "Recall", "F1")])
+metricas_A$Modelo <- "Modelo A"
+metricas_A$Clase  <- rownames(metricas_A)
+
+metricas_B <- as.data.frame(cm_B$byClass[, c("Precision", "Recall", "F1")])
+metricas_B$Modelo <- "Modelo B"
+metricas_B$Clase  <- rownames(metricas_B)
+
+metricas_por_clase <- bind_rows(metricas_A, metricas_B) %>%
+  select(Modelo, Clase, Precision, Recall, F1)
+
+kable(metricas_por_clase, digits = 4,
+      caption = "Precisión, Recall y F1 por clase y modelo")
+```
+
+### Tabla resumen de accuracy
+
+```{r tabla-accuracy}
+acc_A <- cm_A$overall["Accuracy"]
+acc_B <- cm_B$overall["Accuracy"]
+
+kappa_A <- cm_A$overall["Kappa"]
+kappa_B <- cm_B$overall["Kappa"]
+
+tabla_resumen_clf <- tibble(
+  Modelo        = c("Modelo A – nnet (1 capa, logística)",
+                    "Modelo B – neuralnet (2 capas, tanh)"),
+  Accuracy      = c(acc_A, acc_B),
+  Kappa         = c(kappa_A, kappa_B),
+  `F1 macro`    = c(mean(cm_A$byClass[, "F1"], na.rm = TRUE),
+                    mean(cm_B$byClass[, "F1"], na.rm = TRUE))
+)
+
+kable(tabla_resumen_clf, digits = 4,
+      caption = "Resumen comparativo de clasificación – Modelos A y B")
+```
+
+El modelo con mayor Accuracy y F1 macro sobre el conjunto de prueba será el candidato a ajuste fino en el Punto 8.
+
+---
+
 ## Exportación de artefactos
 
 ```{r guardar-artefactos}
@@ -365,16 +491,23 @@ save(
   y_train, y_test,
   niveles, nombres_respuesta, nombres_predictores, formula_rna,
   tiempo_A, tiempo_B,
+  pred_A, pred_B,
+  cm_A, cm_B,
+  tabla_resumen_clf,
   file = "artefactos/modelos_rna.RData"
 )
 
-cat("Artefacto guardado: artefactos/modelos_rna.RData\n")
+save(cm_A, cm_B, pred_A, pred_B, tabla_resumen_clf,
+     file = "artefactos/resultados_clasificacion.RData")
+
+cat("Artefactos guardados en artefactos/\n")
 ```
 
 ```{r verificacion-final}
-cat("modelos_rna.RData :", file.exists("artefactos/modelos_rna.RData"), "\n")
-cat("modelo_A_nnet.rds :", file.exists("artefactos/modelo_A_nnet.rds"), "\n")
-cat("modelo_B_neuralnet:", file.exists("artefactos/modelo_B_neuralnet.rds"), "\n")
+cat("modelos_rna.RData           :", file.exists("artefactos/modelos_rna.RData"), "\n")
+cat("modelo_A_nnet.rds           :", file.exists("artefactos/modelo_A_nnet.rds"), "\n")
+cat("modelo_B_neuralnet.rds      :", file.exists("artefactos/modelo_B_neuralnet.rds"), "\n")
+cat("resultados_clasificacion.RData:", file.exists("artefactos/resultados_clasificacion.RData"), "\n")
 ```
 
 ---
@@ -391,4 +524,6 @@ Con este avance se tienen listos:
    - **Modelo A** (`nnet`): 1 capa oculta, 5 neuronas, activación logística.
    - **Modelo B** (`neuralnet`): 2 capas ocultas (10–5), activación tanh.
 
-El archivo `artefactos/modelos_rna.RData` contiene todos los objetos que necesitan los Integrantes 2 y 3 para continuar.
+4. **Punto 4** — Predicciones de clase sobre el conjunto de prueba generadas con ambos modelos. `nnet` usa `type = "class"` directamente; `neuralnet` requiere seleccionar el `which.max` de la matriz de probabilidades.
+
+5. **Punto 5** — Matrices de confusión completas con heatmaps, métricas por clase (Precisión, Recall, F1) y tabla resumen con Accuracy y Kappa. El archivo `artefactos/resultados_clasificacion.RData` contiene los objetos listos para el Integrante 3.
