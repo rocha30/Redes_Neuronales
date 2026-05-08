@@ -24,7 +24,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ## Preparación del entorno
 
 ```{r librerias}
-paquetes <- c("tidyverse", "caret", "knitr")
+paquetes <- c("tidyverse", "caret", "nnet", "neuralnet", "knitr", "NeuralNetTools")
 
 for (pkg in paquetes) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
@@ -34,6 +34,7 @@ for (pkg in paquetes) {
 }
 
 set.seed(123)
+modo_rapido <- TRUE  # Cambiar a FALSE para entrenamiento completo
 ```
 
 ---
@@ -43,7 +44,7 @@ set.seed(123)
 Se reutilizan los mismos splits del Lab 8 para garantizar comparaciones válidas entre algoritmos. Si los artefactos del Lab 8 están disponibles se cargan directamente; de lo contrario se reconstruyen con los mismos parámetros (`set.seed(123)`, partición 80/20 estratificada por `price_category`).
 
 ```{r carga-datos}
-ruta_lab8      <- "../../Lab8/Laboratorio_8/"
+ruta_lab8       <- "../../Lab8/Laboratorio_8/"
 ruta_artefactos <- paste0(ruta_lab8, "artefactos/")
 
 artefactos_ok <- all(file.exists(
@@ -56,11 +57,10 @@ if (artefactos_ok) {
   fuente <- "artefactos del Lab 8 (train_svm / test_svm)"
 
 } else {
-  # ── Reproducir el pipeline completo del Lab 8 ──────────────────────────────
   ruta_rdata <- if (file.exists(paste0(ruta_lab8, "listings.RData"))) {
     paste0(ruta_lab8, "listings.RData")
   } else {
-    stop("No se encontró listings.RData. Colócalo en la carpeta del Lab 8 o en Lab9/.")
+    stop("No se encontró listings.RData. Colócalo en la carpeta del Lab 8.")
   }
 
   objetos_cargados <- load(ruta_rdata)
@@ -70,12 +70,10 @@ if (artefactos_ok) {
     as.data.frame(get(objetos_cargados[1]))
   }
 
-  # Convertir precio a numérico
   if (is.character(datos$price)) {
     datos <- datos %>% mutate(price = readr::parse_number(price))
   }
 
-  # Crear variable categórica de precio por terciles
   q1 <- quantile(datos$price, 1/3, na.rm = TRUE)
   q2 <- quantile(datos$price, 2/3, na.rm = TRUE)
 
@@ -87,20 +85,17 @@ if (artefactos_ok) {
       )
     )
 
-  # Partición 80/20 estratificada — mismos parámetros que Lab 8
   set.seed(123)
   idx_train <- createDataPartition(datos$price_category, p = 0.8, list = FALSE)
   train_raw <- datos[idx_train, ]
   test_raw  <- datos[-idx_train, ]
 
-  # Exclusión de columnas identificadoras, de alta cardinalidad y con todo NA
   patron_excluir <- "(^id$|_id$|url|name$|description|about|picture|thumbnail|host_url|listing_url|scrape_id|calendar_last_scraped)"
-  cols_patron  <- names(train_raw)[str_detect(names(train_raw), regex(patron_excluir, ignore_case = TRUE))]
-  cols_all_na  <- names(train_raw)[sapply(train_raw, function(x) all(is.na(x)))]
-  cat_cols     <- names(train_raw)[sapply(train_raw, function(x) is.character(x) || is.factor(x))]
-  alta_card    <- cat_cols[sapply(train_raw[cat_cols], function(x) n_distinct(x, na.rm = TRUE) > 100)]
-  excluir      <- unique(c("price", cols_patron, cols_all_na, alta_card))
-  excluir      <- setdiff(excluir, "price_category")
+  cols_patron <- names(train_raw)[str_detect(names(train_raw), regex(patron_excluir, ignore_case = TRUE))]
+  cols_all_na <- names(train_raw)[sapply(train_raw, function(x) all(is.na(x)))]
+  cat_cols    <- names(train_raw)[sapply(train_raw, function(x) is.character(x) || is.factor(x))]
+  alta_card   <- cat_cols[sapply(train_raw[cat_cols], function(x) n_distinct(x, na.rm = TRUE) > 100)]
+  excluir     <- setdiff(unique(c("price", cols_patron, cols_all_na, alta_card)), "price_category")
 
   train_model <- train_raw %>% select(-any_of(excluir))
   test_model  <- test_raw  %>% select(-any_of(excluir))
@@ -110,18 +105,17 @@ if (artefactos_ok) {
   x_train_raw <- train_model %>% select(-price_category)
   x_test_raw  <- test_model  %>% select(-price_category)
 
-  # Dummies + imputación + escalamiento
-  dummy_m  <- dummyVars(~ ., data = x_train_raw, fullRank = TRUE)
-  x_train  <- predict(dummy_m, x_train_raw) %>% as.data.frame()
-  x_test   <- predict(dummy_m, x_test_raw)  %>% as.data.frame()
+  dummy_m <- dummyVars(~ ., data = x_train_raw, fullRank = TRUE)
+  x_train <- predict(dummy_m, x_train_raw) %>% as.data.frame()
+  x_test  <- predict(dummy_m, x_test_raw)  %>% as.data.frame()
 
   cols_faltantes <- setdiff(names(x_train), names(x_test))
   for (col in cols_faltantes) x_test[[col]] <- 0
   x_test <- x_test[, names(x_train), drop = FALSE]
 
-  pre_m    <- preProcess(x_train, method = c("medianImpute", "center", "scale"))
-  x_train  <- predict(pre_m, x_train)
-  x_test   <- predict(pre_m, x_test)
+  pre_m   <- preProcess(x_train, method = c("medianImpute", "center", "scale"))
+  x_train <- predict(pre_m, x_train)
+  x_test  <- predict(pre_m, x_test)
 
   train_base <- x_train %>% mutate(price_category = factor(y_train_tmp, levels = c("barata","media","cara")))
   test_base  <- x_test  %>% mutate(price_category = factor(y_test_tmp,  levels = c("barata","media","cara")))
@@ -194,7 +188,198 @@ Las tres categorías presentan distribución equilibrada (≈33 % cada una por c
 
 ---
 
-## Cierre del avance (Puntos 1 y 2)
+## Punto 3 – Dos modelos de clasificación con RNA
+
+Se entrenan dos arquitecturas distintas para comparar el impacto de la topología y la función de activación sobre la capacidad clasificatoria.
+
+| | Modelo A | Modelo B |
+|---|---|---|
+| **Paquete** | `nnet` | `neuralnet` |
+| **Topología** | 1 capa oculta, 5 neuronas | 2 capas ocultas, 10–5 neuronas |
+| **Activación** | Logística (sigmoide) | Tangente hiperbólica (tanh) |
+| **Datos de entrada** | Predictores escalados | Componentes PCA |
+
+### Preparación de predictores para RNA
+
+```{r preparacion-predictores}
+x_train_base <- train_base %>% select(-price_category)
+x_test_base  <- test_base  %>% select(-price_category)
+
+cat("Número de predictores disponibles:", ncol(x_train_base), "\n")
+
+# PCA para reducir dimensionalidad: neuralnet escala cuadráticamente con el
+# número de pesos, PCA mantiene el 95% de varianza con muchos menos predictores.
+pca_model   <- preProcess(x_train_base, method = "pca", thresh = 0.95)
+x_train_pca <- predict(pca_model, x_train_base)
+x_test_pca  <- predict(pca_model, x_test_base)
+
+cat("Componentes PCA retenidas (95% varianza):", ncol(x_train_pca), "\n")
+```
+
+```{r one-hot-response}
+# One-hot encoding de la respuesta para neuralnet (requiere salidas numéricas)
+niveles <- levels(y_train)
+
+crear_one_hot <- function(y, niveles) {
+  as.data.frame(setNames(
+    lapply(niveles, function(lv) as.integer(y == lv)),
+    paste0("precio_", niveles)
+  ))
+}
+
+oh_train <- crear_one_hot(y_train, niveles)
+oh_test  <- crear_one_hot(y_test,  niveles)
+
+train_nn <- cbind(x_train_pca, oh_train)
+test_nn  <- cbind(x_test_pca,  oh_test)
+
+nombres_respuesta   <- paste0("precio_", niveles)
+nombres_predictores <- names(x_train_pca)
+
+formula_rna <- as.formula(paste(
+  paste(nombres_respuesta, collapse = " + "),
+  "~",
+  paste(nombres_predictores, collapse = " + ")
+))
+
+cat("Respuestas one-hot:", nombres_respuesta, "\n")
+```
+
+### Modelo A – Una capa oculta, activación logística (`nnet`)
+
+`nnet` implementa redes hacia adelante multicapa con salida softmax para clasificación multiclase. Una sola capa oculta con 5 neuronas y activación logística como referencia simple.
+
+```{r modelo-A, cache=TRUE}
+dir.create("artefactos", showWarnings = FALSE)
+ruta_mA <- "artefactos/modelo_A_nnet.rds"
+
+if (file.exists(ruta_mA)) {
+  modelo_A <- readRDS(ruta_mA)
+  tiempo_A <- c(elapsed = NA_real_)
+  cat("Modelo A cargado desde artefacto.\n")
+} else {
+  train_mA <- train_base
+  if (modo_rapido) {
+    set.seed(123)
+    idx_mA   <- sample(seq_len(nrow(train_base)), min(3000, nrow(train_base)))
+    train_mA <- train_base[idx_mA, ]
+  }
+
+  set.seed(123)
+  tiempo_A <- system.time({
+    modelo_A <- nnet(
+      price_category ~ .,
+      data  = train_mA,
+      size  = 5,      # neuronas en la capa oculta
+      decay = 0.01,   # regularización L2
+      maxit = 500,
+      trace = FALSE
+    )
+  })
+  saveRDS(modelo_A, ruta_mA)
+}
+
+cat("Tiempo Modelo A:", round(tiempo_A["elapsed"], 2), "s\n")
+cat("Pesos totales:", length(modelo_A$wts), "\n")
+```
+
+```{r resumen-modelo-A}
+summary(modelo_A)
+```
+
+```{r arquitectura-modelo-A}
+plotnet(modelo_A, main = "Modelo A – nnet (1 capa, logística)")
+```
+
+### Modelo B – Dos capas ocultas, activación tanh (`neuralnet`)
+
+`neuralnet` permite especificar múltiples capas y distintas funciones de activación. Dos capas ocultas (10–5 neuronas) con activación tanh sobre las componentes PCA.
+
+```{r modelo-B, cache=TRUE}
+ruta_mB <- "artefactos/modelo_B_neuralnet.rds"
+
+if (file.exists(ruta_mB)) {
+  modelo_B <- readRDS(ruta_mB)
+  tiempo_B <- c(elapsed = NA_real_)
+  cat("Modelo B cargado desde artefacto.\n")
+} else {
+  train_mB <- train_nn
+  if (modo_rapido) {
+    set.seed(123)
+    idx_mB   <- sample(seq_len(nrow(train_nn)), min(3000, nrow(train_nn)))
+    train_mB <- train_nn[idx_mB, ]
+  }
+
+  set.seed(123)
+  tiempo_B <- system.time({
+    modelo_B <- neuralnet(
+      formula_rna,
+      data          = train_mB,
+      hidden        = c(10, 5),  # 2 capas ocultas
+      act.fct       = "tanh",
+      linear.output = FALSE,
+      err.fct       = "sse",     # SSE compatible con tanh (salida en [-1,1])
+      threshold     = 0.1,
+      stepmax       = 5e5
+    )
+  })
+  saveRDS(modelo_B, ruta_mB)
+}
+
+cat("Tiempo Modelo B:", round(tiempo_B["elapsed"], 2), "s\n")
+cat("Error final:", round(modelo_B$result.matrix["error", 1], 6), "\n")
+cat("Pasos hasta convergencia:", modelo_B$result.matrix["steps", 1], "\n")
+```
+
+```{r arquitectura-modelo-B}
+plot(modelo_B, main = "Modelo B – neuralnet (2 capas, tanh)")
+```
+
+### Comparativa de diseño
+
+```{r tabla-diseno}
+tibble(
+  Característica  = c("Paquete", "Capas ocultas", "Neuronas", "Activación",
+                       "Regularización", "Datos entrada", "Tiempo (s)"),
+  `Modelo A`      = c("nnet", "1", "5", "Logística (sigmoide)",
+                       "Decay L2 = 0.01", "Predictores escalados",
+                       round(tiempo_A["elapsed"], 2)),
+  `Modelo B`      = c("neuralnet", "2", "10 – 5", "Tanh",
+                       "Threshold 0.1", "Componentes PCA",
+                       round(tiempo_B["elapsed"], 2))
+) %>%
+  kable(caption = "Comparativa de diseño: Modelo A vs Modelo B")
+```
+
+---
+
+## Exportación de artefactos
+
+```{r guardar-artefactos}
+save(
+  modelo_A, modelo_B,
+  train_base, test_base,
+  train_nn, test_nn,
+  x_train_pca, x_test_pca,
+  pca_model,
+  y_train, y_test,
+  niveles, nombres_respuesta, nombres_predictores, formula_rna,
+  tiempo_A, tiempo_B,
+  file = "artefactos/modelos_rna.RData"
+)
+
+cat("Artefacto guardado: artefactos/modelos_rna.RData\n")
+```
+
+```{r verificacion-final}
+cat("modelos_rna.RData :", file.exists("artefactos/modelos_rna.RData"), "\n")
+cat("modelo_A_nnet.rds :", file.exists("artefactos/modelo_A_nnet.rds"), "\n")
+cat("modelo_B_neuralnet:", file.exists("artefactos/modelo_B_neuralnet.rds"), "\n")
+```
+
+---
+
+## Cierre
 
 Con este avance se tienen listos:
 
@@ -202,4 +387,8 @@ Con este avance se tienen listos:
 
 2. **Punto 2** — La variable `price_category` verificada como factor de tres niveles (`barata`, `media`, `cara`) con distribución equilibrada por construcción de terciles.
 
-Los modelos RNA (Punto 3) se agregarán en el siguiente commit.
+3. **Punto 3** — Dos modelos RNA para clasificación con topologías y funciones de activación distintas:
+   - **Modelo A** (`nnet`): 1 capa oculta, 5 neuronas, activación logística.
+   - **Modelo B** (`neuralnet`): 2 capas ocultas (10–5), activación tanh.
+
+El archivo `artefactos/modelos_rna.RData` contiene todos los objetos que necesitan los Integrantes 2 y 3 para continuar.
