@@ -1,0 +1,205 @@
+---
+title: "Laboratorio 9 – Redes Neuronales Artificiales"
+subtitle: "Clasificación de precios Airbnb | Integrante 1: Datos y Modelos RNA"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+  pdf_document:
+    toc: true
+    toc_depth: '3'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Link de Repositorio
+
+<!-- Agregar link del repositorio aquí -->
+
+---
+
+## Preparación del entorno
+
+```{r librerias}
+paquetes <- c("tidyverse", "caret", "knitr")
+
+for (pkg in paquetes) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg, repos = "https://cloud.r-project.org")
+  }
+  suppressPackageStartupMessages(library(pkg, character.only = TRUE))
+}
+
+set.seed(123)
+```
+
+---
+
+## Punto 1 – Mismos conjuntos de entrenamiento y prueba
+
+Se reutilizan los mismos splits del Lab 8 para garantizar comparaciones válidas entre algoritmos. Si los artefactos del Lab 8 están disponibles se cargan directamente; de lo contrario se reconstruyen con los mismos parámetros (`set.seed(123)`, partición 80/20 estratificada por `price_category`).
+
+```{r carga-datos}
+ruta_lab8      <- "../../Lab8/Laboratorio_8/"
+ruta_artefactos <- paste0(ruta_lab8, "artefactos/")
+
+artefactos_ok <- all(file.exists(
+  paste0(ruta_artefactos, c("train_svm.rds", "test_svm.rds"))
+))
+
+if (artefactos_ok) {
+  train_base <- readRDS(paste0(ruta_artefactos, "train_svm.rds"))
+  test_base  <- readRDS(paste0(ruta_artefactos, "test_svm.rds"))
+  fuente <- "artefactos del Lab 8 (train_svm / test_svm)"
+
+} else {
+  # ── Reproducir el pipeline completo del Lab 8 ──────────────────────────────
+  ruta_rdata <- if (file.exists(paste0(ruta_lab8, "listings.RData"))) {
+    paste0(ruta_lab8, "listings.RData")
+  } else {
+    stop("No se encontró listings.RData. Colócalo en la carpeta del Lab 8 o en Lab9/.")
+  }
+
+  objetos_cargados <- load(ruta_rdata)
+  datos <- if ("listings" %in% objetos_cargados) {
+    as.data.frame(get("listings"))
+  } else {
+    as.data.frame(get(objetos_cargados[1]))
+  }
+
+  # Convertir precio a numérico
+  if (is.character(datos$price)) {
+    datos <- datos %>% mutate(price = readr::parse_number(price))
+  }
+
+  # Crear variable categórica de precio por terciles
+  q1 <- quantile(datos$price, 1/3, na.rm = TRUE)
+  q2 <- quantile(datos$price, 2/3, na.rm = TRUE)
+
+  datos <- datos %>%
+    mutate(
+      price_category = factor(
+        case_when(price <= q1 ~ "barata", price <= q2 ~ "media", TRUE ~ "cara"),
+        levels = c("barata", "media", "cara")
+      )
+    )
+
+  # Partición 80/20 estratificada — mismos parámetros que Lab 8
+  set.seed(123)
+  idx_train <- createDataPartition(datos$price_category, p = 0.8, list = FALSE)
+  train_raw <- datos[idx_train, ]
+  test_raw  <- datos[-idx_train, ]
+
+  # Exclusión de columnas identificadoras, de alta cardinalidad y con todo NA
+  patron_excluir <- "(^id$|_id$|url|name$|description|about|picture|thumbnail|host_url|listing_url|scrape_id|calendar_last_scraped)"
+  cols_patron  <- names(train_raw)[str_detect(names(train_raw), regex(patron_excluir, ignore_case = TRUE))]
+  cols_all_na  <- names(train_raw)[sapply(train_raw, function(x) all(is.na(x)))]
+  cat_cols     <- names(train_raw)[sapply(train_raw, function(x) is.character(x) || is.factor(x))]
+  alta_card    <- cat_cols[sapply(train_raw[cat_cols], function(x) n_distinct(x, na.rm = TRUE) > 100)]
+  excluir      <- unique(c("price", cols_patron, cols_all_na, alta_card))
+  excluir      <- setdiff(excluir, "price_category")
+
+  train_model <- train_raw %>% select(-any_of(excluir))
+  test_model  <- test_raw  %>% select(-any_of(excluir))
+
+  y_train_tmp <- train_model$price_category
+  y_test_tmp  <- test_model$price_category
+  x_train_raw <- train_model %>% select(-price_category)
+  x_test_raw  <- test_model  %>% select(-price_category)
+
+  # Dummies + imputación + escalamiento
+  dummy_m  <- dummyVars(~ ., data = x_train_raw, fullRank = TRUE)
+  x_train  <- predict(dummy_m, x_train_raw) %>% as.data.frame()
+  x_test   <- predict(dummy_m, x_test_raw)  %>% as.data.frame()
+
+  cols_faltantes <- setdiff(names(x_train), names(x_test))
+  for (col in cols_faltantes) x_test[[col]] <- 0
+  x_test <- x_test[, names(x_train), drop = FALSE]
+
+  pre_m    <- preProcess(x_train, method = c("medianImpute", "center", "scale"))
+  x_train  <- predict(pre_m, x_train)
+  x_test   <- predict(pre_m, x_test)
+
+  train_base <- x_train %>% mutate(price_category = factor(y_train_tmp, levels = c("barata","media","cara")))
+  test_base  <- x_test  %>% mutate(price_category = factor(y_test_tmp,  levels = c("barata","media","cara")))
+
+  fuente <- "reconstruido con set.seed(123) y createDataPartition(p = 0.8)"
+}
+
+cat("Fuente del particionamiento:", fuente, "\n")
+```
+
+```{r verificacion-particion}
+cat("Dimensiones train:", paste(dim(train_base), collapse = " x "), "\n")
+cat("Dimensiones test :", paste(dim(test_base),  collapse = " x "), "\n")
+
+prop_train <- prop.table(table(train_base$price_category))
+prop_test  <- prop.table(table(test_base$price_category))
+
+bind_rows(
+  tibble(conjunto = "train", categoria = names(prop_train), proporcion = as.numeric(prop_train)),
+  tibble(conjunto = "test",  categoria = names(prop_test),  proporcion = as.numeric(prop_test))
+) %>%
+  pivot_wider(names_from = conjunto, values_from = proporcion) %>%
+  mutate(diferencia_abs = abs(train - test)) %>%
+  kable(digits = 4, caption = "Proporciones por categoría de precio en train y test")
+```
+
+Las proporciones entre entrenamiento y prueba son comparables gracias al particionamiento estratificado, lo que garantiza que las diferencias de desempeño entre modelos sean atribuibles al algoritmo y no al balance de clases.
+
+---
+
+## Punto 2 – Variable categórica de precios como respuesta
+
+La variable `price_category` clasifica cada propiedad en tres rangos definidos por los terciles del precio: **barata** (≤ percentil 33), **media** (percentil 33–66) y **cara** (> percentil 66).
+
+```{r variable-respuesta}
+y_train <- train_base$price_category
+y_test  <- test_base$price_category
+
+cat("Niveles de price_category:", levels(y_train), "\n")
+cat("Clase del objeto:", class(y_train), "\n")
+
+tabla_dist <- bind_rows(
+  tibble(conjunto = "train", as.data.frame(table(y_train)) %>% rename(categoria = y_train)),
+  tibble(conjunto = "test",  as.data.frame(table(y_test))  %>% rename(categoria = y_test))
+)
+
+kable(tabla_dist, caption = "Distribución de clases por conjunto")
+```
+
+```{r grafico-distribucion}
+bind_rows(
+  tibble(conjunto = "Entrenamiento", categoria = as.character(y_train)),
+  tibble(conjunto = "Prueba",        categoria = as.character(y_test))
+) %>%
+  mutate(categoria = factor(categoria, levels = c("barata","media","cara"))) %>%
+  ggplot(aes(x = categoria, fill = categoria)) +
+  geom_bar() +
+  facet_wrap(~conjunto) +
+  scale_fill_manual(values = c("barata" = "#2E86AB", "media" = "#F18F01", "cara" = "#C73E1D")) +
+  labs(
+    title = "Distribución de la variable respuesta: categoría de precio",
+    x = "Categoría",
+    y = "Cantidad de propiedades"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+Las tres categorías presentan distribución equilibrada (≈33 % cada una por construcción de terciles), lo que evita sesgos por desbalance de clases en el entrenamiento de las redes neuronales.
+
+---
+
+## Cierre del avance (Puntos 1 y 2)
+
+Con este avance se tienen listos:
+
+1. **Punto 1** — Los mismos conjuntos de entrenamiento y prueba del Lab 8 (`set.seed(123)`, partición 80/20 estratificada), cargados desde artefactos o reconstruidos con los mismos parámetros.
+
+2. **Punto 2** — La variable `price_category` verificada como factor de tres niveles (`barata`, `media`, `cara`) con distribución equilibrada por construcción de terciles.
+
+Los modelos RNA (Punto 3) se agregarán en el siguiente commit.
