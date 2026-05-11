@@ -521,12 +521,10 @@ Con esta tabla se evalúa conjuntamente desempeño predictivo (Accuracy, Precisi
 Se compara rendimiento en entrenamiento y prueba para detectar si el modelo memoriza el train y pierde capacidad de generalización.
 
 ```{r punto-7-sobreajuste}
-# Accuracy en train para Modelo A (nnet)
 pred_A_train <- predict(modelo_A, newdata = train_base, type = "class")
 pred_A_train <- factor(pred_A_train, levels = niveles)
 acc_A_train  <- mean(pred_A_train == y_train)
 
-# Accuracy en train para Modelo B (neuralnet)
 prob_B_train <- predict(modelo_B, newdata = x_train_pca)
 pred_B_train <- factor(niveles[apply(prob_B_train, 1, which.max)], levels = niveles)
 acc_B_train  <- mean(pred_B_train == y_train)
@@ -593,7 +591,6 @@ cat("Modelo seleccionado para tuning:", mejor_modelo, "\n")
 resultados_tuning <- tibble()
 
 if (mejor_modelo == "A") {
-  # Tuning con caret + nnet (validación cruzada)
   grid_nnet <- expand.grid(
     size  = c(3, 5, 8, 10),
     decay = c(0, 0.001, 0.01, 0.1)
@@ -616,7 +613,7 @@ if (mejor_modelo == "A") {
     tuneGrid  = grid_nnet,
     trControl = ctrl,
     metric    = "Accuracy",
-    MaxNWts   = 20000, # aumenta límite de pesos permitidos en nnet
+    MaxNWts   = 20000,
     trace     = FALSE,
     maxit     = 500
   )
@@ -630,7 +627,6 @@ if (mejor_modelo == "A") {
   cm_tuned   <- confusionMatrix(pred_tuned, y_test)
 
 } else {
-  # Tuning manual para neuralnet en topología/activación/threshold
   configuraciones <- list(
     list(hidden = c(8, 4),  act = "tanh",     thr = 0.10),
     list(hidden = c(10, 5), act = "tanh",     thr = 0.10),
@@ -749,6 +745,3 @@ save(
 
 cat("Artefactos guardados en artefactos/\n")
 ```
-
-
-
