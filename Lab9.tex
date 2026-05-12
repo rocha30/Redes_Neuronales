@@ -1,0 +1,2983 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Laboratorio 9 -- Redes Neuronales Artificiales},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Laboratorio 9 -- Redes Neuronales Artificiales}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Clasificación de precios Airbnb \textbar{} Integrante 1: Datos
+y Modelos RNA}
+\author{}
+\date{\vspace{-2.5em}2026-05-11}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\hypertarget{preparaciuxf3n-del-entorno}{%
+\subsection{Preparación del entorno}\label{preparaciuxf3n-del-entorno}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{paquetes }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"tidyverse"}\NormalTok{, }\StringTok{"caret"}\NormalTok{, }\StringTok{"nnet"}\NormalTok{, }\StringTok{"neuralnet"}\NormalTok{, }\StringTok{"knitr"}\NormalTok{, }\StringTok{"NeuralNetTools"}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{ (pkg }\ControlFlowTok{in}\NormalTok{ paquetes) \{}
+  \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{requireNamespace}\NormalTok{(pkg, }\AttributeTok{quietly =} \ConstantTok{TRUE}\NormalTok{)) \{}
+    \FunctionTok{install.packages}\NormalTok{(pkg, }\AttributeTok{repos =} \StringTok{"https://cloud.r{-}project.org"}\NormalTok{)}
+\NormalTok{  \}}
+  \FunctionTok{suppressPackageStartupMessages}\NormalTok{(}\FunctionTok{library}\NormalTok{(pkg, }\AttributeTok{character.only =} \ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{\}}
+
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{modo\_rapido }\OtherTok{\textless{}{-}} \ConstantTok{TRUE}  \CommentTok{\# Cambiar a FALSE para entrenamiento completo}
+
+\NormalTok{indices\_estratificados }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(y, n\_max, }\AttributeTok{seed =} \DecValTok{123}\NormalTok{) \{}
+  \FunctionTok{set.seed}\NormalTok{(seed)}
+\NormalTok{  y }\OtherTok{\textless{}{-}} \FunctionTok{droplevels}\NormalTok{(}\FunctionTok{as.factor}\NormalTok{(y))}
+\NormalTok{  n\_max }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(}\FunctionTok{as.integer}\NormalTok{(n\_max), }\FunctionTok{length}\NormalTok{(y))}
+  \ControlFlowTok{if}\NormalTok{ (n\_max }\SpecialCharTok{\textgreater{}=} \FunctionTok{length}\NormalTok{(y)) \{}
+    \FunctionTok{return}\NormalTok{(}\FunctionTok{seq\_along}\NormalTok{(y))}
+\NormalTok{  \}}
+\NormalTok{  lv }\OtherTok{\textless{}{-}} \FunctionTok{levels}\NormalTok{(y)}
+\NormalTok{  base }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(1L, }\FunctionTok{floor}\NormalTok{(n\_max }\SpecialCharTok{/} \FunctionTok{length}\NormalTok{(lv)))}
+\NormalTok{  out }\OtherTok{\textless{}{-}} \FunctionTok{integer}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+  \ControlFlowTok{for}\NormalTok{ (lev }\ControlFlowTok{in}\NormalTok{ lv) \{}
+\NormalTok{    w }\OtherTok{\textless{}{-}} \FunctionTok{which}\NormalTok{(y }\SpecialCharTok{==}\NormalTok{ lev)}
+    \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(w)) \{}
+\NormalTok{      out }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(out, }\FunctionTok{sample}\NormalTok{(w, }\FunctionTok{min}\NormalTok{(}\FunctionTok{length}\NormalTok{(w), base)))}
+\NormalTok{    \}}
+\NormalTok{  \}}
+\NormalTok{  out }\OtherTok{\textless{}{-}} \FunctionTok{unique}\NormalTok{(out)}
+\NormalTok{  rest }\OtherTok{\textless{}{-}} \FunctionTok{setdiff}\NormalTok{(}\FunctionTok{seq\_along}\NormalTok{(y), out)}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(out) }\SpecialCharTok{\textless{}}\NormalTok{ n\_max }\SpecialCharTok{\&\&} \FunctionTok{length}\NormalTok{(rest) }\SpecialCharTok{\textgreater{}}\NormalTok{ 0L) \{}
+\NormalTok{    take }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(n\_max }\SpecialCharTok{{-}} \FunctionTok{length}\NormalTok{(out), }\FunctionTok{length}\NormalTok{(rest))}
+\NormalTok{    out }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(out, }\FunctionTok{sample}\NormalTok{(rest, take))}
+\NormalTok{  \}}
+\NormalTok{  out}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{punto-1-mismos-conjuntos-de-entrenamiento-y-prueba}{%
+\subsection{Punto 1 -- Mismos conjuntos de entrenamiento y
+prueba}\label{punto-1-mismos-conjuntos-de-entrenamiento-y-prueba}}
+
+Se reutilizan los mismos splits del Lab 8 para garantizar comparaciones
+válidas entre algoritmos. Si los artefactos del Lab 8 están disponibles
+se cargan directamente; de lo contrario se reconstruyen con los mismos
+parámetros (\texttt{set.seed(123)}, partición 80/20 estratificada por
+\texttt{price\_category}).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ruta\_lab8       }\OtherTok{\textless{}{-}} \StringTok{"../../Lab8/Laboratorio\_8/"}
+\NormalTok{ruta\_artefactos }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(ruta\_lab8, }\StringTok{"artefactos/"}\NormalTok{)}
+
+\NormalTok{artefactos\_ok }\OtherTok{\textless{}{-}} \FunctionTok{all}\NormalTok{(}\FunctionTok{file.exists}\NormalTok{(}
+  \FunctionTok{paste0}\NormalTok{(ruta\_artefactos, }\FunctionTok{c}\NormalTok{(}\StringTok{"train\_svm.rds"}\NormalTok{, }\StringTok{"test\_svm.rds"}\NormalTok{))}
+\NormalTok{))}
+
+\ControlFlowTok{if}\NormalTok{ (artefactos\_ok) \{}
+\NormalTok{  train\_base }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(ruta\_artefactos, }\StringTok{"train\_svm.rds"}\NormalTok{))}
+\NormalTok{  test\_base  }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(ruta\_artefactos, }\StringTok{"test\_svm.rds"}\NormalTok{))}
+\NormalTok{  fuente }\OtherTok{\textless{}{-}} \StringTok{"artefactos del Lab 8 (train\_svm / test\_svm)"}
+
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  ruta\_rdata }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{file.exists}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(ruta\_lab8, }\StringTok{"listings.RData"}\NormalTok{))) \{}
+    \FunctionTok{paste0}\NormalTok{(ruta\_lab8, }\StringTok{"listings.RData"}\NormalTok{)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{stop}\NormalTok{(}\StringTok{"No se encontró listings.RData. Colócalo en la carpeta del Lab 8."}\NormalTok{)}
+\NormalTok{  \}}
+
+\NormalTok{  objetos\_cargados }\OtherTok{\textless{}{-}} \FunctionTok{load}\NormalTok{(ruta\_rdata)}
+\NormalTok{  datos }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (}\StringTok{"listings"} \SpecialCharTok{\%in\%}\NormalTok{ objetos\_cargados) \{}
+    \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{get}\NormalTok{(}\StringTok{"listings"}\NormalTok{))}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{get}\NormalTok{(objetos\_cargados[}\DecValTok{1}\NormalTok{]))}
+\NormalTok{  \}}
+
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.character}\NormalTok{(datos}\SpecialCharTok{$}\NormalTok{price)) \{}
+\NormalTok{    datos }\OtherTok{\textless{}{-}}\NormalTok{ datos }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{price =}\NormalTok{ readr}\SpecialCharTok{::}\FunctionTok{parse\_number}\NormalTok{(price))}
+\NormalTok{  \}}
+
+\NormalTok{  q1 }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(datos}\SpecialCharTok{$}\NormalTok{price, }\DecValTok{1}\SpecialCharTok{/}\DecValTok{3}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  q2 }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(datos}\SpecialCharTok{$}\NormalTok{price, }\DecValTok{2}\SpecialCharTok{/}\DecValTok{3}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+
+\NormalTok{  datos }\OtherTok{\textless{}{-}}\NormalTok{ datos }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}
+      \AttributeTok{price\_category =} \FunctionTok{factor}\NormalTok{(}
+        \FunctionTok{case\_when}\NormalTok{(price }\SpecialCharTok{\textless{}=}\NormalTok{ q1 }\SpecialCharTok{\textasciitilde{}} \StringTok{"barata"}\NormalTok{, price }\SpecialCharTok{\textless{}=}\NormalTok{ q2 }\SpecialCharTok{\textasciitilde{}} \StringTok{"media"}\NormalTok{, }\ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}} \StringTok{"cara"}\NormalTok{),}
+        \AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"barata"}\NormalTok{, }\StringTok{"media"}\NormalTok{, }\StringTok{"cara"}\NormalTok{)}
+\NormalTok{      )}
+\NormalTok{    )}
+
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{  idx\_train }\OtherTok{\textless{}{-}} \FunctionTok{createDataPartition}\NormalTok{(datos}\SpecialCharTok{$}\NormalTok{price\_category, }\AttributeTok{p =} \FloatTok{0.8}\NormalTok{, }\AttributeTok{list =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{  train\_raw }\OtherTok{\textless{}{-}}\NormalTok{ datos[idx\_train, ]}
+\NormalTok{  test\_raw  }\OtherTok{\textless{}{-}}\NormalTok{ datos[}\SpecialCharTok{{-}}\NormalTok{idx\_train, ]}
+
+\NormalTok{  patron\_excluir }\OtherTok{\textless{}{-}} \StringTok{"(\^{}id$|\_id$|url|name$|description|about|picture|thumbnail|host\_url|listing\_url|scrape\_id|calendar\_last\_scraped)"}
+\NormalTok{  cols\_patron }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(train\_raw)[}\FunctionTok{str\_detect}\NormalTok{(}\FunctionTok{names}\NormalTok{(train\_raw), }\FunctionTok{regex}\NormalTok{(patron\_excluir, }\AttributeTok{ignore\_case =} \ConstantTok{TRUE}\NormalTok{))]}
+\NormalTok{  cols\_all\_na }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(train\_raw)[}\FunctionTok{sapply}\NormalTok{(train\_raw, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{all}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(x)))]}
+\NormalTok{  cat\_cols    }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(train\_raw)[}\FunctionTok{sapply}\NormalTok{(train\_raw, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{is.character}\NormalTok{(x) }\SpecialCharTok{||} \FunctionTok{is.factor}\NormalTok{(x))]}
+\NormalTok{  alta\_card   }\OtherTok{\textless{}{-}}\NormalTok{ cat\_cols[}\FunctionTok{sapply}\NormalTok{(train\_raw[cat\_cols], }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{n\_distinct}\NormalTok{(x, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\textgreater{}} \DecValTok{100}\NormalTok{)]}
+\NormalTok{  excluir     }\OtherTok{\textless{}{-}} \FunctionTok{setdiff}\NormalTok{(}\FunctionTok{unique}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"price"}\NormalTok{, cols\_patron, cols\_all\_na, alta\_card)), }\StringTok{"price\_category"}\NormalTok{)}
+
+\NormalTok{  train\_model }\OtherTok{\textless{}{-}}\NormalTok{ train\_raw }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{any\_of}\NormalTok{(excluir))}
+\NormalTok{  test\_model  }\OtherTok{\textless{}{-}}\NormalTok{ test\_raw  }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{any\_of}\NormalTok{(excluir))}
+
+\NormalTok{  y\_train\_tmp }\OtherTok{\textless{}{-}}\NormalTok{ train\_model}\SpecialCharTok{$}\NormalTok{price\_category}
+\NormalTok{  y\_test\_tmp  }\OtherTok{\textless{}{-}}\NormalTok{ test\_model}\SpecialCharTok{$}\NormalTok{price\_category}
+\NormalTok{  x\_train\_raw }\OtherTok{\textless{}{-}}\NormalTok{ train\_model }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{price\_category)}
+\NormalTok{  x\_test\_raw  }\OtherTok{\textless{}{-}}\NormalTok{ test\_model  }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{price\_category)}
+
+\NormalTok{  dummy\_m }\OtherTok{\textless{}{-}} \FunctionTok{dummyVars}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ x\_train\_raw, }\AttributeTok{fullRank =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  x\_train }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(dummy\_m, x\_train\_raw) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.data.frame}\NormalTok{()}
+\NormalTok{  x\_test  }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(dummy\_m, x\_test\_raw)  }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.data.frame}\NormalTok{()}
+
+\NormalTok{  cols\_faltantes }\OtherTok{\textless{}{-}} \FunctionTok{setdiff}\NormalTok{(}\FunctionTok{names}\NormalTok{(x\_train), }\FunctionTok{names}\NormalTok{(x\_test))}
+  \ControlFlowTok{for}\NormalTok{ (col }\ControlFlowTok{in}\NormalTok{ cols\_faltantes) x\_test[[col]] }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{  x\_test }\OtherTok{\textless{}{-}}\NormalTok{ x\_test[, }\FunctionTok{names}\NormalTok{(x\_train), drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+
+\NormalTok{  pre\_m   }\OtherTok{\textless{}{-}} \FunctionTok{preProcess}\NormalTok{(x\_train, }\AttributeTok{method =} \FunctionTok{c}\NormalTok{(}\StringTok{"medianImpute"}\NormalTok{, }\StringTok{"center"}\NormalTok{, }\StringTok{"scale"}\NormalTok{))}
+\NormalTok{  x\_train }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(pre\_m, x\_train)}
+\NormalTok{  x\_test  }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(pre\_m, x\_test)}
+
+\NormalTok{  train\_base }\OtherTok{\textless{}{-}}\NormalTok{ x\_train }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{price\_category =} \FunctionTok{factor}\NormalTok{(y\_train\_tmp, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"barata"}\NormalTok{,}\StringTok{"media"}\NormalTok{,}\StringTok{"cara"}\NormalTok{)))}
+\NormalTok{  test\_base  }\OtherTok{\textless{}{-}}\NormalTok{ x\_test  }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{price\_category =} \FunctionTok{factor}\NormalTok{(y\_test\_tmp,  }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"barata"}\NormalTok{,}\StringTok{"media"}\NormalTok{,}\StringTok{"cara"}\NormalTok{)))}
+
+\NormalTok{  fuente }\OtherTok{\textless{}{-}} \StringTok{"reconstruido con set.seed(123) y createDataPartition(p = 0.8)"}
+\NormalTok{\}}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Fuente del particionamiento:"}\NormalTok{, fuente, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Fuente del particionamiento: artefactos del Lab 8 (train_svm / test_svm)
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Dimensiones train:"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(}\FunctionTok{dim}\NormalTok{(train\_base), }\AttributeTok{collapse =} \StringTok{" x "}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Dimensiones train: 137400 x 247
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Dimensiones test :"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(}\FunctionTok{dim}\NormalTok{(test\_base),  }\AttributeTok{collapse =} \StringTok{" x "}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Dimensiones test : 34348 x 247
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prop\_train }\OtherTok{\textless{}{-}} \FunctionTok{prop.table}\NormalTok{(}\FunctionTok{table}\NormalTok{(train\_base}\SpecialCharTok{$}\NormalTok{price\_category))}
+\NormalTok{prop\_test  }\OtherTok{\textless{}{-}} \FunctionTok{prop.table}\NormalTok{(}\FunctionTok{table}\NormalTok{(test\_base}\SpecialCharTok{$}\NormalTok{price\_category))}
+
+\FunctionTok{bind\_rows}\NormalTok{(}
+  \FunctionTok{tibble}\NormalTok{(}\AttributeTok{conjunto =} \StringTok{"train"}\NormalTok{, }\AttributeTok{categoria =} \FunctionTok{names}\NormalTok{(prop\_train), }\AttributeTok{proporcion =} \FunctionTok{as.numeric}\NormalTok{(prop\_train)),}
+  \FunctionTok{tibble}\NormalTok{(}\AttributeTok{conjunto =} \StringTok{"test"}\NormalTok{,  }\AttributeTok{categoria =} \FunctionTok{names}\NormalTok{(prop\_test),  }\AttributeTok{proporcion =} \FunctionTok{as.numeric}\NormalTok{(prop\_test))}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{names\_from =}\NormalTok{ conjunto, }\AttributeTok{values\_from =}\NormalTok{ proporcion) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{diferencia\_abs =} \FunctionTok{abs}\NormalTok{(train }\SpecialCharTok{{-}}\NormalTok{ test)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{kable}\NormalTok{(}\AttributeTok{digits =} \DecValTok{4}\NormalTok{, }\AttributeTok{caption =} \StringTok{"Proporciones por categoría de precio en train y test"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrr@{}}
+\caption{Proporciones por categoría de precio en train y
+test}\tabularnewline
+\toprule\noalign{}
+categoria & train & test & diferencia\_abs \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+categoria & train & test & diferencia\_abs \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+barata & 0.1496 & 0.1496 & 0 \\
+media & 0.1465 & 0.1464 & 0 \\
+cara & 0.7040 & 0.7040 & 0 \\
+\end{longtable}
+
+Las proporciones entre entrenamiento y prueba son comparables gracias al
+particionamiento estratificado, lo que garantiza que las diferencias de
+desempeño entre modelos sean atribuibles al algoritmo y no al balance de
+clases.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{punto-2-variable-categuxf3rica-de-precios-como-respuesta}{%
+\subsection{Punto 2 -- Variable categórica de precios como
+respuesta}\label{punto-2-variable-categuxf3rica-de-precios-como-respuesta}}
+
+La variable \texttt{price\_category} clasifica cada propiedad en tres
+rangos definidos por los terciles del precio: \textbf{barata} (≤
+percentil 33), \textbf{media} (percentil 33--66) y \textbf{cara}
+(\textgreater{} percentil 66).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y\_train }\OtherTok{\textless{}{-}}\NormalTok{ train\_base}\SpecialCharTok{$}\NormalTok{price\_category}
+\NormalTok{y\_test  }\OtherTok{\textless{}{-}}\NormalTok{ test\_base}\SpecialCharTok{$}\NormalTok{price\_category}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Niveles de price\_category:"}\NormalTok{, }\FunctionTok{levels}\NormalTok{(y\_train), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Niveles de price_category: barata media cara
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Clase del objeto:"}\NormalTok{, }\FunctionTok{class}\NormalTok{(y\_train), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Clase del objeto: factor
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tabla\_dist }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(}
+  \FunctionTok{tibble}\NormalTok{(}\AttributeTok{conjunto =} \StringTok{"train"}\NormalTok{, }\FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{table}\NormalTok{(y\_train)) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{rename}\NormalTok{(}\AttributeTok{categoria =}\NormalTok{ y\_train)),}
+  \FunctionTok{tibble}\NormalTok{(}\AttributeTok{conjunto =} \StringTok{"test"}\NormalTok{,  }\FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{table}\NormalTok{(y\_test))  }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{rename}\NormalTok{(}\AttributeTok{categoria =}\NormalTok{ y\_test))}
+\NormalTok{)}
+
+\FunctionTok{kable}\NormalTok{(tabla\_dist, }\AttributeTok{caption =} \StringTok{"Distribución de clases por conjunto"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llr@{}}
+\caption{Distribución de clases por conjunto}\tabularnewline
+\toprule\noalign{}
+conjunto & categoria & Freq \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+conjunto & categoria & Freq \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+train & barata & 20552 \\
+train & media & 20123 \\
+train & cara & 96725 \\
+test & barata & 5137 \\
+test & media & 5030 \\
+test & cara & 24181 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{bind\_rows}\NormalTok{(}
+  \FunctionTok{tibble}\NormalTok{(}\AttributeTok{conjunto =} \StringTok{"Entrenamiento"}\NormalTok{, }\AttributeTok{categoria =} \FunctionTok{as.character}\NormalTok{(y\_train)),}
+  \FunctionTok{tibble}\NormalTok{(}\AttributeTok{conjunto =} \StringTok{"Prueba"}\NormalTok{,        }\AttributeTok{categoria =} \FunctionTok{as.character}\NormalTok{(y\_test))}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{categoria =} \FunctionTok{factor}\NormalTok{(categoria, }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"barata"}\NormalTok{,}\StringTok{"media"}\NormalTok{,}\StringTok{"cara"}\NormalTok{))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ categoria, }\AttributeTok{fill =}\NormalTok{ categoria)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_bar}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{conjunto) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"barata"} \OtherTok{=} \StringTok{"\#2E86AB"}\NormalTok{, }\StringTok{"media"} \OtherTok{=} \StringTok{"\#F18F01"}\NormalTok{, }\StringTok{"cara"} \OtherTok{=} \StringTok{"\#C73E1D"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Distribución de la variable respuesta: categoría de precio"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Categoría"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Cantidad de propiedades"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Lab9_files/figure-latex/grafico-distribucion-1.pdf}
+
+Las tres categorías presentan distribución equilibrada (≈33 \% cada una
+por construcción de terciles), lo que evita sesgos por desbalance de
+clases en el entrenamiento de las redes neuronales.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{punto-3-dos-modelos-de-clasificaciuxf3n-con-rna}{%
+\subsection{Punto 3 -- Dos modelos de clasificación con
+RNA}\label{punto-3-dos-modelos-de-clasificaciuxf3n-con-rna}}
+
+Se entrenan dos arquitecturas distintas para comparar el impacto de la
+topología y la función de activación sobre la capacidad clasificatoria.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Modelo A
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Modelo B
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{Paquete} & \texttt{nnet} & \texttt{neuralnet} \\
+\textbf{Topología} & 1 capa oculta, 5 neuronas & 2 capas ocultas, 10--5
+neuronas \\
+\textbf{Activación} & Logística (sigmoide) & Tangente hiperbólica
+(tanh) \\
+\textbf{Datos de entrada} & Predictores escalados & Componentes PCA \\
+\end{longtable}
+
+\hypertarget{preparaciuxf3n-de-predictores-para-rna}{%
+\subsubsection{Preparación de predictores para
+RNA}\label{preparaciuxf3n-de-predictores-para-rna}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x\_train\_base }\OtherTok{\textless{}{-}}\NormalTok{ train\_base }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{price\_category)}
+\NormalTok{x\_test\_base  }\OtherTok{\textless{}{-}}\NormalTok{ test\_base  }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{price\_category)}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Número de predictores disponibles:"}\NormalTok{, }\FunctionTok{ncol}\NormalTok{(x\_train\_base), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Número de predictores disponibles: 246
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# PCA para reducir dimensionalidad: neuralnet escala cuadráticamente con el}
+\CommentTok{\# número de pesos, PCA mantiene el 95\% de varianza con muchos menos predictores.}
+\NormalTok{pca\_model   }\OtherTok{\textless{}{-}} \FunctionTok{preProcess}\NormalTok{(x\_train\_base, }\AttributeTok{method =} \StringTok{"pca"}\NormalTok{, }\AttributeTok{thresh =} \FloatTok{0.95}\NormalTok{)}
+\NormalTok{x\_train\_pca }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(pca\_model, x\_train\_base)}
+\NormalTok{x\_test\_pca  }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(pca\_model, x\_test\_base)}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Componentes PCA retenidas (95\% varianza):"}\NormalTok{, }\FunctionTok{ncol}\NormalTok{(x\_train\_pca), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Componentes PCA retenidas (95% varianza): 187
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# One{-}hot encoding de la respuesta para neuralnet (requiere salidas numéricas)}
+\NormalTok{niveles }\OtherTok{\textless{}{-}} \FunctionTok{levels}\NormalTok{(y\_train)}
+
+\NormalTok{crear\_one\_hot }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(y, niveles) \{}
+  \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{setNames}\NormalTok{(}
+    \FunctionTok{lapply}\NormalTok{(niveles, }\ControlFlowTok{function}\NormalTok{(lv) }\FunctionTok{as.integer}\NormalTok{(y }\SpecialCharTok{==}\NormalTok{ lv)),}
+    \FunctionTok{paste0}\NormalTok{(}\StringTok{"precio\_"}\NormalTok{, niveles)}
+\NormalTok{  ))}
+\NormalTok{\}}
+
+\NormalTok{oh\_train }\OtherTok{\textless{}{-}} \FunctionTok{crear\_one\_hot}\NormalTok{(y\_train, niveles)}
+\NormalTok{oh\_test  }\OtherTok{\textless{}{-}} \FunctionTok{crear\_one\_hot}\NormalTok{(y\_test,  niveles)}
+
+\NormalTok{train\_nn }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(x\_train\_pca, oh\_train)}
+\NormalTok{test\_nn  }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(x\_test\_pca,  oh\_test)}
+
+\NormalTok{nombres\_respuesta   }\OtherTok{\textless{}{-}} \FunctionTok{paste0}\NormalTok{(}\StringTok{"precio\_"}\NormalTok{, niveles)}
+\NormalTok{nombres\_predictores }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(x\_train\_pca)}
+
+\NormalTok{formula\_rna }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}
+  \FunctionTok{paste}\NormalTok{(nombres\_respuesta, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{),}
+  \StringTok{"\textasciitilde{}"}\NormalTok{,}
+  \FunctionTok{paste}\NormalTok{(nombres\_predictores, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{)}
+\NormalTok{))}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Respuestas one{-}hot:"}\NormalTok{, nombres\_respuesta, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Respuestas one-hot: precio_barata precio_media precio_cara
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{clase\_desde\_onehot }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df, }\AttributeTok{cols =}\NormalTok{ nombres\_respuesta, }\AttributeTok{niveles\_ord =}\NormalTok{ niveles) \{}
+\NormalTok{  j }\OtherTok{\textless{}{-}} \FunctionTok{max.col}\NormalTok{(}\FunctionTok{as.matrix}\NormalTok{(df[, cols, }\AttributeTok{drop =} \ConstantTok{FALSE}\NormalTok{]), }\AttributeTok{ties.method =} \StringTok{"first"}\NormalTok{)}
+  \FunctionTok{factor}\NormalTok{(niveles\_ord[j], }\AttributeTok{levels =}\NormalTok{ niveles\_ord)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{modelo-a-una-capa-oculta-activaciuxf3n-loguxedstica-nnet}{%
+\subsubsection{\texorpdfstring{Modelo A -- Una capa oculta, activación
+logística
+(\texttt{nnet})}{Modelo A -- Una capa oculta, activación logística (nnet)}}\label{modelo-a-una-capa-oculta-activaciuxf3n-loguxedstica-nnet}}
+
+\texttt{nnet} implementa redes hacia adelante multicapa con salida
+softmax para clasificación multiclase. Una sola capa oculta con 5
+neuronas y activación logística como referencia simple.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{dir.create}\NormalTok{(}\StringTok{"artefactos"}\NormalTok{, }\AttributeTok{showWarnings =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{ruta\_mA }\OtherTok{\textless{}{-}} \StringTok{"artefactos/modelo\_A\_nnet.rds"}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{file.exists}\NormalTok{(ruta\_mA)) \{}
+\NormalTok{  modelo\_A }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(ruta\_mA)}
+\NormalTok{  tiempo\_A }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{elapsed =} \ConstantTok{NA\_real\_}\NormalTok{)}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"Modelo A cargado desde artefacto.}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  train\_mA }\OtherTok{\textless{}{-}}\NormalTok{ train\_base}
+  \ControlFlowTok{if}\NormalTok{ (modo\_rapido) \{}
+\NormalTok{    idx\_mA }\OtherTok{\textless{}{-}} \FunctionTok{indices\_estratificados}\NormalTok{(train\_base}\SpecialCharTok{$}\NormalTok{price\_category, }\FunctionTok{min}\NormalTok{(}\DecValTok{3000}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(train\_base)), }\DecValTok{123}\NormalTok{)}
+\NormalTok{    train\_mA }\OtherTok{\textless{}{-}}\NormalTok{ train\_base[idx\_mA, , drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{    train\_mA}\SpecialCharTok{$}\NormalTok{price\_category }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(train\_mA}\SpecialCharTok{$}\NormalTok{price\_category, }\AttributeTok{levels =} \FunctionTok{levels}\NormalTok{(train\_base}\SpecialCharTok{$}\NormalTok{price\_category))}
+\NormalTok{  \}}
+
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{  tiempo\_A }\OtherTok{\textless{}{-}} \FunctionTok{system.time}\NormalTok{(\{}
+\NormalTok{    modelo\_A }\OtherTok{\textless{}{-}} \FunctionTok{nnet}\NormalTok{(}
+\NormalTok{      price\_category }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+      \AttributeTok{data  =}\NormalTok{ train\_mA,}
+      \AttributeTok{size  =} \DecValTok{5}\NormalTok{,      }\CommentTok{\# neuronas en la capa oculta}
+      \AttributeTok{decay =} \FloatTok{0.01}\NormalTok{,   }\CommentTok{\# regularización L2}
+      \AttributeTok{maxit =} \DecValTok{500}\NormalTok{,}
+      \AttributeTok{MaxNWts =} \DecValTok{20000}\NormalTok{, }\CommentTok{\# evita error "too many weights" con alta dimensionalidad}
+      \AttributeTok{trace =} \ConstantTok{FALSE}
+\NormalTok{    )}
+\NormalTok{  \})}
+  \FunctionTok{saveRDS}\NormalTok{(modelo\_A, ruta\_mA)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Modelo A cargado desde artefacto.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Tiempo Modelo A:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(tiempo\_A[}\StringTok{"elapsed"}\NormalTok{], }\DecValTok{2}\NormalTok{), }\StringTok{"s}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Tiempo Modelo A: NA s
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Pesos totales:"}\NormalTok{, }\FunctionTok{length}\NormalTok{(modelo\_A}\SpecialCharTok{$}\NormalTok{wts), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Pesos totales: 1253
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(modelo\_A)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## a 246-5-3 network with 1253 weights
+## options were - softmax modelling  decay=0.01
+##    b->h1   i1->h1   i2->h1   i3->h1   i4->h1   i5->h1   i6->h1   i7->h1 
+##     6.16     0.10     0.00    -0.01    -0.05    -0.17    -0.16     2.81 
+##   i8->h1   i9->h1  i10->h1  i11->h1  i12->h1  i13->h1  i14->h1  i15->h1 
+##     3.07     2.13    -0.44    -0.38     1.20    -0.07     0.13     0.28 
+##  i16->h1  i17->h1  i18->h1  i19->h1  i20->h1  i21->h1  i22->h1  i23->h1 
+##    -0.06    -0.13     0.18    -0.17     0.10    -0.06    -0.04    -0.06 
+##  i24->h1  i25->h1  i26->h1  i27->h1  i28->h1  i29->h1  i30->h1  i31->h1 
+##    -0.09    -0.15    -0.11    -0.15    -0.03    -0.14    -0.03    -0.06 
+##  i32->h1  i33->h1  i34->h1  i35->h1  i36->h1  i37->h1  i38->h1  i39->h1 
+##    -0.08    -0.15    -0.07    -0.05    -0.03     0.02    -0.02    -0.20 
+##  i40->h1  i41->h1  i42->h1  i43->h1  i44->h1  i45->h1  i46->h1  i47->h1 
+##    -0.03    -0.01    -0.06     0.06    -0.04    -0.06    -0.04    -0.03 
+##  i48->h1  i49->h1  i50->h1  i51->h1  i52->h1  i53->h1  i54->h1  i55->h1 
+##     0.38    -0.08    -0.04    -0.05     0.05    -0.12    -0.07    -0.20 
+##  i56->h1  i57->h1  i58->h1  i59->h1  i60->h1  i61->h1  i62->h1  i63->h1 
+##    -0.02    -0.11    -0.06    -0.05    -0.11    -0.20    -0.17    -0.19 
+##  i64->h1  i65->h1  i66->h1  i67->h1  i68->h1  i69->h1  i70->h1  i71->h1 
+##    -0.12    -0.10    -0.06    -0.06     0.05     0.06    -0.12    -0.09 
+##  i72->h1  i73->h1  i74->h1  i75->h1  i76->h1  i77->h1  i78->h1  i79->h1 
+##    -0.07    -0.29    -0.60    -0.26     0.40    -0.17    -0.02    -0.05 
+##  i80->h1  i81->h1  i82->h1  i83->h1  i84->h1  i85->h1  i86->h1  i87->h1 
+##    -0.11    -0.12    -0.20     0.04    -0.16     0.43     0.04    -0.39 
+##  i88->h1  i89->h1  i90->h1  i91->h1  i92->h1  i93->h1  i94->h1  i95->h1 
+##     0.04    -0.02     0.00     0.24     0.03    -0.31     0.10    -1.13 
+##  i96->h1  i97->h1  i98->h1  i99->h1 i100->h1 i101->h1 i102->h1 i103->h1 
+##     0.16     0.02     0.12     0.09     0.11    -0.17    -0.22    -0.79 
+## i104->h1 i105->h1 i106->h1 i107->h1 i108->h1 i109->h1 i110->h1 i111->h1 
+##     0.71     0.14    -0.07    -0.01     0.00     0.08    -0.13    -0.08 
+## i112->h1 i113->h1 i114->h1 i115->h1 i116->h1 i117->h1 i118->h1 i119->h1 
+##    -0.03     0.07     0.07    -0.04     0.04    -0.03     0.57    -0.21 
+## i120->h1 i121->h1 i122->h1 i123->h1 i124->h1 i125->h1 i126->h1 i127->h1 
+##     1.94    -0.52    -0.58    -0.54    -0.34     1.30    -0.60     0.25 
+## i128->h1 i129->h1 i130->h1 i131->h1 i132->h1 i133->h1 i134->h1 i135->h1 
+##     0.30     0.15     1.11    -0.18     0.13    -0.02     0.82    -1.69 
+## i136->h1 i137->h1 i138->h1 i139->h1 i140->h1 i141->h1 i142->h1 i143->h1 
+##    -0.73     0.00     1.94    -0.50     0.01     0.13     0.04    -0.19 
+## i144->h1 i145->h1 i146->h1 i147->h1 i148->h1 i149->h1 i150->h1 i151->h1 
+##     0.20     0.26    -0.06     2.07    -0.10    -0.06    -0.06    -0.05 
+## i152->h1 i153->h1 i154->h1 i155->h1 i156->h1 i157->h1 i158->h1 i159->h1 
+##    -0.08    -0.02    -0.01    -0.05    -0.04    -0.02    -0.01    -0.01 
+## i160->h1 i161->h1 i162->h1 i163->h1 i164->h1 i165->h1 i166->h1 i167->h1 
+##    -0.02    -0.02    -0.02    -0.01    -0.01    -0.02    -0.18    -0.15 
+## i168->h1 i169->h1 i170->h1 i171->h1 i172->h1 i173->h1 i174->h1 i175->h1 
+##    -0.22    -0.01    -0.02    -0.03    -0.55     0.25    -0.56    -0.08 
+## i176->h1 i177->h1 i178->h1 i179->h1 i180->h1 i181->h1 i182->h1 i183->h1 
+##    -0.01    -0.09    -0.17     0.02     0.09    -0.33     0.20    -0.20 
+## i184->h1 i185->h1 i186->h1 i187->h1 i188->h1 i189->h1 i190->h1 i191->h1 
+##    -0.02     1.55    -0.06    -0.04    -0.05    -0.13    -0.02    -0.11 
+## i192->h1 i193->h1 i194->h1 i195->h1 i196->h1 i197->h1 i198->h1 i199->h1 
+##    -0.07    -0.05    -0.11    -0.02    -0.11    -0.02    -0.06    -0.10 
+## i200->h1 i201->h1 i202->h1 i203->h1 i204->h1 i205->h1 i206->h1 i207->h1 
+##    -0.14    -0.17    -0.09     0.50     0.09     0.02     0.60     0.10 
+## i208->h1 i209->h1 i210->h1 i211->h1 i212->h1 i213->h1 i214->h1 i215->h1 
+##    -0.05     0.00    -0.40     0.01    -0.35     0.09    -0.37     0.19 
+## i216->h1 i217->h1 i218->h1 i219->h1 i220->h1 i221->h1 i222->h1 i223->h1 
+##    -0.94    -0.08    -0.05     0.33     0.00     0.99    -0.27     6.31 
+## i224->h1 i225->h1 i226->h1 i227->h1 i228->h1 i229->h1 i230->h1 i231->h1 
+##   -41.16    -0.21    -0.18    -0.02    -0.01     0.30     0.05     0.02 
+## i232->h1 i233->h1 i234->h1 i235->h1 i236->h1 i237->h1 i238->h1 i239->h1 
+##     0.00     0.43    -0.25    -1.24     5.17    -0.22    -0.04    -0.17 
+## i240->h1 i241->h1 i242->h1 i243->h1 i244->h1 i245->h1 i246->h1 
+##    -0.19     3.56     2.96    -0.16    -0.18     0.91     0.20 
+##    b->h2   i1->h2   i2->h2   i3->h2   i4->h2   i5->h2   i6->h2   i7->h2 
+##     5.22     0.57    -4.73     0.80    -0.49     0.96     1.21     3.23 
+##   i8->h2   i9->h2  i10->h2  i11->h2  i12->h2  i13->h2  i14->h2  i15->h2 
+##     4.09     2.92    -0.75    -1.06     2.27     0.50    -0.09    -0.65 
+##  i16->h2  i17->h2  i18->h2  i19->h2  i20->h2  i21->h2  i22->h2  i23->h2 
+##     0.34     0.11     0.68     0.67     0.16    -0.03    -0.03    -0.05 
+##  i24->h2  i25->h2  i26->h2  i27->h2  i28->h2  i29->h2  i30->h2  i31->h2 
+##    -0.01     0.07    -0.08    -0.14    -0.04    -0.14    -0.01    -0.03 
+##  i32->h2  i33->h2  i34->h2  i35->h2  i36->h2  i37->h2  i38->h2  i39->h2 
+##    -0.06    -0.11     0.13     0.12    -0.01    -0.01    -0.02    -0.41 
+##  i40->h2  i41->h2  i42->h2  i43->h2  i44->h2  i45->h2  i46->h2  i47->h2 
+##    -0.03     0.00    -0.06    -0.11    -0.03    -0.04    -0.05    -0.04 
+##  i48->h2  i49->h2  i50->h2  i51->h2  i52->h2  i53->h2  i54->h2  i55->h2 
+##    -0.65    -0.08    -0.03    -0.03     0.09    -0.13    -0.04    -0.06 
+##  i56->h2  i57->h2  i58->h2  i59->h2  i60->h2  i61->h2  i62->h2  i63->h2 
+##    -0.04     0.00    -0.04    -0.03    -0.07     1.21    -0.01    -0.09 
+##  i64->h2  i65->h2  i66->h2  i67->h2  i68->h2  i69->h2  i70->h2  i71->h2 
+##     0.05    -0.08    -0.02    -0.04     0.57     0.17     0.63    -0.06 
+##  i72->h2  i73->h2  i74->h2  i75->h2  i76->h2  i77->h2  i78->h2  i79->h2 
+##    -0.07     0.11    -0.47    -0.09     1.15    -0.09     0.00     0.88 
+##  i80->h2  i81->h2  i82->h2  i83->h2  i84->h2  i85->h2  i86->h2  i87->h2 
+##     0.01    -0.10    -0.35    -2.25     1.24    -0.08    -0.27     0.05 
+##  i88->h2  i89->h2  i90->h2  i91->h2  i92->h2  i93->h2  i94->h2  i95->h2 
+##    -0.15    -0.03    -0.76     0.72    -4.79    -0.40    -0.52     0.57 
+##  i96->h2  i97->h2  i98->h2  i99->h2 i100->h2 i101->h2 i102->h2 i103->h2 
+##     1.38    -1.84     0.38     1.13    -0.08     0.47    -0.64     5.64 
+## i104->h2 i105->h2 i106->h2 i107->h2 i108->h2 i109->h2 i110->h2 i111->h2 
+##     2.44     0.76    -0.04    -0.19    -0.58     0.95    -0.09    -0.93 
+## i112->h2 i113->h2 i114->h2 i115->h2 i116->h2 i117->h2 i118->h2 i119->h2 
+##     0.04     0.39     0.37    -0.12    -0.40    -0.01     0.21     1.14 
+## i120->h2 i121->h2 i122->h2 i123->h2 i124->h2 i125->h2 i126->h2 i127->h2 
+##     1.18    -1.28     0.82    -1.40    -0.66     1.59     1.01     3.91 
+## i128->h2 i129->h2 i130->h2 i131->h2 i132->h2 i133->h2 i134->h2 i135->h2 
+##     0.85    -1.31     0.80    -0.07     1.88    -1.74     3.21    -1.53 
+## i136->h2 i137->h2 i138->h2 i139->h2 i140->h2 i141->h2 i142->h2 i143->h2 
+##    -0.23     1.86    -0.16     4.79     0.89    -0.74     0.97    -1.39 
+## i144->h2 i145->h2 i146->h2 i147->h2 i148->h2 i149->h2 i150->h2 i151->h2 
+##     0.83    -1.55     1.26    -0.20     3.81    -0.03    -0.03    -0.03 
+## i152->h2 i153->h2 i154->h2 i155->h2 i156->h2 i157->h2 i158->h2 i159->h2 
+##    -0.09    -0.04    -0.01    -0.06    -0.03    -0.02    -0.01    -0.02 
+## i160->h2 i161->h2 i162->h2 i163->h2 i164->h2 i165->h2 i166->h2 i167->h2 
+##    -0.01    -0.02    -0.02    -0.01    -0.03     0.84    -1.10    -0.97 
+## i168->h2 i169->h2 i170->h2 i171->h2 i172->h2 i173->h2 i174->h2 i175->h2 
+##    -0.31    -0.03    -0.01    -0.03     0.82    -0.26     0.41    -0.07 
+## i176->h2 i177->h2 i178->h2 i179->h2 i180->h2 i181->h2 i182->h2 i183->h2 
+##    -0.01     1.00    -0.12     0.14    -0.09    -0.21    -0.60     0.73 
+## i184->h2 i185->h2 i186->h2 i187->h2 i188->h2 i189->h2 i190->h2 i191->h2 
+##    -0.02     1.37    -0.07    -0.07    -0.04    -0.14    -0.02    -0.09 
+## i192->h2 i193->h2 i194->h2 i195->h2 i196->h2 i197->h2 i198->h2 i199->h2 
+##     0.82     0.12    -0.08    -0.02    -0.10    -0.03    -0.07    -0.29 
+## i200->h2 i201->h2 i202->h2 i203->h2 i204->h2 i205->h2 i206->h2 i207->h2 
+##    -0.10     0.52    -2.10     0.46     0.68    -0.01     0.65    -0.10 
+## i208->h2 i209->h2 i210->h2 i211->h2 i212->h2 i213->h2 i214->h2 i215->h2 
+##    -0.06    -0.09     0.07    -0.07    -1.01     1.78    -2.90     0.20 
+## i216->h2 i217->h2 i218->h2 i219->h2 i220->h2 i221->h2 i222->h2 i223->h2 
+##     1.11     1.90     0.49    -0.36    -0.26    -0.22     0.28     0.54 
+## i224->h2 i225->h2 i226->h2 i227->h2 i228->h2 i229->h2 i230->h2 i231->h2 
+##     7.70     0.57     0.13     0.23    -4.51    -0.98     2.90     3.04 
+## i232->h2 i233->h2 i234->h2 i235->h2 i236->h2 i237->h2 i238->h2 i239->h2 
+##     0.75     0.31     0.12     0.04     4.10    -2.06     1.84    -1.33 
+## i240->h2 i241->h2 i242->h2 i243->h2 i244->h2 i245->h2 i246->h2 
+##     0.79     3.85     3.76     1.19     0.98     2.45    -3.86 
+##    b->h3   i1->h3   i2->h3   i3->h3   i4->h3   i5->h3   i6->h3   i7->h3 
+##   -13.56    -0.27    -0.10    -0.06    -0.27     0.29    -0.27    -4.13 
+##   i8->h3   i9->h3  i10->h3  i11->h3  i12->h3  i13->h3  i14->h3  i15->h3 
+##    -5.70     0.29    -0.15    -0.06    -9.28     0.35    -0.24    -0.29 
+##  i16->h3  i17->h3  i18->h3  i19->h3  i20->h3  i21->h3  i22->h3  i23->h3 
+##     0.03     0.21    -0.21     0.43    -0.54     0.13     0.08     0.09 
+##  i24->h3  i25->h3  i26->h3  i27->h3  i28->h3  i29->h3  i30->h3  i31->h3 
+##     0.14    -0.20     0.24     0.33     0.10     0.35     0.04     0.10 
+##  i32->h3  i33->h3  i34->h3  i35->h3  i36->h3  i37->h3  i38->h3  i39->h3 
+##     0.14     0.33    -0.34     0.49     0.04     0.04     0.05     0.21 
+##  i40->h3  i41->h3  i42->h3  i43->h3  i44->h3  i45->h3  i46->h3  i47->h3 
+##     0.11     0.03    -0.04     0.05     0.11     0.16     0.09     0.09 
+##  i48->h3  i49->h3  i50->h3  i51->h3  i52->h3  i53->h3  i54->h3  i55->h3 
+##     0.05     0.16     0.11     0.11    -0.05     0.19     0.13     0.41 
+##  i56->h3  i57->h3  i58->h3  i59->h3  i60->h3  i61->h3  i62->h3  i63->h3 
+##     0.09     0.17     0.10     0.10     0.23    -0.19     0.27    -0.44 
+##  i64->h3  i65->h3  i66->h3  i67->h3  i68->h3  i69->h3  i70->h3  i71->h3 
+##     2.87     0.24     0.08     0.09     0.13    -0.06     0.21     0.17 
+##  i72->h3  i73->h3  i74->h3  i75->h3  i76->h3  i77->h3  i78->h3  i79->h3 
+##     0.15     0.45     0.33    -1.08     5.13     0.24     0.05     0.10 
+##  i80->h3  i81->h3  i82->h3  i83->h3  i84->h3  i85->h3  i86->h3  i87->h3 
+##     0.07     0.25     0.13     0.02    -2.18     0.03    -0.09     0.09 
+##  i88->h3  i89->h3  i90->h3  i91->h3  i92->h3  i93->h3  i94->h3  i95->h3 
+##     0.02     0.07    -0.06    -0.04     0.49     0.16     0.17    -0.15 
+##  i96->h3  i97->h3  i98->h3  i99->h3 i100->h3 i101->h3 i102->h3 i103->h3 
+##     0.06    -0.13    -0.01    -0.10    -0.21     0.39     0.40     0.44 
+## i104->h3 i105->h3 i106->h3 i107->h3 i108->h3 i109->h3 i110->h3 i111->h3 
+##    -0.30    -0.23     0.14     0.42     0.12    -0.23     0.26     0.04 
+## i112->h3 i113->h3 i114->h3 i115->h3 i116->h3 i117->h3 i118->h3 i119->h3 
+##     0.00    -0.02    -0.11     0.11    -0.24     0.05     0.08    -1.31 
+## i120->h3 i121->h3 i122->h3 i123->h3 i124->h3 i125->h3 i126->h3 i127->h3 
+##    -0.29     1.28     1.32     1.05     0.48    -0.83     1.36     0.30 
+## i128->h3 i129->h3 i130->h3 i131->h3 i132->h3 i133->h3 i134->h3 i135->h3 
+##     0.13     0.17    -0.08    -0.58    -0.33     0.18     0.52     2.77 
+## i136->h3 i137->h3 i138->h3 i139->h3 i140->h3 i141->h3 i142->h3 i143->h3 
+##     0.06     0.20    -0.10    -0.23    -0.66    -0.92    -0.06    -0.03 
+## i144->h3 i145->h3 i146->h3 i147->h3 i148->h3 i149->h3 i150->h3 i151->h3 
+##    -0.20     0.13     0.25     0.25    -0.09     0.11     0.12     0.10 
+## i152->h3 i153->h3 i154->h3 i155->h3 i156->h3 i157->h3 i158->h3 i159->h3 
+##     0.18     0.08     0.06     0.11     0.06     0.05     0.04     0.03 
+## i160->h3 i161->h3 i162->h3 i163->h3 i164->h3 i165->h3 i166->h3 i167->h3 
+##     0.04     0.05     0.02     0.05     0.04     0.16     0.07     0.41 
+## i168->h3 i169->h3 i170->h3 i171->h3 i172->h3 i173->h3 i174->h3 i175->h3 
+##     0.45     0.03     0.05     0.10     0.33     0.19     0.51     0.18 
+## i176->h3 i177->h3 i178->h3 i179->h3 i180->h3 i181->h3 i182->h3 i183->h3 
+##     0.05     0.20     0.36     0.44     0.63    -0.03     0.33     0.23 
+## i184->h3 i185->h3 i186->h3 i187->h3 i188->h3 i189->h3 i190->h3 i191->h3 
+##     0.04     0.79     0.14    -0.82     0.07    -0.57     0.05     0.29 
+## i192->h3 i193->h3 i194->h3 i195->h3 i196->h3 i197->h3 i198->h3 i199->h3 
+##     0.16     0.12     0.21     0.05     0.26     0.03    -0.08    -0.76 
+## i200->h3 i201->h3 i202->h3 i203->h3 i204->h3 i205->h3 i206->h3 i207->h3 
+##     0.34     0.36    -0.09    -0.36    -0.20     0.01    -2.29    -0.69 
+## i208->h3 i209->h3 i210->h3 i211->h3 i212->h3 i213->h3 i214->h3 i215->h3 
+##    -0.05     0.25     2.95     0.23    -0.56    -3.22    -0.55     0.89 
+## i216->h3 i217->h3 i218->h3 i219->h3 i220->h3 i221->h3 i222->h3 i223->h3 
+##    -0.32     0.09    -0.20    -0.36     0.01    -0.46     0.56     8.28 
+## i224->h3 i225->h3 i226->h3 i227->h3 i228->h3 i229->h3 i230->h3 i231->h3 
+##   -28.12     0.11     0.41    -0.22    -0.40    -0.08    -0.14     0.31 
+## i232->h3 i233->h3 i234->h3 i235->h3 i236->h3 i237->h3 i238->h3 i239->h3 
+##    -0.04    -1.01     1.02    -0.19     0.07    -0.03    -0.12    -0.10 
+## i240->h3 i241->h3 i242->h3 i243->h3 i244->h3 i245->h3 i246->h3 
+##     0.47    -3.70    -4.77    -0.29     0.30    -1.45    -0.28 
+##    b->h4   i1->h4   i2->h4   i3->h4   i4->h4   i5->h4   i6->h4   i7->h4 
+##    -0.94    -3.45    -1.91    -3.24     1.04    -1.06     0.33     1.86 
+##   i8->h4   i9->h4  i10->h4  i11->h4  i12->h4  i13->h4  i14->h4  i15->h4 
+##     0.47     2.76     1.97    -0.13     2.23     0.24    -2.01    -2.97 
+##  i16->h4  i17->h4  i18->h4  i19->h4  i20->h4  i21->h4  i22->h4  i23->h4 
+##     2.95     0.94     0.24    -0.28     1.12     0.01     0.01     0.00 
+##  i24->h4  i25->h4  i26->h4  i27->h4  i28->h4  i29->h4  i30->h4  i31->h4 
+##     0.05     0.06     0.02     0.02     0.00     0.01    -0.01     0.00 
+##  i32->h4  i33->h4  i34->h4  i35->h4  i36->h4  i37->h4  i38->h4  i39->h4 
+##     0.00    -0.01     0.03     0.07     0.01     0.10    -0.01     0.20 
+##  i40->h4  i41->h4  i42->h4  i43->h4  i44->h4  i45->h4  i46->h4  i47->h4 
+##     0.00     0.02     0.12     0.00     0.01     0.02     0.02     0.01 
+##  i48->h4  i49->h4  i50->h4  i51->h4  i52->h4  i53->h4  i54->h4  i55->h4 
+##     0.51     0.00     0.01     0.02     0.02     0.02     0.01     0.08 
+##  i56->h4  i57->h4  i58->h4  i59->h4  i60->h4  i61->h4  i62->h4  i63->h4 
+##     0.01    -1.79     0.02     0.01     0.02     0.04     0.05    -0.40 
+##  i64->h4  i65->h4  i66->h4  i67->h4  i68->h4  i69->h4  i70->h4  i71->h4 
+##     2.17    -0.03     0.21     0.00     0.78     0.00     0.56     0.02 
+##  i72->h4  i73->h4  i74->h4  i75->h4  i76->h4  i77->h4  i78->h4  i79->h4 
+##     0.00     0.05    -0.01    -0.09     0.00    -0.16     0.00    -0.01 
+##  i80->h4  i81->h4  i82->h4  i83->h4  i84->h4  i85->h4  i86->h4  i87->h4 
+##    -0.80     0.01     0.43    -0.22     0.05    -0.21     0.08     1.15 
+##  i88->h4  i89->h4  i90->h4  i91->h4  i92->h4  i93->h4  i94->h4  i95->h4 
+##    -0.57     0.02     2.54    -0.04     1.73     0.37    -1.02    -0.59 
+##  i96->h4  i97->h4  i98->h4  i99->h4 i100->h4 i101->h4 i102->h4 i103->h4 
+##    -0.17    -0.39    -1.95     0.32    -2.01    -0.71     1.91     1.06 
+## i104->h4 i105->h4 i106->h4 i107->h4 i108->h4 i109->h4 i110->h4 i111->h4 
+##     0.42    -1.49     0.03     1.02    -0.81    -0.86     0.01     0.37 
+## i112->h4 i113->h4 i114->h4 i115->h4 i116->h4 i117->h4 i118->h4 i119->h4 
+##     0.45    -0.58    -0.13     0.01    -1.82     0.02     0.12     1.47 
+## i120->h4 i121->h4 i122->h4 i123->h4 i124->h4 i125->h4 i126->h4 i127->h4 
+##     0.85    -0.43    -0.64     1.45    -0.07    -0.50    -0.44    -1.12 
+## i128->h4 i129->h4 i130->h4 i131->h4 i132->h4 i133->h4 i134->h4 i135->h4 
+##     2.75    -0.98     0.55     0.05     0.80     2.83     1.17    -1.02 
+## i136->h4 i137->h4 i138->h4 i139->h4 i140->h4 i141->h4 i142->h4 i143->h4 
+##     0.68    -1.71     0.89    -0.71     1.16    -0.81    -0.24    -0.89 
+## i144->h4 i145->h4 i146->h4 i147->h4 i148->h4 i149->h4 i150->h4 i151->h4 
+##     2.45    -1.32    -1.30     1.67     0.09     0.00     0.00     0.00 
+## i152->h4 i153->h4 i154->h4 i155->h4 i156->h4 i157->h4 i158->h4 i159->h4 
+##     0.01    -0.01    -0.01     0.02     0.01     0.02    -0.01    -0.01 
+## i160->h4 i161->h4 i162->h4 i163->h4 i164->h4 i165->h4 i166->h4 i167->h4 
+##     0.00    -0.01     0.00     0.00     0.00    -2.31     2.03     0.89 
+## i168->h4 i169->h4 i170->h4 i171->h4 i172->h4 i173->h4 i174->h4 i175->h4 
+##     0.48     0.02     0.02    -0.01     1.36     0.83     1.06     0.01 
+## i176->h4 i177->h4 i178->h4 i179->h4 i180->h4 i181->h4 i182->h4 i183->h4 
+##     0.00     0.24     0.31     0.49     0.03     1.18    -3.76     0.76 
+## i184->h4 i185->h4 i186->h4 i187->h4 i188->h4 i189->h4 i190->h4 i191->h4 
+##     0.00     1.27     0.01     0.24     0.00     0.01     0.01     0.01 
+## i192->h4 i193->h4 i194->h4 i195->h4 i196->h4 i197->h4 i198->h4 i199->h4 
+##     1.37    -0.01     0.03     0.00     0.00    -0.01     0.03    -0.07 
+## i200->h4 i201->h4 i202->h4 i203->h4 i204->h4 i205->h4 i206->h4 i207->h4 
+##    -0.43     0.18     1.00    -1.76     1.98     0.01    -2.35    -3.02 
+## i208->h4 i209->h4 i210->h4 i211->h4 i212->h4 i213->h4 i214->h4 i215->h4 
+##    -1.11     0.14    -0.86     0.12    -0.09     0.58     3.06     2.20 
+## i216->h4 i217->h4 i218->h4 i219->h4 i220->h4 i221->h4 i222->h4 i223->h4 
+##    -1.60     5.82    -0.07    -0.70     1.38    -4.86    -0.40     0.99 
+## i224->h4 i225->h4 i226->h4 i227->h4 i228->h4 i229->h4 i230->h4 i231->h4 
+##     3.08     4.42     2.70     2.75    -3.52    -1.49    -2.49    -1.03 
+## i232->h4 i233->h4 i234->h4 i235->h4 i236->h4 i237->h4 i238->h4 i239->h4 
+##     3.11    -0.76    -0.97    -0.16     0.04    -4.67    -0.48    -1.92 
+## i240->h4 i241->h4 i242->h4 i243->h4 i244->h4 i245->h4 i246->h4 
+##    -0.45     3.06     0.79     0.30    -1.06     1.12    -1.35 
+##    b->h5   i1->h5   i2->h5   i3->h5   i4->h5   i5->h5   i6->h5   i7->h5 
+##     1.69    -4.32     0.39     0.11     1.56    -1.13     0.34     3.37 
+##   i8->h5   i9->h5  i10->h5  i11->h5  i12->h5  i13->h5  i14->h5  i15->h5 
+##     1.88     1.71     0.43     0.56     6.16     0.55     0.69    -0.97 
+##  i16->h5  i17->h5  i18->h5  i19->h5  i20->h5  i21->h5  i22->h5  i23->h5 
+##    -0.06    -0.28     0.37     0.14    -1.14     0.01    -0.01    -0.01 
+##  i24->h5  i25->h5  i26->h5  i27->h5  i28->h5  i29->h5  i30->h5  i31->h5 
+##    -0.05     0.91    -0.01    -0.05    -0.01    -0.05     0.00    -0.01 
+##  i32->h5  i33->h5  i34->h5  i35->h5  i36->h5  i37->h5  i38->h5  i39->h5 
+##    -0.02    -0.05     1.36     0.01    -0.02     0.02    -0.01    -0.06 
+##  i40->h5  i41->h5  i42->h5  i43->h5  i44->h5  i45->h5  i46->h5  i47->h5 
+##     0.00    -0.01    -0.01    -0.02    -0.01    -0.01    -0.02    -0.01 
+##  i48->h5  i49->h5  i50->h5  i51->h5  i52->h5  i53->h5  i54->h5  i55->h5 
+##     0.19    -0.02    -0.01    -0.01     0.49    -0.04    -0.02     0.03 
+##  i56->h5  i57->h5  i58->h5  i59->h5  i60->h5  i61->h5  i62->h5  i63->h5 
+##     0.00     0.63    -0.01     0.00    -0.04     0.10    -0.01    -0.04 
+##  i64->h5  i65->h5  i66->h5  i67->h5  i68->h5  i69->h5  i70->h5  i71->h5 
+##     0.29     0.01     0.02    -0.01     0.69    -0.04     0.90    -0.03 
+##  i72->h5  i73->h5  i74->h5  i75->h5  i76->h5  i77->h5  i78->h5  i79->h5 
+##    -0.03     0.02     1.05    -0.16     0.07     0.33    -0.01    -0.11 
+##  i80->h5  i81->h5  i82->h5  i83->h5  i84->h5  i85->h5  i86->h5  i87->h5 
+##     0.00    -0.03    -0.31     0.27    -0.06    -0.04     0.45    -0.71 
+##  i88->h5  i89->h5  i90->h5  i91->h5  i92->h5  i93->h5  i94->h5  i95->h5 
+##    -0.49     0.01     1.26    -0.19     0.16    -0.03     1.44    -1.12 
+##  i96->h5  i97->h5  i98->h5  i99->h5 i100->h5 i101->h5 i102->h5 i103->h5 
+##    -0.02    -0.21    -1.16     0.62     0.66     0.18    -0.38     0.50 
+## i104->h5 i105->h5 i106->h5 i107->h5 i108->h5 i109->h5 i110->h5 i111->h5 
+##     0.40    -0.06    -0.02    -0.06    -0.11    -0.28    -0.02     0.16 
+## i112->h5 i113->h5 i114->h5 i115->h5 i116->h5 i117->h5 i118->h5 i119->h5 
+##     0.23    -0.29     0.36    -0.39    -0.57    -0.01     0.41     0.33 
+## i120->h5 i121->h5 i122->h5 i123->h5 i124->h5 i125->h5 i126->h5 i127->h5 
+##     1.02     0.49    -0.33     0.63     0.43     0.39     0.84    -0.12 
+## i128->h5 i129->h5 i130->h5 i131->h5 i132->h5 i133->h5 i134->h5 i135->h5 
+##     2.39     0.54     1.23     0.04     0.36    -0.09     2.03    -1.39 
+## i136->h5 i137->h5 i138->h5 i139->h5 i140->h5 i141->h5 i142->h5 i143->h5 
+##     0.78    -0.56     0.82     1.61     0.05     1.00     0.35    -0.99 
+## i144->h5 i145->h5 i146->h5 i147->h5 i148->h5 i149->h5 i150->h5 i151->h5 
+##    -0.33    -1.10    -0.14    -0.07     2.51    -0.01    -0.01     0.00 
+## i152->h5 i153->h5 i154->h5 i155->h5 i156->h5 i157->h5 i158->h5 i159->h5 
+##    -0.04     0.00     0.01    -0.03     0.00     0.00    -0.01    -0.01 
+## i160->h5 i161->h5 i162->h5 i163->h5 i164->h5 i165->h5 i166->h5 i167->h5 
+##     0.00     0.00    -0.02    -0.01    -0.01     1.27    -0.99     0.93 
+## i168->h5 i169->h5 i170->h5 i171->h5 i172->h5 i173->h5 i174->h5 i175->h5 
+##    -0.04    -0.02     0.00     0.00     1.25    -0.04     0.32    -0.01 
+## i176->h5 i177->h5 i178->h5 i179->h5 i180->h5 i181->h5 i182->h5 i183->h5 
+##     0.01    -1.03    -0.04     0.50    -0.02     0.22    -0.04     0.10 
+## i184->h5 i185->h5 i186->h5 i187->h5 i188->h5 i189->h5 i190->h5 i191->h5 
+##    -0.01     0.25    -0.01     0.20    -0.02    -0.04     0.01    -0.04 
+## i192->h5 i193->h5 i194->h5 i195->h5 i196->h5 i197->h5 i198->h5 i199->h5 
+##    -0.03     0.00    -0.03    -0.02    -0.04     0.01     0.01    -0.01 
+## i200->h5 i201->h5 i202->h5 i203->h5 i204->h5 i205->h5 i206->h5 i207->h5 
+##    -0.04    -0.04    -1.67     1.32    -0.11    -0.01     0.83    -2.10 
+## i208->h5 i209->h5 i210->h5 i211->h5 i212->h5 i213->h5 i214->h5 i215->h5 
+##    -0.39     0.34    -0.02     0.37     0.45    -0.77    -2.03     1.73 
+## i216->h5 i217->h5 i218->h5 i219->h5 i220->h5 i221->h5 i222->h5 i223->h5 
+##     1.90    -2.74    -0.15     0.02    -2.02    -4.12     0.30    -1.50 
+## i224->h5 i225->h5 i226->h5 i227->h5 i228->h5 i229->h5 i230->h5 i231->h5 
+##     2.06     0.57     1.51     0.27    -1.02    -0.25     2.68     1.83 
+## i232->h5 i233->h5 i234->h5 i235->h5 i236->h5 i237->h5 i238->h5 i239->h5 
+##     0.81     0.29     0.42    -0.52     0.52     1.09     1.13    -0.26 
+## i240->h5 i241->h5 i242->h5 i243->h5 i244->h5 i245->h5 i246->h5 
+##     1.34     3.43     1.67     0.35    -1.12     2.25     1.50 
+##  b->o1 h1->o1 h2->o1 h3->o1 h4->o1 h5->o1 
+## -15.28  15.73  -6.92  11.97   1.26  -8.34 
+##  b->o2 h1->o2 h2->o2 h3->o2 h4->o2 h5->o2 
+##   7.07  -8.37  -0.50   2.74  -5.90   0.45 
+##  b->o3 h1->o3 h2->o3 h3->o3 h4->o3 h5->o3 
+##   8.25  -7.33   7.42 -14.75   4.66   7.90
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plotnet}\NormalTok{(modelo\_A, }\AttributeTok{main =} \StringTok{"Modelo A – nnet (1 capa, logística)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Lab9_files/figure-latex/arquitectura-modelo-A-1.pdf}
+
+\hypertarget{modelo-b-dos-capas-ocultas-activaciuxf3n-tanh-neuralnet}{%
+\subsubsection{\texorpdfstring{Modelo B -- Dos capas ocultas, activación
+tanh
+(\texttt{neuralnet})}{Modelo B -- Dos capas ocultas, activación tanh (neuralnet)}}\label{modelo-b-dos-capas-ocultas-activaciuxf3n-tanh-neuralnet}}
+
+\texttt{neuralnet} permite especificar múltiples capas y distintas
+funciones de activación. Dos capas ocultas (10--5 neuronas) con
+activación tanh sobre las componentes PCA.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ruta\_mB }\OtherTok{\textless{}{-}} \StringTok{"artefactos/modelo\_B\_neuralnet.rds"}
+\NormalTok{tiempo\_B }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{elapsed =} \ConstantTok{NA\_real\_}\NormalTok{)}
+\NormalTok{modelo\_B }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\NormalTok{vars\_entrada\_B }\OtherTok{\textless{}{-}} \FunctionTok{character}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{file.exists}\NormalTok{(ruta\_mB)) \{}
+\NormalTok{  modelo\_B }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(ruta\_mB)}
+\NormalTok{  vars\_entrada\_B }\OtherTok{\textless{}{-}} \FunctionTok{attr}\NormalTok{(modelo\_B, }\StringTok{"variables\_entrada"}\NormalTok{)}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.null}\NormalTok{(vars\_entrada\_B) }\SpecialCharTok{||} \FunctionTok{length}\NormalTok{(vars\_entrada\_B) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    vars\_entrada\_B }\OtherTok{\textless{}{-}} \FunctionTok{intersect}\NormalTok{(}\FunctionTok{names}\NormalTok{(x\_train\_pca), }\FunctionTok{colnames}\NormalTok{(modelo\_B}\SpecialCharTok{$}\NormalTok{data))}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(vars\_entrada\_B) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    vars\_entrada\_B }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(x\_train\_pca)}
+\NormalTok{  \}}
+\NormalTok{  x\_train\_pca\_B }\OtherTok{\textless{}{-}}\NormalTok{ x\_train\_pca }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{all\_of}\NormalTok{(vars\_entrada\_B))}
+\NormalTok{  x\_test\_pca\_B }\OtherTok{\textless{}{-}}\NormalTok{ x\_test\_pca }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{all\_of}\NormalTok{(vars\_entrada\_B))}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"Modelo B cargado desde artefacto.}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  max\_comp\_B }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) }\FunctionTok{min}\NormalTok{(}\DecValTok{12}\NormalTok{, }\FunctionTok{ncol}\NormalTok{(x\_train\_pca)) }\ControlFlowTok{else} \FunctionTok{min}\NormalTok{(}\DecValTok{25}\NormalTok{, }\FunctionTok{ncol}\NormalTok{(x\_train\_pca))}
+\NormalTok{  vars\_entrada\_B }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(x\_train\_pca)[}\FunctionTok{seq\_len}\NormalTok{(max\_comp\_B)]}
+\NormalTok{  x\_train\_pca\_B }\OtherTok{\textless{}{-}}\NormalTok{ x\_train\_pca }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{all\_of}\NormalTok{(vars\_entrada\_B))}
+\NormalTok{  x\_test\_pca\_B }\OtherTok{\textless{}{-}}\NormalTok{ x\_test\_pca }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{all\_of}\NormalTok{(vars\_entrada\_B))}
+
+\NormalTok{  train\_nn\_B }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(x\_train\_pca\_B, oh\_train)}
+\NormalTok{  formula\_rna\_B }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}
+    \FunctionTok{paste}\NormalTok{(}\FunctionTok{paste}\NormalTok{(nombres\_respuesta, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{), }\StringTok{"\textasciitilde{}"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(vars\_entrada\_B, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{))}
+\NormalTok{  )}
+
+\NormalTok{  train\_mB\_full }\OtherTok{\textless{}{-}}\NormalTok{ train\_nn\_B}
+  \ControlFlowTok{if}\NormalTok{ (modo\_rapido) \{}
+\NormalTok{    idx\_mB }\OtherTok{\textless{}{-}} \FunctionTok{indices\_estratificados}\NormalTok{(y\_train, }\FunctionTok{min}\NormalTok{(}\DecValTok{1200}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(train\_nn\_B)), }\DecValTok{123}\NormalTok{)}
+\NormalTok{    train\_mB\_full }\OtherTok{\textless{}{-}}\NormalTok{ train\_nn\_B[idx\_mB, , drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    idx\_mB }\OtherTok{\textless{}{-}} \FunctionTok{indices\_estratificados}\NormalTok{(y\_train, }\FunctionTok{min}\NormalTok{(}\DecValTok{4500}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(train\_nn\_B)), }\DecValTok{123}\NormalTok{)}
+\NormalTok{    train\_mB\_full }\OtherTok{\textless{}{-}}\NormalTok{ train\_nn\_B[idx\_mB, , drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{  \}}
+
+\NormalTok{  configs\_B }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) \{}
+    \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{hidden =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{), }\AttributeTok{stepmax =} \FloatTok{2e4}\NormalTok{, }\AttributeTok{threshold =} \FloatTok{0.25}\NormalTok{),}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{hidden =} \FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{), }\AttributeTok{stepmax =} \FloatTok{4e4}\NormalTok{, }\AttributeTok{threshold =} \FloatTok{0.2}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{hidden =} \FunctionTok{c}\NormalTok{(}\DecValTok{8}\NormalTok{, }\DecValTok{4}\NormalTok{), }\AttributeTok{stepmax =} \FloatTok{1.2e5}\NormalTok{, }\AttributeTok{threshold =} \FloatTok{0.12}\NormalTok{),}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{hidden =} \FunctionTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{), }\AttributeTok{stepmax =} \FloatTok{1.8e5}\NormalTok{, }\AttributeTok{threshold =} \FloatTok{0.1}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{  \}}
+
+  \ControlFlowTok{for}\NormalTok{ (cfg }\ControlFlowTok{in}\NormalTok{ configs\_B) \{}
+\NormalTok{    train\_mB }\OtherTok{\textless{}{-}}\NormalTok{ train\_mB\_full}
+    \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(cfg}\SpecialCharTok{$}\NormalTok{hidden) }\SpecialCharTok{\textgreater{}} \DecValTok{1} \SpecialCharTok{\&\&} \FunctionTok{nrow}\NormalTok{(train\_mB) }\SpecialCharTok{\textgreater{}} \DecValTok{2500}\NormalTok{) \{}
+\NormalTok{      yb }\OtherTok{\textless{}{-}} \FunctionTok{clase\_desde\_onehot}\NormalTok{(train\_mB, nombres\_respuesta, niveles)}
+\NormalTok{      idx\_sub }\OtherTok{\textless{}{-}} \FunctionTok{indices\_estratificados}\NormalTok{(yb, }\DecValTok{2500}\NormalTok{, }\DecValTok{321}\NormalTok{)}
+\NormalTok{      train\_mB }\OtherTok{\textless{}{-}}\NormalTok{ train\_mB[idx\_sub, , drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{    \}}
+
+    \FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{    tiempo\_tmp }\OtherTok{\textless{}{-}} \FunctionTok{system.time}\NormalTok{(\{}
+\NormalTok{      modelo\_tmp }\OtherTok{\textless{}{-}} \FunctionTok{tryCatch}\NormalTok{(}
+\NormalTok{        \{}
+          \FunctionTok{setTimeLimit}\NormalTok{(}\AttributeTok{elapsed =} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) }\DecValTok{70} \ControlFlowTok{else} \DecValTok{140}\NormalTok{, }\AttributeTok{transient =} \ConstantTok{TRUE}\NormalTok{)}
+          \FunctionTok{neuralnet}\NormalTok{(}
+\NormalTok{            formula\_rna\_B,}
+            \AttributeTok{data =}\NormalTok{ train\_mB,}
+            \AttributeTok{hidden =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{hidden,}
+            \AttributeTok{act.fct =} \StringTok{"tanh"}\NormalTok{,}
+            \AttributeTok{linear.output =} \ConstantTok{FALSE}\NormalTok{,}
+            \AttributeTok{err.fct =} \StringTok{"sse"}\NormalTok{,}
+            \AttributeTok{threshold =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{threshold,}
+            \AttributeTok{stepmax =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{stepmax,}
+            \AttributeTok{lifesign =} \StringTok{"minimal"}
+\NormalTok{          )}
+\NormalTok{        \},}
+        \AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) }\ConstantTok{NULL}\NormalTok{,}
+        \AttributeTok{finally =}\NormalTok{ \{}
+          \FunctionTok{setTimeLimit}\NormalTok{(}\AttributeTok{cpu =} \ConstantTok{Inf}\NormalTok{, }\AttributeTok{elapsed =} \ConstantTok{Inf}\NormalTok{, }\AttributeTok{transient =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{        \}}
+\NormalTok{      )}
+\NormalTok{    \})}
+
+    \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(modelo\_tmp)) \{}
+\NormalTok{      modelo\_B }\OtherTok{\textless{}{-}}\NormalTok{ modelo\_tmp}
+\NormalTok{      tiempo\_B }\OtherTok{\textless{}{-}}\NormalTok{ tiempo\_tmp}
+      \ControlFlowTok{break}
+\NormalTok{    \}}
+\NormalTok{  \}}
+
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.null}\NormalTok{(modelo\_B)) \{}
+    \FunctionTok{stop}\NormalTok{(}\StringTok{"No fue posible entrenar Modelo B con los recursos actuales. Activa modo\_rapido=TRUE o borra artefactos viejos."}\NormalTok{)}
+\NormalTok{  \}}
+
+  \FunctionTok{attr}\NormalTok{(modelo\_B, }\StringTok{"variables\_entrada"}\NormalTok{) }\OtherTok{\textless{}{-}}\NormalTok{ vars\_entrada\_B}
+  \FunctionTok{saveRDS}\NormalTok{(modelo\_B, ruta\_mB)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Modelo B cargado desde artefacto.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Tiempo Modelo B:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(tiempo\_B[}\StringTok{"elapsed"}\NormalTok{], }\DecValTok{2}\NormalTok{), }\StringTok{"s}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Tiempo Modelo B: NA s
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Error final:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(modelo\_B}\SpecialCharTok{$}\NormalTok{result.matrix[}\StringTok{"error"}\NormalTok{, }\DecValTok{1}\NormalTok{], }\DecValTok{6}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Error final: 128.2327
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Pasos hasta convergencia:"}\NormalTok{, modelo\_B}\SpecialCharTok{$}\NormalTok{result.matrix[}\StringTok{"steps"}\NormalTok{, }\DecValTok{1}\NormalTok{], }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Pasos hasta convergencia: 4880
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Variables usadas por Modelo B:"}\NormalTok{, }\FunctionTok{length}\NormalTok{(vars\_entrada\_B), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Variables usadas por Modelo B: 18
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(modelo\_B, }\AttributeTok{main =} \StringTok{"Modelo B – neuralnet (2 capas, tanh)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{comparativa-de-diseuxf1o}{%
+\subsubsection{Comparativa de diseño}\label{comparativa-de-diseuxf1o}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tibble}\NormalTok{(}
+\NormalTok{  Característica  }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\StringTok{"Paquete"}\NormalTok{, }\StringTok{"Capas ocultas"}\NormalTok{, }\StringTok{"Neuronas"}\NormalTok{, }\StringTok{"Activación"}\NormalTok{,}
+                       \StringTok{"Regularización"}\NormalTok{, }\StringTok{"Datos entrada"}\NormalTok{, }\StringTok{"Tiempo (s)"}\NormalTok{),}
+  \StringTok{\textasciigrave{}}\AttributeTok{Modelo A}\StringTok{\textasciigrave{}}      \OtherTok{=} \FunctionTok{c}\NormalTok{(}\StringTok{"nnet"}\NormalTok{, }\StringTok{"1"}\NormalTok{, }\StringTok{"5"}\NormalTok{, }\StringTok{"Logística (sigmoide)"}\NormalTok{,}
+                       \StringTok{"Decay L2 = 0.01"}\NormalTok{, }\StringTok{"Predictores escalados"}\NormalTok{,}
+                       \FunctionTok{round}\NormalTok{(tiempo\_A[}\StringTok{"elapsed"}\NormalTok{], }\DecValTok{2}\NormalTok{)),}
+  \StringTok{\textasciigrave{}}\AttributeTok{Modelo B}\StringTok{\textasciigrave{}}      \OtherTok{=} \FunctionTok{c}\NormalTok{(}\StringTok{"neuralnet"}\NormalTok{, }\StringTok{"2"}\NormalTok{, }\StringTok{"10 – 5"}\NormalTok{, }\StringTok{"Tanh"}\NormalTok{,}
+                       \StringTok{"Threshold 0.1"}\NormalTok{, }\StringTok{"Componentes PCA"}\NormalTok{,}
+                       \FunctionTok{round}\NormalTok{(tiempo\_B[}\StringTok{"elapsed"}\NormalTok{], }\DecValTok{2}\NormalTok{))}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{kable}\NormalTok{(}\AttributeTok{caption =} \StringTok{"Comparativa de diseño: Modelo A vs Modelo B"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lll@{}}
+\caption{Comparativa de diseño: Modelo A vs Modelo B}\tabularnewline
+\toprule\noalign{}
+Característica & Modelo A & Modelo B \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Característica & Modelo A & Modelo B \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Paquete & nnet & neuralnet \\
+Capas ocultas & 1 & 2 \\
+Neuronas & 5 & 10 -- 5 \\
+Activación & Logística (sigmoide) & Tanh \\
+Regularización & Decay L2 = 0.01 & Threshold 0.1 \\
+Datos entrada & Predictores escalados & Componentes PCA \\
+Tiempo (s) & NA & NA \\
+\end{longtable}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{punto-4-predicciuxf3n-de-la-variable-respuesta}{%
+\subsection{Punto 4 -- Predicción de la variable
+respuesta}\label{punto-4-predicciuxf3n-de-la-variable-respuesta}}
+
+Se aplican ambos modelos al conjunto de prueba para obtener la clase
+predicha de \texttt{price\_category}.
+
+\hypertarget{predicciones-del-modelo-a-nnet}{%
+\subsubsection{\texorpdfstring{Predicciones del Modelo A
+(\texttt{nnet})}{Predicciones del Modelo A (nnet)}}\label{predicciones-del-modelo-a-nnet}}
+
+\texttt{nnet} devuelve directamente la clase con mayor probabilidad
+mediante \texttt{type\ =\ "class"}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x\_test\_base }\OtherTok{\textless{}{-}}\NormalTok{ test\_base }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{price\_category)}
+
+\NormalTok{pred\_A }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(modelo\_A, }\AttributeTok{newdata =}\NormalTok{ x\_test\_base, }\AttributeTok{type =} \StringTok{"class"}\NormalTok{)}
+\NormalTok{pred\_A }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(pred\_A, }\AttributeTok{levels =}\NormalTok{ niveles)}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Predicciones Modelo A – primeras 10 observaciones:}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Predicciones Modelo A – primeras 10 observaciones:
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Real =}\NormalTok{ y\_test, }\AttributeTok{Pred\_A =}\NormalTok{ pred\_A), }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      Real Pred_A
+## 1  barata barata
+## 2   media barata
+## 3   media  media
+## 4  barata barata
+## 5  barata barata
+## 6  barata barata
+## 7   media   cara
+## 8    cara   cara
+## 9    cara  media
+## 10   cara   cara
+\end{verbatim}
+
+\hypertarget{predicciones-del-modelo-b-neuralnet}{%
+\subsubsection{\texorpdfstring{Predicciones del Modelo B
+(\texttt{neuralnet})}{Predicciones del Modelo B (neuralnet)}}\label{predicciones-del-modelo-b-neuralnet}}
+
+\texttt{neuralnet} devuelve una matriz de probabilidades por clase (una
+columna por neurona de salida). Se selecciona la clase con mayor
+activación.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prob\_B }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(modelo\_B, }\AttributeTok{newdata =}\NormalTok{ x\_test\_pca\_B)}
+
+\CommentTok{\# Cada columna corresponde a: precio\_barata, precio\_media, precio\_cara}
+\NormalTok{idx\_max }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(prob\_B, }\DecValTok{1}\NormalTok{, which.max)}
+\NormalTok{pred\_B  }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(niveles[idx\_max], }\AttributeTok{levels =}\NormalTok{ niveles)}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Predicciones Modelo B – primeras 10 observaciones:}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Predicciones Modelo B – primeras 10 observaciones:
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Real =}\NormalTok{ y\_test, }\AttributeTok{Pred\_B =}\NormalTok{ pred\_B), }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      Real Pred_B
+## 1  barata barata
+## 2   media  media
+## 3   media   cara
+## 4  barata   cara
+## 5  barata barata
+## 6  barata barata
+## 7   media   cara
+## 8    cara   cara
+## 9    cara   cara
+## 10   cara   cara
+\end{verbatim}
+
+\hypertarget{verificaciuxf3n-cruzada}{%
+\subsubsection{Verificación cruzada}\label{verificaciuxf3n-cruzada}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Distribución de predicciones – Modelo A:}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Distribución de predicciones – Modelo A:
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(}\FunctionTok{table}\NormalTok{(pred\_A))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## pred_A
+## barata  media   cara 
+##   5382   5080  23886
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Distribución de predicciones – Modelo B:}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Distribución de predicciones – Modelo B:
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(}\FunctionTok{table}\NormalTok{(pred\_B))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## pred_B
+## barata  media   cara 
+##   5225   4679  24444
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{Distribución real (test):}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Distribución real (test):
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(}\FunctionTok{table}\NormalTok{(y\_test))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## y_test
+## barata  media   cara 
+##   5137   5030  24181
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{punto-5-matrices-de-confusiuxf3n}{%
+\subsection{Punto 5 -- Matrices de
+confusión}\label{punto-5-matrices-de-confusiuxf3n}}
+
+\hypertarget{matriz-de-confusiuxf3n-modelo-a}{%
+\subsubsection{Matriz de confusión -- Modelo
+A}\label{matriz-de-confusiuxf3n-modelo-a}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cm\_A }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(pred\_A, y\_test)}
+\FunctionTok{print}\NormalTok{(cm\_A)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction barata media  cara
+##     barata   4212   641   529
+##     media     680  3418   982
+##     cara      245   971 22670
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.8821          
+##                  95% CI : (0.8787, 0.8855)
+##     No Information Rate : 0.704           
+##     P-Value [Acc > NIR] : < 2.2e-16       
+##                                           
+##                   Kappa : 0.7467          
+##                                           
+##  Mcnemar's Test P-Value : < 2.2e-16       
+## 
+## Statistics by Class:
+## 
+##                      Class: barata Class: media Class: cara
+## Sensitivity                 0.8199      0.67952      0.9375
+## Specificity                 0.9599      0.94331      0.8804
+## Pos Pred Value              0.7826      0.67283      0.9491
+## Neg Pred Value              0.9681      0.94492      0.8556
+## Prevalence                  0.1496      0.14644      0.7040
+## Detection Rate              0.1226      0.09951      0.6600
+## Detection Prevalence        0.1567      0.14790      0.6954
+## Balanced Accuracy           0.8899      0.81142      0.9090
+\end{verbatim}
+
+\hypertarget{matriz-de-confusiuxf3n-modelo-b}{%
+\subsubsection{Matriz de confusión -- Modelo
+B}\label{matriz-de-confusiuxf3n-modelo-b}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cm\_B }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(pred\_B, y\_test)}
+\FunctionTok{print}\NormalTok{(cm\_B)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction barata media  cara
+##     barata   2890  1429   906
+##     media    1508  1853  1318
+##     cara      739  1748 21957
+## 
+## Overall Statistics
+##                                           
+##                Accuracy : 0.7773          
+##                  95% CI : (0.7729, 0.7817)
+##     No Information Rate : 0.704           
+##     P-Value [Acc > NIR] : < 2.2e-16       
+##                                           
+##                   Kappa : 0.512           
+##                                           
+##  Mcnemar's Test P-Value : < 2.2e-16       
+## 
+## Statistics by Class:
+## 
+##                      Class: barata Class: media Class: cara
+## Sensitivity                0.56259      0.36839      0.9080
+## Specificity                0.92006      0.90361      0.7554
+## Pos Pred Value             0.55311      0.39602      0.8983
+## Neg Pred Value             0.92284      0.89292      0.7754
+## Prevalence                 0.14956      0.14644      0.7040
+## Detection Rate             0.08414      0.05395      0.6393
+## Detection Prevalence       0.15212      0.13622      0.7117
+## Balanced Accuracy          0.74132      0.63600      0.8317
+\end{verbatim}
+
+\hypertarget{visualizaciuxf3n-como-heatmap}{%
+\subsubsection{Visualización como
+heatmap}\label{visualizaciuxf3n-como-heatmap}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot\_cm }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(cm, titulo) \{}
+\NormalTok{  df }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(cm}\SpecialCharTok{$}\NormalTok{table)}
+  \FunctionTok{ggplot}\NormalTok{(df, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Reference, }\AttributeTok{y =}\NormalTok{ Prediction, }\AttributeTok{fill =}\NormalTok{ Freq)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_tile}\NormalTok{(}\AttributeTok{color =} \StringTok{"white"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{geom\_text}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{label =}\NormalTok{ Freq), }\AttributeTok{color =} \StringTok{"white"}\NormalTok{, }\AttributeTok{size =} \DecValTok{6}\NormalTok{, }\AttributeTok{fontface =} \StringTok{"bold"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{scale\_fill\_gradient}\NormalTok{(}\AttributeTok{low =} \StringTok{"\#2E86AB"}\NormalTok{, }\AttributeTok{high =} \StringTok{"\#1B3A4B"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =}\NormalTok{ titulo, }\AttributeTok{x =} \StringTok{"Clase real"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Clase predicha"}\NormalTok{, }\AttributeTok{fill =} \StringTok{"Frecuencia"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{13}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{theme}\NormalTok{(}\AttributeTok{plot.title =} \FunctionTok{element\_text}\NormalTok{(}\AttributeTok{face =} \StringTok{"bold"}\NormalTok{))}
+\NormalTok{\}}
+
+\FunctionTok{plot\_cm}\NormalTok{(cm\_A, }\StringTok{"Matriz de Confusión – Modelo A (1 capa, logística)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Lab9_files/figure-latex/heatmaps-cm-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot\_cm}\NormalTok{(cm\_B, }\StringTok{"Matriz de Confusión – Modelo B (2 capas, tanh)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Lab9_files/figure-latex/heatmaps-cm-2.pdf}
+
+\hypertarget{muxe9tricas-por-clase}{%
+\subsubsection{Métricas por clase}\label{muxe9tricas-por-clase}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{metricas\_A }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(cm\_A}\SpecialCharTok{$}\NormalTok{byClass[, }\FunctionTok{c}\NormalTok{(}\StringTok{"Precision"}\NormalTok{, }\StringTok{"Recall"}\NormalTok{, }\StringTok{"F1"}\NormalTok{)])}
+\NormalTok{metricas\_A}\SpecialCharTok{$}\NormalTok{Modelo }\OtherTok{\textless{}{-}} \StringTok{"Modelo A"}
+\NormalTok{metricas\_A}\SpecialCharTok{$}\NormalTok{Clase  }\OtherTok{\textless{}{-}} \FunctionTok{rownames}\NormalTok{(metricas\_A)}
+
+\NormalTok{metricas\_B }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(cm\_B}\SpecialCharTok{$}\NormalTok{byClass[, }\FunctionTok{c}\NormalTok{(}\StringTok{"Precision"}\NormalTok{, }\StringTok{"Recall"}\NormalTok{, }\StringTok{"F1"}\NormalTok{)])}
+\NormalTok{metricas\_B}\SpecialCharTok{$}\NormalTok{Modelo }\OtherTok{\textless{}{-}} \StringTok{"Modelo B"}
+\NormalTok{metricas\_B}\SpecialCharTok{$}\NormalTok{Clase  }\OtherTok{\textless{}{-}} \FunctionTok{rownames}\NormalTok{(metricas\_B)}
+
+\NormalTok{metricas\_por\_clase }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(metricas\_A, metricas\_B) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(Modelo, Clase, Precision, Recall, F1)}
+
+\FunctionTok{kable}\NormalTok{(metricas\_por\_clase, }\AttributeTok{digits =} \DecValTok{4}\NormalTok{,}
+      \AttributeTok{caption =} \StringTok{"Precisión, Recall y F1 por clase y modelo"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllrrr@{}}
+\caption{Precisión, Recall y F1 por clase y modelo}\tabularnewline
+\toprule\noalign{}
+& Modelo & Clase & Precision & Recall & F1 \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+& Modelo & Clase & Precision & Recall & F1 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Class: barata\ldots1 & Modelo A & Class: barata & 0.7826 & 0.8199 &
+0.8008 \\
+Class: media\ldots2 & Modelo A & Class: media & 0.6728 & 0.6795 &
+0.6762 \\
+Class: cara\ldots3 & Modelo A & Class: cara & 0.9491 & 0.9375 &
+0.9433 \\
+Class: barata\ldots4 & Modelo B & Class: barata & 0.5531 & 0.5626 &
+0.5578 \\
+Class: media\ldots5 & Modelo B & Class: media & 0.3960 & 0.3684 &
+0.3817 \\
+Class: cara\ldots6 & Modelo B & Class: cara & 0.8983 & 0.9080 &
+0.9031 \\
+\end{longtable}
+
+\hypertarget{tabla-resumen-de-accuracy}{%
+\subsubsection{Tabla resumen de
+accuracy}\label{tabla-resumen-de-accuracy}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{acc\_A }\OtherTok{\textless{}{-}}\NormalTok{ cm\_A}\SpecialCharTok{$}\NormalTok{overall[}\StringTok{"Accuracy"}\NormalTok{]}
+\NormalTok{acc\_B }\OtherTok{\textless{}{-}}\NormalTok{ cm\_B}\SpecialCharTok{$}\NormalTok{overall[}\StringTok{"Accuracy"}\NormalTok{]}
+
+\NormalTok{kappa\_A }\OtherTok{\textless{}{-}}\NormalTok{ cm\_A}\SpecialCharTok{$}\NormalTok{overall[}\StringTok{"Kappa"}\NormalTok{]}
+\NormalTok{kappa\_B }\OtherTok{\textless{}{-}}\NormalTok{ cm\_B}\SpecialCharTok{$}\NormalTok{overall[}\StringTok{"Kappa"}\NormalTok{]}
+
+\NormalTok{tabla\_resumen\_clf }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{Modelo        =} \FunctionTok{c}\NormalTok{(}\StringTok{"Modelo A – nnet (1 capa, logística)"}\NormalTok{,}
+                    \StringTok{"Modelo B – neuralnet (2 capas, tanh)"}\NormalTok{),}
+  \AttributeTok{Accuracy      =} \FunctionTok{c}\NormalTok{(acc\_A, acc\_B),}
+  \AttributeTok{Kappa         =} \FunctionTok{c}\NormalTok{(kappa\_A, kappa\_B),}
+  \StringTok{\textasciigrave{}}\AttributeTok{F1 macro}\StringTok{\textasciigrave{}}    \OtherTok{=} \FunctionTok{c}\NormalTok{(}\FunctionTok{mean}\NormalTok{(cm\_A}\SpecialCharTok{$}\NormalTok{byClass[, }\StringTok{"F1"}\NormalTok{], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+                    \FunctionTok{mean}\NormalTok{(cm\_B}\SpecialCharTok{$}\NormalTok{byClass[, }\StringTok{"F1"}\NormalTok{], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{)}
+
+\FunctionTok{kable}\NormalTok{(tabla\_resumen\_clf, }\AttributeTok{digits =} \DecValTok{4}\NormalTok{,}
+      \AttributeTok{caption =} \StringTok{"Resumen comparativo de clasificación – Modelos A y B"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrr@{}}
+\caption{Resumen comparativo de clasificación -- Modelos A y
+B}\tabularnewline
+\toprule\noalign{}
+Modelo & Accuracy & Kappa & F1 macro \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Modelo & Accuracy & Kappa & F1 macro \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Modelo A -- nnet (1 capa, logística) & 0.8821 & 0.7467 & 0.8068 \\
+Modelo B -- neuralnet (2 capas, tanh) & 0.7773 & 0.5120 & 0.6142 \\
+\end{longtable}
+
+El modelo con mayor Accuracy y F1 macro sobre el conjunto de prueba será
+el candidato a ajuste fino en el Punto 8.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{punto-6-comparar-resultados-efectividad-tiempo-y-error}{%
+\subsection{Punto 6 -- Comparar resultados (efectividad, tiempo y
+error)}\label{punto-6-comparar-resultados-efectividad-tiempo-y-error}}
+
+Se consolidan las métricas principales para comparar ambos modelos con
+una sola tabla.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{acc\_A  }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(cm\_A}\SpecialCharTok{$}\NormalTok{overall[}\StringTok{"Accuracy"}\NormalTok{])}
+\NormalTok{acc\_B  }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(cm\_B}\SpecialCharTok{$}\NormalTok{overall[}\StringTok{"Accuracy"}\NormalTok{])}
+\NormalTok{f1\_A   }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(cm\_A}\SpecialCharTok{$}\NormalTok{byClass[, }\StringTok{"F1"}\NormalTok{], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{f1\_B   }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(cm\_B}\SpecialCharTok{$}\NormalTok{byClass[, }\StringTok{"F1"}\NormalTok{], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{prec\_A }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(cm\_A}\SpecialCharTok{$}\NormalTok{byClass[, }\StringTok{"Precision"}\NormalTok{], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{prec\_B }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(cm\_B}\SpecialCharTok{$}\NormalTok{byClass[, }\StringTok{"Precision"}\NormalTok{], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{rec\_A  }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(cm\_A}\SpecialCharTok{$}\NormalTok{byClass[, }\StringTok{"Recall"}\NormalTok{], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{rec\_B  }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(cm\_B}\SpecialCharTok{$}\NormalTok{byClass[, }\StringTok{"Recall"}\NormalTok{], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+
+\NormalTok{tiempo\_A\_seg }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(tiempo\_A[}\StringTok{"elapsed"}\NormalTok{])}
+\NormalTok{tiempo\_B\_seg }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(tiempo\_B[}\StringTok{"elapsed"}\NormalTok{])}
+
+\NormalTok{tabla\_comparacion }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{Modelo    =} \FunctionTok{c}\NormalTok{(}\StringTok{"Modelo A – nnet (1 capa, logística)"}\NormalTok{,}
+                \StringTok{"Modelo B – neuralnet (2 capas, tanh)"}\NormalTok{),}
+  \AttributeTok{Accuracy  =} \FunctionTok{round}\NormalTok{(}\FunctionTok{c}\NormalTok{(acc\_A, acc\_B), }\DecValTok{4}\NormalTok{),}
+  \AttributeTok{Precision =} \FunctionTok{round}\NormalTok{(}\FunctionTok{c}\NormalTok{(prec\_A, prec\_B), }\DecValTok{4}\NormalTok{),}
+  \AttributeTok{Recall    =} \FunctionTok{round}\NormalTok{(}\FunctionTok{c}\NormalTok{(rec\_A, rec\_B), }\DecValTok{4}\NormalTok{),}
+  \AttributeTok{F1        =} \FunctionTok{round}\NormalTok{(}\FunctionTok{c}\NormalTok{(f1\_A, f1\_B), }\DecValTok{4}\NormalTok{),}
+  \AttributeTok{Error     =} \FunctionTok{round}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ acc\_A, }\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ acc\_B), }\DecValTok{4}\NormalTok{),}
+  \AttributeTok{Tiempo\_s  =} \FunctionTok{round}\NormalTok{(}\FunctionTok{c}\NormalTok{(tiempo\_A\_seg, tiempo\_B\_seg), }\DecValTok{2}\NormalTok{)}
+\NormalTok{)}
+
+\FunctionTok{kable}\NormalTok{(tabla\_comparacion, }\AttributeTok{digits =} \DecValTok{4}\NormalTok{,}
+      \AttributeTok{caption =} \StringTok{"Punto 6 – Comparación cuantitativa entre Modelo A y Modelo B"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.4302}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1047}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1163}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.0814}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.0814}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.0814}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1047}}@{}}
+\caption{Punto 6 -- Comparación cuantitativa entre Modelo A y Modelo
+B}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Precision
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Recall
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Error
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Tiempo\_s
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Precision
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Recall
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Error
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Tiempo\_s
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Modelo A -- nnet (1 capa, logística) & 0.8821 & 0.8015 & 0.8123 & 0.8068
+& 0.1179 & NA \\
+Modelo B -- neuralnet (2 capas, tanh) & 0.7773 & 0.6158 & 0.6130 &
+0.6142 & 0.2227 & NA \\
+\end{longtable}
+
+Con esta tabla se evalúa conjuntamente desempeño predictivo (Accuracy,
+Precision, Recall, F1), error de clasificación y costo computacional
+aproximado.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{punto-7-analizar-sobreajuste}{%
+\subsection{Punto 7 -- Analizar
+sobreajuste}\label{punto-7-analizar-sobreajuste}}
+
+Se compara rendimiento en entrenamiento y prueba para detectar si el
+modelo memoriza el train y pierde capacidad de generalización.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred\_A\_train }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(modelo\_A, }\AttributeTok{newdata =}\NormalTok{ train\_base, }\AttributeTok{type =} \StringTok{"class"}\NormalTok{)}
+\NormalTok{pred\_A\_train }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(pred\_A\_train, }\AttributeTok{levels =}\NormalTok{ niveles)}
+\NormalTok{acc\_A\_train  }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(pred\_A\_train }\SpecialCharTok{==}\NormalTok{ y\_train)}
+
+\NormalTok{prob\_B\_train }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(modelo\_B, }\AttributeTok{newdata =}\NormalTok{ x\_train\_pca\_B)}
+\NormalTok{pred\_B\_train }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(niveles[}\FunctionTok{apply}\NormalTok{(prob\_B\_train, }\DecValTok{1}\NormalTok{, which.max)], }\AttributeTok{levels =}\NormalTok{ niveles)}
+\NormalTok{acc\_B\_train  }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(pred\_B\_train }\SpecialCharTok{==}\NormalTok{ y\_train)}
+
+\NormalTok{acc\_A\_test }\OtherTok{\textless{}{-}}\NormalTok{ acc\_A}
+\NormalTok{acc\_B\_test }\OtherTok{\textless{}{-}}\NormalTok{ acc\_B}
+
+\NormalTok{sobreajuste }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{Modelo     =} \FunctionTok{c}\NormalTok{(}\StringTok{"Modelo A"}\NormalTok{, }\StringTok{"Modelo B"}\NormalTok{),}
+  \AttributeTok{Acc\_Train  =} \FunctionTok{round}\NormalTok{(}\FunctionTok{c}\NormalTok{(acc\_A\_train, acc\_B\_train), }\DecValTok{4}\NormalTok{),}
+  \AttributeTok{Acc\_Test   =} \FunctionTok{round}\NormalTok{(}\FunctionTok{c}\NormalTok{(acc\_A\_test, acc\_B\_test), }\DecValTok{4}\NormalTok{),}
+  \AttributeTok{Diferencia =} \FunctionTok{round}\NormalTok{(}\FunctionTok{c}\NormalTok{(acc\_A\_train }\SpecialCharTok{{-}}\NormalTok{ acc\_A\_test, acc\_B\_train }\SpecialCharTok{{-}}\NormalTok{ acc\_B\_test), }\DecValTok{4}\NormalTok{)}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{Diagnostico =} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      Diferencia }\SpecialCharTok{\textless{}} \FloatTok{0.03} \SpecialCharTok{\textasciitilde{}} \StringTok{"Sin sobreajuste significativo"}\NormalTok{,}
+\NormalTok{      Diferencia }\SpecialCharTok{\textless{}=} \FloatTok{0.10} \SpecialCharTok{\textasciitilde{}} \StringTok{"Sobreajuste leve"}\NormalTok{,}
+      \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}} \StringTok{"Sobreajuste grave"}
+\NormalTok{    )}
+\NormalTok{  )}
+
+\FunctionTok{kable}\NormalTok{(sobreajuste, }\AttributeTok{digits =} \DecValTok{4}\NormalTok{,}
+      \AttributeTok{caption =} \StringTok{"Punto 7 – Detección de sobreajuste (train vs test)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1304}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1449}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1304}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1594}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.4348}}@{}}
+\caption{Punto 7 -- Detección de sobreajuste (train vs
+test)}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Acc\_Train
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Acc\_Test
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Diferencia
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Diagnostico
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Modelo
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Acc\_Train
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Acc\_Test
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Diferencia
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Diagnostico
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Modelo A & 0.8848 & 0.8821 & 0.0026 & Sin sobreajuste significativo \\
+Modelo B & 0.7758 & 0.7773 & -0.0015 & Sin sobreajuste significativo \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Interpretación:}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Interpretación:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"{-} Diferencias menores a 0.03 suelen indicar buena generalización.}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Diferencias menores a 0.03 suelen indicar buena generalización.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"{-} Diferencias entre 0.03 y 0.10 sugieren sobreajuste leve.}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Diferencias entre 0.03 y 0.10 sugieren sobreajuste leve.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"{-} Diferencias mayores a 0.10 indican sobreajuste importante.}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Diferencias mayores a 0.10 indican sobreajuste importante.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Error final Modelo A (nnet): no reportado directamente por \textquotesingle{}nnet\textquotesingle{} en esta salida.}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Error final Modelo A (nnet): no reportado directamente por 'nnet' en esta salida.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Error final Modelo B (neuralnet):"}\NormalTok{, }\FunctionTok{round}\NormalTok{(modelo\_B}\SpecialCharTok{$}\NormalTok{result.matrix[}\StringTok{"error"}\NormalTok{, }\DecValTok{1}\NormalTok{], }\DecValTok{6}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Error final Modelo B (neuralnet): 128.2327
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{punto-8-ajustar-tuning-el-mejor-modelo}{%
+\subsection{Punto 8 -- Ajustar (tuning) el mejor
+modelo}\label{punto-8-ajustar-tuning-el-mejor-modelo}}
+
+Primero se selecciona el mejor modelo base usando F1 macro (maximizar) y
+diferencia train-test (minimizar).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{resumen\_seleccion }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{Modelo =} \FunctionTok{c}\NormalTok{(}\StringTok{"A"}\NormalTok{, }\StringTok{"B"}\NormalTok{),}
+  \AttributeTok{F1\_macro =} \FunctionTok{c}\NormalTok{(f1\_A, f1\_B),}
+  \AttributeTok{Gap\_train\_test =} \FunctionTok{c}\NormalTok{(acc\_A\_train }\SpecialCharTok{{-}}\NormalTok{ acc\_A\_test, acc\_B\_train }\SpecialCharTok{{-}}\NormalTok{ acc\_B\_test)}
+\NormalTok{)}
+
+\NormalTok{mejor\_modelo }\OtherTok{\textless{}{-}}\NormalTok{ resumen\_seleccion }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(F1\_macro), Gap\_train\_test) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pull}\NormalTok{(Modelo)}
+
+\FunctionTok{kable}\NormalTok{(resumen\_seleccion, }\AttributeTok{digits =} \DecValTok{4}\NormalTok{,}
+      \AttributeTok{caption =} \StringTok{"Criterio de selección del modelo base para tuning"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrr@{}}
+\caption{Criterio de selección del modelo base para
+tuning}\tabularnewline
+\toprule\noalign{}
+Modelo & F1\_macro & Gap\_train\_test \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Modelo & F1\_macro & Gap\_train\_test \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.8068 & 0.0026 \\
+B & 0.6142 & -0.0015 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Modelo seleccionado para tuning:"}\NormalTok{, mejor\_modelo, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Modelo seleccionado para tuning: A
+\end{verbatim}
+
+\hypertarget{estrategia-de-tuning-seguxfan-modelo-seleccionado}{%
+\subsubsection{Estrategia de tuning según modelo
+seleccionado}\label{estrategia-de-tuning-seguxfan-modelo-seleccionado}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{resultados\_tuning }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{()}
+\NormalTok{cm\_tuned }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\NormalTok{pred\_tuned }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+
+\ControlFlowTok{if}\NormalTok{ (mejor\_modelo }\SpecialCharTok{==} \StringTok{"A"}\NormalTok{) \{}
+\NormalTok{  grid\_nnet }\OtherTok{\textless{}{-}} \FunctionTok{expand.grid}\NormalTok{(}
+    \AttributeTok{size =} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) }\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{) }\ControlFlowTok{else} \FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{10}\NormalTok{),}
+    \AttributeTok{decay =} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) }\FunctionTok{c}\NormalTok{(}\FloatTok{0.001}\NormalTok{, }\FloatTok{0.01}\NormalTok{) }\ControlFlowTok{else} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.001}\NormalTok{, }\FloatTok{0.01}\NormalTok{, }\FloatTok{0.1}\NormalTok{)}
+\NormalTok{  )}
+
+\NormalTok{  k\_cv }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) 3L }\ControlFlowTok{else}\NormalTok{ 5L}
+\NormalTok{  train\_tune }\OtherTok{\textless{}{-}}\NormalTok{ train\_base}
+  \ControlFlowTok{if}\NormalTok{ (modo\_rapido) \{}
+\NormalTok{    idx\_tune }\OtherTok{\textless{}{-}} \FunctionTok{indices\_estratificados}\NormalTok{(train\_base}\SpecialCharTok{$}\NormalTok{price\_category, }\FunctionTok{min}\NormalTok{(}\DecValTok{2500}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(train\_base)), }\DecValTok{123}\NormalTok{)}
+\NormalTok{    train\_tune }\OtherTok{\textless{}{-}}\NormalTok{ train\_base[idx\_tune, , drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{    train\_tune}\SpecialCharTok{$}\NormalTok{price\_category }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(train\_tune}\SpecialCharTok{$}\NormalTok{price\_category, }\AttributeTok{levels =} \FunctionTok{levels}\NormalTok{(train\_base}\SpecialCharTok{$}\NormalTok{price\_category))}
+\NormalTok{  \}}
+
+\NormalTok{  idx\_cv }\OtherTok{\textless{}{-}} \FunctionTok{createFolds}\NormalTok{(train\_tune}\SpecialCharTok{$}\NormalTok{price\_category, }\AttributeTok{k =}\NormalTok{ k\_cv, }\AttributeTok{list =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{returnTrain =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  ctrl }\OtherTok{\textless{}{-}} \FunctionTok{trainControl}\NormalTok{(}\AttributeTok{method =} \StringTok{"cv"}\NormalTok{, }\AttributeTok{number =}\NormalTok{ k\_cv, }\AttributeTok{index =}\NormalTok{ idx\_cv)}
+
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{  modelo\_tuned }\OtherTok{\textless{}{-}} \FunctionTok{tryCatch}\NormalTok{(}
+    \FunctionTok{train}\NormalTok{(}
+\NormalTok{      price\_category }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+      \AttributeTok{data =}\NormalTok{ train\_tune,}
+      \AttributeTok{method =} \StringTok{"nnet"}\NormalTok{,}
+      \AttributeTok{tuneGrid =}\NormalTok{ grid\_nnet,}
+      \AttributeTok{trControl =}\NormalTok{ ctrl,}
+      \AttributeTok{metric =} \StringTok{"Accuracy"}\NormalTok{,}
+      \AttributeTok{MaxNWts =} \DecValTok{20000}\NormalTok{,}
+      \AttributeTok{trace =} \ConstantTok{FALSE}\NormalTok{,}
+      \AttributeTok{maxit =} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) }\DecValTok{200} \ControlFlowTok{else} \DecValTok{500}
+\NormalTok{    ),}
+    \AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) }\ConstantTok{NULL}
+\NormalTok{  )}
+
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.null}\NormalTok{(modelo\_tuned)) \{}
+    \FunctionTok{stop}\NormalTok{(}\StringTok{"El tuning del modelo A falló. Reduce tuneGrid o activa modo\_rapido=TRUE."}\NormalTok{)}
+\NormalTok{  \}}
+
+\NormalTok{  resultados\_tuning }\OtherTok{\textless{}{-}}\NormalTok{ modelo\_tuned}\SpecialCharTok{$}\NormalTok{results }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(Accuracy)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{select}\NormalTok{(size, decay, Accuracy, Kappa) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{Modelo =} \StringTok{"A (nnet tuned)"}\NormalTok{)}
+
+\NormalTok{  pred\_tuned }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(modelo\_tuned, }\AttributeTok{newdata =}\NormalTok{ test\_base)}
+\NormalTok{  cm\_tuned }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(pred\_tuned, y\_test)}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  vars\_tune\_B }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{exists}\NormalTok{(}\StringTok{"vars\_entrada\_B"}\NormalTok{)) vars\_entrada\_B }\ControlFlowTok{else} \FunctionTok{names}\NormalTok{(x\_train\_pca)}
+\NormalTok{  x\_train\_tune\_B }\OtherTok{\textless{}{-}}\NormalTok{ x\_train\_pca }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{all\_of}\NormalTok{(vars\_tune\_B))}
+\NormalTok{  x\_test\_tune\_B }\OtherTok{\textless{}{-}}\NormalTok{ x\_test\_pca }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\FunctionTok{all\_of}\NormalTok{(vars\_tune\_B))}
+\NormalTok{  train\_nn\_tune }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(x\_train\_tune\_B, oh\_train)}
+
+\NormalTok{  formula\_rna\_tune\_B }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}
+    \FunctionTok{paste}\NormalTok{(}\FunctionTok{paste}\NormalTok{(nombres\_respuesta, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{), }\StringTok{"\textasciitilde{}"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(vars\_tune\_B, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{))}
+\NormalTok{  )}
+
+\NormalTok{  configuraciones }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) \{}
+    \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{hidden =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{), }\AttributeTok{act =} \StringTok{"tanh"}\NormalTok{, }\AttributeTok{thr =} \FloatTok{0.25}\NormalTok{, }\AttributeTok{step =} \FloatTok{2e4}\NormalTok{),}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{hidden =} \FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{), }\AttributeTok{act =} \StringTok{"tanh"}\NormalTok{, }\AttributeTok{thr =} \FloatTok{0.2}\NormalTok{, }\AttributeTok{step =} \FloatTok{4e4}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{hidden =} \FunctionTok{c}\NormalTok{(}\DecValTok{8}\NormalTok{, }\DecValTok{4}\NormalTok{), }\AttributeTok{act =} \StringTok{"tanh"}\NormalTok{, }\AttributeTok{thr =} \FloatTok{0.12}\NormalTok{, }\AttributeTok{step =} \FloatTok{1.2e5}\NormalTok{),}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{hidden =} \FunctionTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{), }\AttributeTok{act =} \StringTok{"tanh"}\NormalTok{, }\AttributeTok{thr =} \FloatTok{0.1}\NormalTok{, }\AttributeTok{step =} \FloatTok{1.8e5}\NormalTok{),}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{hidden =} \FunctionTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{), }\AttributeTok{act =} \StringTok{"logistic"}\NormalTok{, }\AttributeTok{thr =} \FloatTok{0.1}\NormalTok{, }\AttributeTok{step =} \FloatTok{1.8e5}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{  \}}
+
+\NormalTok{  train\_tune\_nn }\OtherTok{\textless{}{-}}\NormalTok{ train\_nn\_tune}
+  \ControlFlowTok{if}\NormalTok{ (modo\_rapido) \{}
+\NormalTok{    idx\_tune }\OtherTok{\textless{}{-}} \FunctionTok{indices\_estratificados}\NormalTok{(y\_train, }\FunctionTok{min}\NormalTok{(}\DecValTok{2000}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(train\_nn\_tune)), }\DecValTok{123}\NormalTok{)}
+\NormalTok{    train\_tune\_nn }\OtherTok{\textless{}{-}}\NormalTok{ train\_nn\_tune[idx\_tune, , drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{  \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{nrow}\NormalTok{(train\_nn\_tune) }\SpecialCharTok{\textgreater{}} \DecValTok{5000}\NormalTok{) \{}
+\NormalTok{    idx\_tune }\OtherTok{\textless{}{-}} \FunctionTok{indices\_estratificados}\NormalTok{(y\_train, }\FunctionTok{min}\NormalTok{(}\DecValTok{5000}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(train\_nn\_tune)), }\DecValTok{123}\NormalTok{)}
+\NormalTok{    train\_tune\_nn }\OtherTok{\textless{}{-}}\NormalTok{ train\_nn\_tune[idx\_tune, , drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{  \}}
+
+\NormalTok{  resultados\_lista }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{()}
+\NormalTok{  modelos\_lista }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{()}
+
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(configuraciones)) \{}
+\NormalTok{    cfg }\OtherTok{\textless{}{-}}\NormalTok{ configuraciones[[i]]}
+\NormalTok{    err\_fun }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (cfg}\SpecialCharTok{$}\NormalTok{act }\SpecialCharTok{==} \StringTok{"logistic"}\NormalTok{) }\StringTok{"ce"} \ControlFlowTok{else} \StringTok{"sse"}
+
+    \FunctionTok{set.seed}\NormalTok{(}\DecValTok{123} \SpecialCharTok{+}\NormalTok{ i)}
+\NormalTok{    m }\OtherTok{\textless{}{-}} \FunctionTok{tryCatch}\NormalTok{(}
+\NormalTok{      \{}
+        \FunctionTok{setTimeLimit}\NormalTok{(}\AttributeTok{elapsed =} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) }\DecValTok{60} \ControlFlowTok{else} \DecValTok{120}\NormalTok{, }\AttributeTok{transient =} \ConstantTok{TRUE}\NormalTok{)}
+        \FunctionTok{neuralnet}\NormalTok{(}
+\NormalTok{          formula\_rna\_tune\_B,}
+          \AttributeTok{data =}\NormalTok{ train\_tune\_nn,}
+          \AttributeTok{hidden =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{hidden,}
+          \AttributeTok{act.fct =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{act,}
+          \AttributeTok{linear.output =} \ConstantTok{FALSE}\NormalTok{,}
+          \AttributeTok{err.fct =}\NormalTok{ err\_fun,}
+          \AttributeTok{threshold =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{thr,}
+          \AttributeTok{stepmax =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{step,}
+          \AttributeTok{lifesign =} \StringTok{"minimal"}
+\NormalTok{        )}
+\NormalTok{      \},}
+      \AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) }\ConstantTok{NULL}\NormalTok{,}
+      \AttributeTok{finally =}\NormalTok{ \{}
+        \FunctionTok{setTimeLimit}\NormalTok{(}\AttributeTok{cpu =} \ConstantTok{Inf}\NormalTok{, }\AttributeTok{elapsed =} \ConstantTok{Inf}\NormalTok{, }\AttributeTok{transient =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{      \}}
+\NormalTok{    )}
+
+    \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.null}\NormalTok{(m)) }\ControlFlowTok{next}
+
+\NormalTok{    prob }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(m, }\AttributeTok{newdata =}\NormalTok{ x\_test\_tune\_B)}
+\NormalTok{    pred }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(niveles[}\FunctionTok{apply}\NormalTok{(prob, }\DecValTok{1}\NormalTok{, which.max)], }\AttributeTok{levels =}\NormalTok{ niveles)}
+\NormalTok{    acc }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(pred }\SpecialCharTok{==}\NormalTok{ y\_test)}
+
+\NormalTok{    resultados\_lista[[i]] }\OtherTok{\textless{}{-}} \FunctionTok{tibble}\NormalTok{(}
+      \AttributeTok{Topologia =} \FunctionTok{paste}\NormalTok{(cfg}\SpecialCharTok{$}\NormalTok{hidden, }\AttributeTok{collapse =} \StringTok{"{-}"}\NormalTok{),}
+      \AttributeTok{Activacion =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{act,}
+      \AttributeTok{Threshold =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{thr,}
+      \AttributeTok{Accuracy =} \FunctionTok{round}\NormalTok{(acc, }\DecValTok{4}\NormalTok{),}
+      \AttributeTok{Modelo =} \StringTok{"B (neuralnet tuned)"}
+\NormalTok{    )}
+\NormalTok{    modelos\_lista[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ m}
+\NormalTok{  \}}
+
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(resultados\_lista) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+    \FunctionTok{stop}\NormalTok{(}\StringTok{"No se pudo completar tuning de Modelo B con los límites actuales."}\NormalTok{)}
+\NormalTok{  \}}
+
+\NormalTok{  resultados\_tuning }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(resultados\_lista) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(Accuracy))}
+
+\NormalTok{  idx\_best }\OtherTok{\textless{}{-}} \FunctionTok{which.max}\NormalTok{(resultados\_tuning}\SpecialCharTok{$}\NormalTok{Accuracy)}
+\NormalTok{  modelo\_tuned }\OtherTok{\textless{}{-}}\NormalTok{ modelos\_lista[[idx\_best]]}
+\NormalTok{  prob\_tuned }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(modelo\_tuned, }\AttributeTok{newdata =}\NormalTok{ x\_test\_tune\_B)}
+\NormalTok{  pred\_tuned }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(niveles[}\FunctionTok{apply}\NormalTok{(prob\_tuned, }\DecValTok{1}\NormalTok{, which.max)], }\AttributeTok{levels =}\NormalTok{ niveles)}
+\NormalTok{  cm\_tuned }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(pred\_tuned, y\_test)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{kable}\NormalTok{(resultados\_tuning, }\AttributeTok{digits =} \DecValTok{4}\NormalTok{,}
+      \AttributeTok{caption =} \StringTok{"Punto 8 – Resultados de tuning del modelo seleccionado"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}rrrrl@{}}
+\caption{Punto 8 -- Resultados de tuning del modelo
+seleccionado}\tabularnewline
+\toprule\noalign{}
+size & decay & Accuracy & Kappa & Modelo \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+size & decay & Accuracy & Kappa & Modelo \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+3 & 0.010 & 0.8072 & 0.7108 & A (nnet tuned) \\
+3 & 0.001 & 0.8020 & 0.7030 & A (nnet tuned) \\
+5 & 0.010 & 0.7800 & 0.6700 & A (nnet tuned) \\
+5 & 0.001 & 0.7496 & 0.6244 & A (nnet tuned) \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(cm\_tuned)) \{}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"Accuracy tuned:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(cm\_tuned}\SpecialCharTok{$}\NormalTok{overall[}\StringTok{"Accuracy"}\NormalTok{]), }\DecValTok{4}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"Kappa tuned:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{as.numeric}\NormalTok{(cm\_tuned}\SpecialCharTok{$}\NormalTok{overall[}\StringTok{"Kappa"}\NormalTok{]), }\DecValTok{4}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"No se generó cm\_tuned.}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Accuracy tuned: 0.8656 
+## Kappa tuned: 0.7287
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(cm\_tuned)) \{}
+\NormalTok{  acc\_tuned }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(cm\_tuned}\SpecialCharTok{$}\NormalTok{overall[}\StringTok{"Accuracy"}\NormalTok{])}
+\NormalTok{  f1\_tuned }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{(cm\_tuned}\SpecialCharTok{$}\NormalTok{byClass[, }\StringTok{"F1"}\NormalTok{], }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"Conclusión del tuning:}\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"{-} Accuracy del modelo afinado:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(acc\_tuned, }\DecValTok{4}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"{-} F1 macro del modelo afinado:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(f1\_tuned, }\DecValTok{4}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"{-} El modelo afinado se usa como candidato RNA final para la comparación global del laboratorio.}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"No hay métricas de tuning disponibles (cm\_tuned ausente).}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+Conclusión del tuning:
+
+\begin{itemize}
+\tightlist
+\item
+  Accuracy del modelo afinado: 0.8656
+\item
+  F1 macro del modelo afinado: 0.8056
+\item
+  El modelo afinado se usa como candidato RNA final para la comparación
+  global del laboratorio.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{punto-9-precio-como-variable-respuesta-regresiuxf3n}{%
+\subsection{Punto 9 -- Precio como variable respuesta
+(regresión)}\label{punto-9-precio-como-variable-respuesta-regresiuxf3n}}
+
+Para los modelos de regresión se utiliza \texttt{price} como variable
+respuesta numérica, recuperada desde el archivo original
+\texttt{listings.RData} y alineada con el mismo split train/test del
+resto del laboratorio mediante el mismo \texttt{set.seed(123)} y
+\texttt{createDataPartition} con los mismos parámetros.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{objetos\_reg  }\OtherTok{\textless{}{-}} \FunctionTok{load}\NormalTok{(}\StringTok{"listings.RData"}\NormalTok{)}
+\NormalTok{datos\_precio }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (}\StringTok{"listings"} \SpecialCharTok{\%in\%}\NormalTok{ objetos\_reg) \{}
+  \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{get}\NormalTok{(}\StringTok{"listings"}\NormalTok{))}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+  \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{get}\NormalTok{(objetos\_reg[}\DecValTok{1}\NormalTok{]))}
+\NormalTok{\}}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.character}\NormalTok{(datos\_precio}\SpecialCharTok{$}\NormalTok{price)) \{}
+\NormalTok{  datos\_precio }\OtherTok{\textless{}{-}}\NormalTok{ datos\_precio }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{price =}\NormalTok{ readr}\SpecialCharTok{::}\FunctionTok{parse\_number}\NormalTok{(}\FunctionTok{as.character}\NormalTok{(price)))}
+\NormalTok{\}}
+
+\NormalTok{datos\_precio }\OtherTok{\textless{}{-}}\NormalTok{ datos\_precio }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{filter}\NormalTok{(}\SpecialCharTok{!}\FunctionTok{is.na}\NormalTok{(price))}
+
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\StringTok{"price\_category"} \SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(datos\_precio)) \{}
+\NormalTok{  q1\_p }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(datos\_precio}\SpecialCharTok{$}\NormalTok{price, }\DecValTok{1}\SpecialCharTok{/}\DecValTok{3}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  q2\_p }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(datos\_precio}\SpecialCharTok{$}\NormalTok{price, }\DecValTok{2}\SpecialCharTok{/}\DecValTok{3}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  datos\_precio }\OtherTok{\textless{}{-}}\NormalTok{ datos\_precio }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}
+      \AttributeTok{price\_category =} \FunctionTok{factor}\NormalTok{(}
+        \FunctionTok{case\_when}\NormalTok{(price }\SpecialCharTok{\textless{}=}\NormalTok{ q1\_p }\SpecialCharTok{\textasciitilde{}} \StringTok{"barata"}\NormalTok{, price }\SpecialCharTok{\textless{}=}\NormalTok{ q2\_p }\SpecialCharTok{\textasciitilde{}} \StringTok{"media"}\NormalTok{, }\ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}} \StringTok{"cara"}\NormalTok{),}
+        \AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"barata"}\NormalTok{, }\StringTok{"media"}\NormalTok{, }\StringTok{"cara"}\NormalTok{)}
+\NormalTok{      )}
+\NormalTok{    )}
+\NormalTok{\}}
+
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{idx\_reg     }\OtherTok{\textless{}{-}} \FunctionTok{createDataPartition}\NormalTok{(datos\_precio}\SpecialCharTok{$}\NormalTok{price\_category, }\AttributeTok{p =} \FloatTok{0.8}\NormalTok{, }\AttributeTok{list =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{train\_reg\_raw }\OtherTok{\textless{}{-}}\NormalTok{ datos\_precio[idx\_reg, ]}
+\NormalTok{test\_reg\_raw  }\OtherTok{\textless{}{-}}\NormalTok{ datos\_precio[}\SpecialCharTok{{-}}\NormalTok{idx\_reg, ]}
+
+\NormalTok{price\_train }\OtherTok{\textless{}{-}}\NormalTok{ train\_reg\_raw}\SpecialCharTok{$}\NormalTok{price}
+\NormalTok{price\_test  }\OtherTok{\textless{}{-}}\NormalTok{ test\_reg\_raw}\SpecialCharTok{$}\NormalTok{price}
+
+\NormalTok{patron\_excluir\_reg }\OtherTok{\textless{}{-}} \StringTok{"(\^{}id$|\_id$|url|name$|description|about|picture|thumbnail|host\_url|listing\_url|scrape\_id|calendar\_last\_scraped)"}
+\NormalTok{cols\_patron\_reg }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(train\_reg\_raw)[}\FunctionTok{str\_detect}\NormalTok{(}\FunctionTok{names}\NormalTok{(train\_reg\_raw), }\FunctionTok{regex}\NormalTok{(patron\_excluir\_reg, }\AttributeTok{ignore\_case =} \ConstantTok{TRUE}\NormalTok{))]}
+\NormalTok{cols\_all\_na\_reg }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(train\_reg\_raw)[}\FunctionTok{sapply}\NormalTok{(train\_reg\_raw, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{all}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(x)))]}
+\NormalTok{cat\_cols\_reg }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(train\_reg\_raw)[}\FunctionTok{sapply}\NormalTok{(train\_reg\_raw, }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{is.character}\NormalTok{(x) }\SpecialCharTok{||} \FunctionTok{is.factor}\NormalTok{(x))]}
+\NormalTok{alta\_card\_reg }\OtherTok{\textless{}{-}}\NormalTok{ cat\_cols\_reg[}\FunctionTok{sapply}\NormalTok{(train\_reg\_raw[cat\_cols\_reg], }\ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{n\_distinct}\NormalTok{(x, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\textgreater{}} \DecValTok{100}\NormalTok{)]}
+\NormalTok{excluir\_reg }\OtherTok{\textless{}{-}} \FunctionTok{unique}\NormalTok{(}\FunctionTok{c}\NormalTok{(cols\_patron\_reg, cols\_all\_na\_reg, alta\_card\_reg))}
+
+\NormalTok{train\_reg\_model }\OtherTok{\textless{}{-}}\NormalTok{ train\_reg\_raw }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{any\_of}\NormalTok{(excluir\_reg))}
+\NormalTok{test\_reg\_model  }\OtherTok{\textless{}{-}}\NormalTok{ test\_reg\_raw }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{any\_of}\NormalTok{(excluir\_reg))}
+
+\NormalTok{x\_train\_reg\_raw }\OtherTok{\textless{}{-}}\NormalTok{ train\_reg\_model }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{any\_of}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"price"}\NormalTok{, }\StringTok{"price\_category"}\NormalTok{)))}
+\NormalTok{x\_test\_reg\_raw  }\OtherTok{\textless{}{-}}\NormalTok{ test\_reg\_model  }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{select}\NormalTok{(}\SpecialCharTok{{-}}\FunctionTok{any\_of}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"price"}\NormalTok{, }\StringTok{"price\_category"}\NormalTok{)))}
+
+\NormalTok{x\_train\_reg\_raw }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(x\_train\_reg\_raw)}
+\NormalTok{x\_test\_reg\_raw }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(x\_test\_reg\_raw)}
+
+\ControlFlowTok{for}\NormalTok{ (nm }\ControlFlowTok{in} \FunctionTok{names}\NormalTok{(x\_train\_reg\_raw)) \{}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.character}\NormalTok{(x\_train\_reg\_raw[[nm]])) \{}
+\NormalTok{    x\_train\_reg\_raw[[nm]] }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(x\_train\_reg\_raw[[nm]])}
+    \ControlFlowTok{if}\NormalTok{ (nm }\SpecialCharTok{\%in\%} \FunctionTok{names}\NormalTok{(x\_test\_reg\_raw)) \{}
+\NormalTok{      x\_test\_reg\_raw[[nm]] }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(x\_test\_reg\_raw[[nm]], }\AttributeTok{levels =} \FunctionTok{levels}\NormalTok{(x\_train\_reg\_raw[[nm]]))}
+\NormalTok{    \}}
+\NormalTok{  \}}
+\NormalTok{\}}
+
+\ControlFlowTok{for}\NormalTok{ (nm }\ControlFlowTok{in} \FunctionTok{names}\NormalTok{(x\_train\_reg\_raw)) \{}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.factor}\NormalTok{(x\_train\_reg\_raw[[nm]])) \{}
+\NormalTok{    x\_train\_reg\_raw[[nm]] }\OtherTok{\textless{}{-}} \FunctionTok{droplevels}\NormalTok{(x\_train\_reg\_raw[[nm]])}
+\NormalTok{  \}}
+\NormalTok{\}}
+
+\NormalTok{cols\_mal\_dummy }\OtherTok{\textless{}{-}} \FunctionTok{sapply}\NormalTok{(}\FunctionTok{names}\NormalTok{(x\_train\_reg\_raw), }\ControlFlowTok{function}\NormalTok{(nm) \{}
+\NormalTok{  x }\OtherTok{\textless{}{-}}\NormalTok{ x\_train\_reg\_raw[[nm]]}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.factor}\NormalTok{(x)) \{}
+    \FunctionTok{return}\NormalTok{(}\FunctionTok{nlevels}\NormalTok{(x) }\SpecialCharTok{\textless{}}\NormalTok{ 2L)}
+\NormalTok{  \}}
+  \FunctionTok{n\_distinct}\NormalTok{(x, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\textless{}}\NormalTok{ 2L}
+\NormalTok{\})}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{any}\NormalTok{(cols\_mal\_dummy)) \{}
+  \FunctionTok{cat}\NormalTok{(}
+    \StringTok{"Predictores omitidos (constantes o factor con un solo nivel): "}\NormalTok{,}
+    \FunctionTok{paste}\NormalTok{(}\FunctionTok{names}\NormalTok{(x\_train\_reg\_raw)[cols\_mal\_dummy], }\AttributeTok{collapse =} \StringTok{", "}\NormalTok{),}
+    \StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}
+\NormalTok{  )}
+\NormalTok{  x\_train\_reg\_raw }\OtherTok{\textless{}{-}}\NormalTok{ x\_train\_reg\_raw[, }\SpecialCharTok{!}\NormalTok{cols\_mal\_dummy, drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{  x\_test\_reg\_raw }\OtherTok{\textless{}{-}}\NormalTok{ x\_test\_reg\_raw[, }\FunctionTok{names}\NormalTok{(x\_train\_reg\_raw), drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Predictores omitidos (constantes o factor con un solo nivel):  source
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{ncol}\NormalTok{(x\_train\_reg\_raw) }\SpecialCharTok{==}\NormalTok{ 0L) \{}
+  \FunctionTok{stop}\NormalTok{(}\StringTok{"No quedaron columnas predictoras para dummyVars en regresión."}\NormalTok{)}
+\NormalTok{\}}
+
+\NormalTok{dummy\_reg }\OtherTok{\textless{}{-}} \FunctionTok{dummyVars}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ x\_train\_reg\_raw, }\AttributeTok{fullRank =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{x\_train\_reg }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(dummy\_reg, x\_train\_reg\_raw) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.data.frame}\NormalTok{()}
+\NormalTok{x\_test\_reg  }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(dummy\_reg, x\_test\_reg\_raw)  }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{as.data.frame}\NormalTok{()}
+
+\NormalTok{cols\_faltantes\_reg }\OtherTok{\textless{}{-}} \FunctionTok{setdiff}\NormalTok{(}\FunctionTok{names}\NormalTok{(x\_train\_reg), }\FunctionTok{names}\NormalTok{(x\_test\_reg))}
+\ControlFlowTok{for}\NormalTok{ (col }\ControlFlowTok{in}\NormalTok{ cols\_faltantes\_reg) x\_test\_reg[[col]] }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{x\_test\_reg }\OtherTok{\textless{}{-}}\NormalTok{ x\_test\_reg[, }\FunctionTok{names}\NormalTok{(x\_train\_reg), drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+
+\NormalTok{pre\_reg }\OtherTok{\textless{}{-}} \FunctionTok{preProcess}\NormalTok{(x\_train\_reg, }\AttributeTok{method =} \FunctionTok{c}\NormalTok{(}\StringTok{"medianImpute"}\NormalTok{, }\StringTok{"center"}\NormalTok{, }\StringTok{"scale"}\NormalTok{))}
+\NormalTok{x\_train\_reg\_base }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(pre\_reg, x\_train\_reg)}
+\NormalTok{x\_test\_reg\_base  }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(pre\_reg, x\_test\_reg)}
+
+\NormalTok{pca\_reg }\OtherTok{\textless{}{-}} \FunctionTok{preProcess}\NormalTok{(x\_train\_reg\_base, }\AttributeTok{method =} \StringTok{"pca"}\NormalTok{, }\AttributeTok{thresh =} \FloatTok{0.95}\NormalTok{)}
+\NormalTok{x\_train\_reg\_pca }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(pca\_reg, x\_train\_reg\_base)}
+\NormalTok{x\_test\_reg\_pca  }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(pca\_reg, x\_test\_reg\_base)}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Rango price\_train:"}\NormalTok{, }\FunctionTok{range}\NormalTok{(price\_train, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rango price_train: 8 50082
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Rango price\_test :"}\NormalTok{, }\FunctionTok{range}\NormalTok{(price\_test,  }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rango price_test : 8 50123
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Observaciones train:"}\NormalTok{, }\FunctionTok{length}\NormalTok{(price\_train), }\StringTok{"| test:"}\NormalTok{, }\FunctionTok{length}\NormalTok{(price\_test), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Observaciones train: 60999 | test: 15247
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Predictores regresión (base):"}\NormalTok{, }\FunctionTok{ncol}\NormalTok{(x\_train\_reg\_base), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Predictores regresión (base): 299
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Componentes PCA regresión:"}\NormalTok{, }\FunctionTok{ncol}\NormalTok{(x\_train\_reg\_pca), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Componentes PCA regresión: 237
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tibble}\NormalTok{(}\AttributeTok{price   =} \FunctionTok{c}\NormalTok{(price\_train, price\_test),}
+       \AttributeTok{conjunto =} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\StringTok{"train"}\NormalTok{, }\FunctionTok{length}\NormalTok{(price\_train)), }\FunctionTok{rep}\NormalTok{(}\StringTok{"test"}\NormalTok{, }\FunctionTok{length}\NormalTok{(price\_test)))) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ price, }\AttributeTok{fill =}\NormalTok{ conjunto)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{bins =} \DecValTok{50}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.7}\NormalTok{, }\AttributeTok{position =} \StringTok{"identity"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_x\_log10}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Distribución del precio (escala log)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Precio (USD)"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Frecuencia"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Lab9_files/figure-latex/histograma-precio-1.pdf}
+
+El precio muestra una distribución fuertemente sesgada hacia la derecha,
+con la mayoría de las propiedades concentradas en rangos bajos pero con
+valores extremos superiores que elevan considerablemente el rango total.
+En escala logarítmica la distribución se aproxima a la normal, lo que
+sugiere que una transformación logarítmica podría mejorar el ajuste; sin
+embargo, para conservar la interpretabilidad de los errores en la escala
+original (USD) y mantener coherencia con las instrucciones del
+laboratorio, los modelos se entrenan directamente sobre el precio sin
+transformar.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{punto-10-modelos-rna-de-regresiuxf3n}{%
+\subsection{Punto 10 -- Modelos RNA de
+regresión}\label{punto-10-modelos-rna-de-regresiuxf3n}}
+
+Se construyen dos arquitecturas de red neuronal para predecir el precio
+como variable continua. El cambio fundamental respecto a la
+clasificación es la salida lineal (\texttt{linout\ =\ TRUE} /
+\texttt{linear.output\ =\ TRUE}), que permite a la red producir valores
+reales en lugar de probabilidades de clase.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Modelo C
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Modelo D
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{Paquete} & \texttt{nnet} & \texttt{neuralnet} \\
+\textbf{Topología} & 1 capa oculta (8 neuronas; menos en
+\texttt{modo\_rapido}) & En \texttt{modo\_rapido}: red más pequeña y
+menos PCA; en modo completo: 12--6 \\
+\textbf{Activación oculta} & Logística & Tanh \\
+\textbf{Salida} & Lineal (\texttt{linout\ =\ TRUE}) & Lineal
+(\texttt{linear.output\ =\ TRUE}) \\
+\textbf{Datos entrada} & Predictores escalados & Componentes PCA \\
+\end{longtable}
+
+\hypertarget{modelo-c-nnet-para-regresiuxf3n}{%
+\subsubsection{\texorpdfstring{Modelo C -- \texttt{nnet} para
+regresión}{Modelo C -- nnet para regresión}}\label{modelo-c-nnet-para-regresiuxf3n}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{train\_reg }\OtherTok{\textless{}{-}}\NormalTok{ x\_train\_reg\_base }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{price =}\NormalTok{ price\_train)}
+\NormalTok{test\_reg }\OtherTok{\textless{}{-}}\NormalTok{ x\_test\_reg\_base }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{price =}\NormalTok{ price\_test)}
+
+\NormalTok{ruta\_mC }\OtherTok{\textless{}{-}} \StringTok{"artefactos/modelo\_C\_reg.rds"}
+\NormalTok{tiempo\_C }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{elapsed =} \ConstantTok{NA\_real\_}\NormalTok{)}
+
+\NormalTok{entrenar\_nnet\_C }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(df, n\_max, size, maxit, decay, }\AttributeTok{maxwts =}\NormalTok{ 20000L, ...) \{}
+\NormalTok{  n\_max }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(}\FunctionTok{as.integer}\NormalTok{(n\_max), }\FunctionTok{nrow}\NormalTok{(df))}
+\NormalTok{  idx }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (n\_max }\SpecialCharTok{\textless{}} \FunctionTok{nrow}\NormalTok{(df)) \{}
+\NormalTok{    g\_precio }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(dplyr}\SpecialCharTok{::}\FunctionTok{ntile}\NormalTok{(df}\SpecialCharTok{$}\NormalTok{price, }\FunctionTok{min}\NormalTok{(15L, }\FunctionTok{max}\NormalTok{(5L, n\_max }\SpecialCharTok{\%/\%}\NormalTok{ 250L))))}
+    \FunctionTok{indices\_estratificados}\NormalTok{(g\_precio, n\_max, }\DecValTok{123}\NormalTok{)}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{seq\_len}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(df))}
+\NormalTok{  \}}
+\NormalTok{  sub }\OtherTok{\textless{}{-}}\NormalTok{ df[idx, , drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+  \FunctionTok{nnet}\NormalTok{(}
+\NormalTok{    price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+    \AttributeTok{data =}\NormalTok{ sub,}
+    \AttributeTok{size =}\NormalTok{ size,}
+    \AttributeTok{decay =}\NormalTok{ decay,}
+    \AttributeTok{linout =} \ConstantTok{TRUE}\NormalTok{,}
+    \AttributeTok{maxit =}\NormalTok{ maxit,}
+    \AttributeTok{MaxNWts =}\NormalTok{ maxwts,}
+    \AttributeTok{trace =} \ConstantTok{FALSE}\NormalTok{,}
+\NormalTok{    ...}
+\NormalTok{  )}
+\NormalTok{\}}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{file.exists}\NormalTok{(ruta\_mC)) \{}
+\NormalTok{  modelo\_C }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(ruta\_mC)}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  configs\_C }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) \{}
+    \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{n =} \FunctionTok{min}\NormalTok{(4500L, }\FunctionTok{nrow}\NormalTok{(train\_reg)), }\AttributeTok{size =}\NormalTok{ 5L, }\AttributeTok{maxit =}\NormalTok{ 120L, }\AttributeTok{decay =} \FloatTok{0.01}\NormalTok{, }\AttributeTok{tlim =} \DecValTok{90}\NormalTok{),}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{n =} \FunctionTok{min}\NormalTok{(3000L, }\FunctionTok{nrow}\NormalTok{(train\_reg)), }\AttributeTok{size =}\NormalTok{ 4L, }\AttributeTok{maxit =}\NormalTok{ 80L, }\AttributeTok{decay =} \FloatTok{0.05}\NormalTok{, }\AttributeTok{tlim =} \DecValTok{75}\NormalTok{),}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{n =} \FunctionTok{min}\NormalTok{(2000L, }\FunctionTok{nrow}\NormalTok{(train\_reg)), }\AttributeTok{size =}\NormalTok{ 3L, }\AttributeTok{maxit =}\NormalTok{ 60L, }\AttributeTok{decay =} \FloatTok{0.1}\NormalTok{, }\AttributeTok{tlim =} \DecValTok{60}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{n =} \FunctionTok{nrow}\NormalTok{(train\_reg), }\AttributeTok{size =}\NormalTok{ 8L, }\AttributeTok{maxit =}\NormalTok{ 500L, }\AttributeTok{decay =} \FloatTok{0.01}\NormalTok{, }\AttributeTok{tlim =} \DecValTok{900}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{  \}}
+
+\NormalTok{  modelo\_C }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{  tiempo\_C }\OtherTok{\textless{}{-}} \FunctionTok{system.time}\NormalTok{(\{}
+    \ControlFlowTok{for}\NormalTok{ (cfg }\ControlFlowTok{in}\NormalTok{ configs\_C) \{}
+\NormalTok{      modelo\_C }\OtherTok{\textless{}{-}} \FunctionTok{tryCatch}\NormalTok{(}
+\NormalTok{        \{}
+          \FunctionTok{setTimeLimit}\NormalTok{(}\AttributeTok{elapsed =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{tlim, }\AttributeTok{transient =} \ConstantTok{TRUE}\NormalTok{)}
+          \FunctionTok{entrenar\_nnet\_C}\NormalTok{(}
+\NormalTok{            train\_reg,}
+            \AttributeTok{n\_max =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{n,}
+            \AttributeTok{size =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{size,}
+            \AttributeTok{maxit =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{maxit,}
+            \AttributeTok{decay =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{decay}
+\NormalTok{          )}
+\NormalTok{        \},}
+        \AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) }\ConstantTok{NULL}\NormalTok{,}
+        \AttributeTok{finally =}\NormalTok{ \{}
+          \FunctionTok{setTimeLimit}\NormalTok{(}\AttributeTok{cpu =} \ConstantTok{Inf}\NormalTok{, }\AttributeTok{elapsed =} \ConstantTok{Inf}\NormalTok{, }\AttributeTok{transient =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{        \}}
+\NormalTok{      )}
+      \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(modelo\_C)) \{}
+        \FunctionTok{attr}\NormalTok{(modelo\_C, }\StringTok{"config\_C"}\NormalTok{) }\OtherTok{\textless{}{-}}\NormalTok{ cfg}
+        \ControlFlowTok{break}
+\NormalTok{      \}}
+\NormalTok{    \}}
+\NormalTok{  \})}
+
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.null}\NormalTok{(modelo\_C)) \{}
+    \FunctionTok{stop}\NormalTok{(}\StringTok{"Modelo C (nnet): no convergió con las configuraciones definidas. Activa modo\_rapido o reduce columnas."}\NormalTok{)}
+\NormalTok{  \}}
+  \FunctionTok{saveRDS}\NormalTok{(modelo\_C, ruta\_mC)}
+\NormalTok{\}}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Tiempo Modelo C:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(tiempo\_C[}\StringTok{"elapsed"}\NormalTok{], }\DecValTok{2}\NormalTok{), }\StringTok{"s}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Tiempo Modelo C: NA s
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Pesos totales:"}\NormalTok{, }\FunctionTok{length}\NormalTok{(modelo\_C}\SpecialCharTok{$}\NormalTok{wts), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Pesos totales: 1506
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(}\FunctionTok{attr}\NormalTok{(modelo\_C, }\StringTok{"config\_C"}\NormalTok{))) \{}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"Config usada (n filas / size / maxit):"}\NormalTok{, }\FunctionTok{attr}\NormalTok{(modelo\_C, }\StringTok{"config\_C"}\NormalTok{)}\SpecialCharTok{$}\NormalTok{n, }\StringTok{"/"}\NormalTok{,}
+      \FunctionTok{attr}\NormalTok{(modelo\_C, }\StringTok{"config\_C"}\NormalTok{)}\SpecialCharTok{$}\NormalTok{size, }\StringTok{"/"}\NormalTok{, }\FunctionTok{attr}\NormalTok{(modelo\_C, }\StringTok{"config\_C"}\NormalTok{)}\SpecialCharTok{$}\NormalTok{maxit, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Config usada (n filas / size / maxit): 4500 / 5 / 120
+\end{verbatim}
+
+\hypertarget{modelo-d-neuralnet-para-regresiuxf3n}{%
+\subsubsection{\texorpdfstring{Modelo D -- \texttt{neuralnet} para
+regresión}{Modelo D -- neuralnet para regresión}}\label{modelo-d-neuralnet-para-regresiuxf3n}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ruta\_mD }\OtherTok{\textless{}{-}} \StringTok{"artefactos/modelo\_D\_reg.rds"}
+\NormalTok{tiempo\_D }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{elapsed =} \ConstantTok{NA\_real\_}\NormalTok{)}
+\NormalTok{modelo\_D }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\NormalTok{pca\_cols\_D }\OtherTok{\textless{}{-}} \FunctionTok{character}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{file.exists}\NormalTok{(ruta\_mD)) \{}
+\NormalTok{  modelo\_D }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(ruta\_mD)}
+\NormalTok{  pca\_cols\_D }\OtherTok{\textless{}{-}} \FunctionTok{attr}\NormalTok{(modelo\_D, }\StringTok{"pca\_cols\_D"}\NormalTok{)}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.null}\NormalTok{(pca\_cols\_D) }\SpecialCharTok{||} \FunctionTok{length}\NormalTok{(pca\_cols\_D) }\SpecialCharTok{==} \DecValTok{0}\NormalTok{) \{}
+\NormalTok{    pca\_cols\_D }\OtherTok{\textless{}{-}} \FunctionTok{intersect}\NormalTok{(}\FunctionTok{names}\NormalTok{(x\_train\_reg\_pca), }\FunctionTok{colnames}\NormalTok{(modelo\_D}\SpecialCharTok{$}\NormalTok{data))}
+\NormalTok{    pca\_cols\_D }\OtherTok{\textless{}{-}} \FunctionTok{setdiff}\NormalTok{(pca\_cols\_D, }\StringTok{"price"}\NormalTok{)}
+\NormalTok{  \}}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{length}\NormalTok{(pca\_cols\_D) }\SpecialCharTok{==}\NormalTok{ 0L) \{}
+\NormalTok{    pca\_cols\_D }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(x\_train\_reg\_pca)}
+\NormalTok{  \}}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  n\_comp }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) }\FunctionTok{min}\NormalTok{(18L, }\FunctionTok{ncol}\NormalTok{(x\_train\_reg\_pca)) }\ControlFlowTok{else} \FunctionTok{ncol}\NormalTok{(x\_train\_reg\_pca)}
+\NormalTok{  pca\_cols\_D }\OtherTok{\textless{}{-}} \FunctionTok{names}\NormalTok{(x\_train\_reg\_pca)[}\FunctionTok{seq\_len}\NormalTok{(n\_comp)]}
+
+\NormalTok{  formula\_reg }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}\FunctionTok{paste}\NormalTok{(}\StringTok{"price \textasciitilde{}"}\NormalTok{, }\FunctionTok{paste}\NormalTok{(pca\_cols\_D, }\AttributeTok{collapse =} \StringTok{" + "}\NormalTok{)))}
+\NormalTok{  train\_full\_D }\OtherTok{\textless{}{-}}\NormalTok{ x\_train\_reg\_pca }\SpecialCharTok{\%\textgreater{}\%}
+\NormalTok{    dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(dplyr}\SpecialCharTok{::}\FunctionTok{all\_of}\NormalTok{(pca\_cols\_D)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{price =}\NormalTok{ price\_train)}
+
+\NormalTok{  configs\_D }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) \{}
+    \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{n =} \FunctionTok{min}\NormalTok{(2000L, }\FunctionTok{nrow}\NormalTok{(train\_full\_D)), }\AttributeTok{hidden =} \FunctionTok{c}\NormalTok{(}\DecValTok{6}\NormalTok{, }\DecValTok{3}\NormalTok{), }\AttributeTok{thr =} \FloatTok{0.25}\NormalTok{, }\AttributeTok{step =} \FloatTok{4e4}\NormalTok{L, }\AttributeTok{tlim =} \DecValTok{120}\NormalTok{),}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{n =} \FunctionTok{min}\NormalTok{(1500L, }\FunctionTok{nrow}\NormalTok{(train\_full\_D)), }\AttributeTok{hidden =} \FunctionTok{c}\NormalTok{(4L), }\AttributeTok{thr =} \FloatTok{0.3}\NormalTok{, }\AttributeTok{step =} \FloatTok{2e4}\NormalTok{L, }\AttributeTok{tlim =} \DecValTok{90}\NormalTok{),}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{n =} \FunctionTok{min}\NormalTok{(1200L, }\FunctionTok{nrow}\NormalTok{(train\_full\_D)), }\AttributeTok{hidden =} \FunctionTok{c}\NormalTok{(3L), }\AttributeTok{thr =} \FloatTok{0.35}\NormalTok{, }\AttributeTok{step =}\NormalTok{ 15000L, }\AttributeTok{tlim =} \DecValTok{75}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{list}\NormalTok{(}
+      \FunctionTok{list}\NormalTok{(}\AttributeTok{n =} \FunctionTok{nrow}\NormalTok{(train\_full\_D), }\AttributeTok{hidden =} \FunctionTok{c}\NormalTok{(}\DecValTok{12}\NormalTok{, }\DecValTok{6}\NormalTok{), }\AttributeTok{thr =} \FloatTok{0.1}\NormalTok{, }\AttributeTok{step =} \FloatTok{2e5}\NormalTok{L, }\AttributeTok{tlim =} \DecValTok{600}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{  \}}
+
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{  tiempo\_D }\OtherTok{\textless{}{-}} \FunctionTok{system.time}\NormalTok{(\{}
+    \ControlFlowTok{for}\NormalTok{ (cfg }\ControlFlowTok{in}\NormalTok{ configs\_D) \{}
+\NormalTok{      n\_grp }\OtherTok{\textless{}{-}} \FunctionTok{min}\NormalTok{(12L, }\FunctionTok{max}\NormalTok{(4L, }\FunctionTok{as.integer}\NormalTok{(cfg}\SpecialCharTok{$}\NormalTok{n }\SpecialCharTok{\%/\%}\NormalTok{ 200L)))}
+\NormalTok{      g\_nt }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(dplyr}\SpecialCharTok{::}\FunctionTok{ntile}\NormalTok{(train\_full\_D}\SpecialCharTok{$}\NormalTok{price, n\_grp))}
+\NormalTok{      idx }\OtherTok{\textless{}{-}} \FunctionTok{indices\_estratificados}\NormalTok{(g\_nt, cfg}\SpecialCharTok{$}\NormalTok{n, 123L)}
+\NormalTok{      train\_sub }\OtherTok{\textless{}{-}}\NormalTok{ train\_full\_D[idx, , drop }\OtherTok{=} \ConstantTok{FALSE}\NormalTok{]}
+
+\NormalTok{      modelo\_try }\OtherTok{\textless{}{-}} \FunctionTok{tryCatch}\NormalTok{(}
+\NormalTok{        \{}
+          \FunctionTok{setTimeLimit}\NormalTok{(}\AttributeTok{elapsed =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{tlim, }\AttributeTok{transient =} \ConstantTok{TRUE}\NormalTok{)}
+          \FunctionTok{neuralnet}\NormalTok{(}
+\NormalTok{            formula\_reg,}
+            \AttributeTok{data =}\NormalTok{ train\_sub,}
+            \AttributeTok{hidden =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{hidden,}
+            \AttributeTok{act.fct =} \StringTok{"tanh"}\NormalTok{,}
+            \AttributeTok{linear.output =} \ConstantTok{TRUE}\NormalTok{,}
+            \AttributeTok{threshold =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{thr,}
+            \AttributeTok{stepmax =}\NormalTok{ cfg}\SpecialCharTok{$}\NormalTok{step,}
+            \AttributeTok{lifesign =} \StringTok{"minimal"}
+\NormalTok{          )}
+\NormalTok{        \},}
+        \AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) }\ConstantTok{NULL}\NormalTok{,}
+        \AttributeTok{finally =}\NormalTok{ \{}
+          \FunctionTok{setTimeLimit}\NormalTok{(}\AttributeTok{cpu =} \ConstantTok{Inf}\NormalTok{, }\AttributeTok{elapsed =} \ConstantTok{Inf}\NormalTok{, }\AttributeTok{transient =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{        \}}
+\NormalTok{      )}
+
+      \ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(modelo\_try)) \{}
+\NormalTok{        modelo\_D }\OtherTok{\textless{}{-}}\NormalTok{ modelo\_try}
+        \FunctionTok{attr}\NormalTok{(modelo\_D, }\StringTok{"pca\_cols\_D"}\NormalTok{) }\OtherTok{\textless{}{-}}\NormalTok{ pca\_cols\_D}
+        \ControlFlowTok{break}
+\NormalTok{      \}}
+\NormalTok{    \}}
+\NormalTok{  \})}
+
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.null}\NormalTok{(modelo\_D)) \{}
+    \FunctionTok{stop}\NormalTok{(}\StringTok{"Modelo D (neuralnet): no entrenó. Activa modo\_rapido=TRUE o borra artefactos viejos."}\NormalTok{)}
+\NormalTok{  \}}
+  \FunctionTok{saveRDS}\NormalTok{(modelo\_D, ruta\_mD)}
+\NormalTok{\}}
+
+\NormalTok{x\_train\_reg\_pca\_D }\OtherTok{\textless{}{-}}\NormalTok{ x\_train\_reg\_pca }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(dplyr}\SpecialCharTok{::}\FunctionTok{all\_of}\NormalTok{(pca\_cols\_D))}
+\NormalTok{x\_test\_reg\_pca\_D }\OtherTok{\textless{}{-}}\NormalTok{ x\_test\_reg\_pca }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(dplyr}\SpecialCharTok{::}\FunctionTok{all\_of}\NormalTok{(pca\_cols\_D))}
+\NormalTok{train\_reg\_pca }\OtherTok{\textless{}{-}}\NormalTok{ x\_train\_reg\_pca\_D }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{price =}\NormalTok{ price\_train)}
+\NormalTok{test\_reg\_pca }\OtherTok{\textless{}{-}}\NormalTok{ x\_test\_reg\_pca\_D }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{mutate}\NormalTok{(}\AttributeTok{price =}\NormalTok{ price\_test)}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Tiempo Modelo D:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(tiempo\_D[}\StringTok{"elapsed"}\NormalTok{], }\DecValTok{2}\NormalTok{), }\StringTok{"s}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Tiempo Modelo D: NA s
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Componentes PCA usadas (Modelo D):"}\NormalTok{, }\FunctionTok{length}\NormalTok{(pca\_cols\_D), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Componentes PCA usadas (Modelo D): 18
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Error final:"}\NormalTok{, }\FunctionTok{round}\NormalTok{(modelo\_D}\SpecialCharTok{$}\NormalTok{result.matrix[}\StringTok{"error"}\NormalTok{, }\DecValTok{1}\NormalTok{], }\DecValTok{4}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Error final: 11764735391
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{punto-11-comparaciuxf3n-de-modelos-rna-de-regresiuxf3n}{%
+\subsection{Punto 11 -- Comparación de modelos RNA de
+regresión}\label{punto-11-comparaciuxf3n-de-modelos-rna-de-regresiuxf3n}}
+
+\hypertarget{predicciones-y-muxe9tricas}{%
+\subsubsection{Predicciones y
+métricas}\label{predicciones-y-muxe9tricas}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred\_C }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{predict}\NormalTok{(modelo\_C, }\AttributeTok{newdata =}\NormalTok{ x\_test\_reg\_base))}
+\NormalTok{pred\_D }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{predict}\NormalTok{(modelo\_D, }\AttributeTok{newdata =}\NormalTok{ x\_test\_reg\_pca\_D))}
+
+\NormalTok{tabla\_reg }\OtherTok{\textless{}{-}} \FunctionTok{bind\_rows}\NormalTok{(}
+  \FunctionTok{metricas\_reg}\NormalTok{(price\_test, pred\_C, }\StringTok{"Modelo C – nnet (1 capa, logística)"}\NormalTok{),}
+  \FunctionTok{metricas\_reg}\NormalTok{(price\_test, pred\_D, }\StringTok{"Modelo D – neuralnet (2 capas, tanh)"}\NormalTok{)}
+\NormalTok{)}
+
+\FunctionTok{kable}\NormalTok{(tabla\_reg, }\AttributeTok{digits =} \DecValTok{4}\NormalTok{, }\AttributeTok{caption =} \StringTok{"Comparación de modelos RNA de regresión"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrr@{}}
+\caption{Comparación de modelos RNA de regresión}\tabularnewline
+\toprule\noalign{}
+Modelo & RMSE & MAE & R2 \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Modelo & RMSE & MAE & R2 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Modelo C -- nnet (1 capa, logística) & 3995.759 & 1647.909 & 0.1815 \\
+Modelo D -- neuralnet (2 capas, tanh) & 4418.823 & 904.186 & -0.0010 \\
+\end{longtable}
+
+\hypertarget{gruxe1fico-predicho-vs-real}{%
+\subsubsection{Gráfico: predicho vs
+real}\label{gruxe1fico-predicho-vs-real}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{bind\_rows}\NormalTok{(}
+  \FunctionTok{tibble}\NormalTok{(}\AttributeTok{Real =}\NormalTok{ price\_test, }\AttributeTok{Predicho =}\NormalTok{ pred\_C, }\AttributeTok{Modelo =} \StringTok{"Modelo C"}\NormalTok{),}
+  \FunctionTok{tibble}\NormalTok{(}\AttributeTok{Real =}\NormalTok{ price\_test, }\AttributeTok{Predicho =}\NormalTok{ pred\_D, }\AttributeTok{Modelo =} \StringTok{"Modelo D"}\NormalTok{)}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ Real, }\AttributeTok{y =}\NormalTok{ Predicho)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.3}\NormalTok{, }\AttributeTok{size =} \FloatTok{0.8}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_abline}\NormalTok{(}\AttributeTok{slope =} \DecValTok{1}\NormalTok{, }\AttributeTok{intercept =} \DecValTok{0}\NormalTok{, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{, }\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{Modelo) }\SpecialCharTok{+}
+  \FunctionTok{scale\_x\_log10}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{scale\_y\_log10}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Predicho vs Real – Modelos de regresión RNA"}\NormalTok{,}
+       \AttributeTok{x =} \StringTok{"Precio real (USD)"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Precio predicho (USD)"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Lab9_files/figure-latex/grafico-predicho-vs-real-1.pdf}
+
+Ambos modelos capturan la tendencia central del precio pero con
+dispersión considerable en los extremos, lo que es esperable dado el
+fuerte sesgo de la distribución. El Modelo C aprovecha todos los
+predictores escalados originales, mientras que el Modelo D trabaja con
+las componentes PCA, perdiendo algo de señal en la compresión
+dimensional pero reduciendo el riesgo de correlaciones espurias. El
+modelo con menor RMSE y mayor R² ---las métricas más informativas para
+regresión--- se seleccionará como base para el ajuste fino del Punto 13.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{punto-12-sobreajuste-en-regresiuxf3n}{%
+\subsection{Punto 12 -- Sobreajuste en
+regresión}\label{punto-12-sobreajuste-en-regresiuxf3n}}
+
+Se compara el RMSE en entrenamiento y en prueba para detectar si los
+modelos memorizan el conjunto de entrenamiento o generalizan
+correctamente.
+
+\hypertarget{rmse-en-train-vs-test}{%
+\subsubsection{RMSE en train vs test}\label{rmse-en-train-vs-test}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred\_C\_train }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{predict}\NormalTok{(modelo\_C, }\AttributeTok{newdata =}\NormalTok{ x\_train\_reg\_base))}
+\NormalTok{pred\_D\_train }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{predict}\NormalTok{(modelo\_D, }\AttributeTok{newdata =}\NormalTok{ x\_train\_reg\_pca\_D))}
+
+\NormalTok{rmse\_C\_train }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{((price\_train }\SpecialCharTok{{-}}\NormalTok{ pred\_C\_train)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{rmse\_D\_train }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{((price\_train }\SpecialCharTok{{-}}\NormalTok{ pred\_D\_train)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{rmse\_C\_test  }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{((price\_test  }\SpecialCharTok{{-}}\NormalTok{ pred\_C)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{rmse\_D\_test  }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{((price\_test  }\SpecialCharTok{{-}}\NormalTok{ pred\_D)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+
+\FunctionTok{tibble}\NormalTok{(}
+  \AttributeTok{Modelo      =} \FunctionTok{c}\NormalTok{(}\StringTok{"Modelo C"}\NormalTok{, }\StringTok{"Modelo D"}\NormalTok{),}
+  \AttributeTok{RMSE\_Train  =} \FunctionTok{c}\NormalTok{(rmse\_C\_train, rmse\_D\_train),}
+  \AttributeTok{RMSE\_Test   =} \FunctionTok{c}\NormalTok{(rmse\_C\_test,  rmse\_D\_test),}
+  \AttributeTok{Brecha\_RMSE =} \FunctionTok{c}\NormalTok{(rmse\_C\_train }\SpecialCharTok{{-}}\NormalTok{ rmse\_C\_test, rmse\_D\_train }\SpecialCharTok{{-}}\NormalTok{ rmse\_D\_test)}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{kable}\NormalTok{(}\AttributeTok{digits =} \DecValTok{2}\NormalTok{, }\AttributeTok{caption =} \StringTok{"Brecha train/test en RMSE – análisis de sobreajuste"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrr@{}}
+\caption{Brecha train/test en RMSE -- análisis de
+sobreajuste}\tabularnewline
+\toprule\noalign{}
+Modelo & RMSE\_Train & RMSE\_Test & Brecha\_RMSE \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Modelo & RMSE\_Train & RMSE\_Test & Brecha\_RMSE \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Modelo C & 3828.37 & 3995.76 & -167.39 \\
+Modelo D & 4209.53 & 4418.82 & -209.29 \\
+\end{longtable}
+
+\hypertarget{curva-de-aprendizaje-modelo-c}{%
+\subsubsection{Curva de aprendizaje (Modelo
+C)}\label{curva-de-aprendizaje-modelo-c}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# En muchos equipos Windows, setTimeLimit no corta nnet (optimización en C): el}
+\CommentTok{\# tiempo real lo mandan maxit, tamaño de red y filas. Aquí: caché en RDS,}
+\CommentTok{\# hiperparámetros más livianos que el modelo final y parada temprana (reltol).}
+\FunctionTok{dir.create}\NormalTok{(}\StringTok{"artefactos"}\NormalTok{, }\AttributeTok{showWarnings =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{ruta\_curva\_C }\OtherTok{\textless{}{-}} \StringTok{"artefactos/curva\_aprendizaje\_C\_reg.rds"}
+
+\NormalTok{cfg\_C }\OtherTok{\textless{}{-}} \FunctionTok{attr}\NormalTok{(modelo\_C, }\StringTok{"config\_C"}\NormalTok{)}
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.null}\NormalTok{(cfg\_C)) \{}
+\NormalTok{  cfg\_C }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+    \AttributeTok{size =}\NormalTok{ 8L, }\AttributeTok{maxit =}\NormalTok{ 300L, }\AttributeTok{decay =} \FloatTok{0.01}\NormalTok{,}
+    \AttributeTok{tlim =} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) }\DecValTok{90} \ControlFlowTok{else} \DecValTok{600}
+\NormalTok{  )}
+\NormalTok{\}}
+
+\NormalTok{fracciones }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) }\FunctionTok{c}\NormalTok{(}\FloatTok{0.45}\NormalTok{, }\FloatTok{1.0}\NormalTok{) }\ControlFlowTok{else} \FunctionTok{seq}\NormalTok{(}\FloatTok{0.2}\NormalTok{, }\FloatTok{1.0}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.2}\NormalTok{)}
+\NormalTok{tamanos }\OtherTok{\textless{}{-}} \FunctionTok{unique}\NormalTok{(}\FunctionTok{pmin}\NormalTok{(}\FunctionTok{as.integer}\NormalTok{(}\FunctionTok{ceiling}\NormalTok{(fracciones }\SpecialCharTok{*} \FunctionTok{nrow}\NormalTok{(train\_reg))), }\FunctionTok{nrow}\NormalTok{(train\_reg)))}
+
+\NormalTok{meta\_curva }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{version =}\NormalTok{ 2L,}
+  \AttributeTok{nrow\_train =} \FunctionTok{nrow}\NormalTok{(train\_reg),}
+  \AttributeTok{modo\_rapido =}\NormalTok{ modo\_rapido,}
+  \AttributeTok{tamanos =}\NormalTok{ tamanos}
+\NormalTok{)}
+
+\NormalTok{curva }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{file.exists}\NormalTok{(ruta\_curva\_C)) \{}
+\NormalTok{  guardado }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(ruta\_curva\_C)}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{isTRUE}\NormalTok{(}\FunctionTok{all.equal}\NormalTok{(guardado}\SpecialCharTok{$}\NormalTok{meta, meta\_curva))) \{}
+\NormalTok{    curva }\OtherTok{\textless{}{-}}\NormalTok{ guardado}\SpecialCharTok{$}\NormalTok{curva}
+\NormalTok{  \}}
+\NormalTok{\}}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.null}\NormalTok{(curva)) \{}
+\NormalTok{  maxit\_curva }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) \{}
+\NormalTok{    35L}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{as.integer}\NormalTok{(}\FunctionTok{min}\NormalTok{(200L, }\FunctionTok{max}\NormalTok{(100L, cfg\_C}\SpecialCharTok{$}\NormalTok{maxit)))}
+\NormalTok{  \}}
+\NormalTok{  size\_curva }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) \{}
+    \FunctionTok{max}\NormalTok{(2L, }\FunctionTok{min}\NormalTok{(4L, }\FunctionTok{as.integer}\NormalTok{(cfg\_C}\SpecialCharTok{$}\NormalTok{size)))}
+\NormalTok{  \} }\ControlFlowTok{else}\NormalTok{ \{}
+    \FunctionTok{as.integer}\NormalTok{(cfg\_C}\SpecialCharTok{$}\NormalTok{size)}
+\NormalTok{  \}}
+\NormalTok{  curva }\OtherTok{\textless{}{-}}\NormalTok{ purrr}\SpecialCharTok{::}\FunctionTok{map\_dfr}\NormalTok{(tamanos, }\ControlFlowTok{function}\NormalTok{(n) \{}
+\NormalTok{    m\_tmp }\OtherTok{\textless{}{-}} \FunctionTok{tryCatch}\NormalTok{(}
+\NormalTok{      \{}
+        \FunctionTok{setTimeLimit}\NormalTok{(}\AttributeTok{elapsed =}\NormalTok{ cfg\_C}\SpecialCharTok{$}\NormalTok{tlim, }\AttributeTok{transient =} \ConstantTok{TRUE}\NormalTok{)}
+        \ControlFlowTok{if}\NormalTok{ (modo\_rapido) \{}
+          \FunctionTok{entrenar\_nnet\_C}\NormalTok{(}
+\NormalTok{            train\_reg,}
+            \AttributeTok{n\_max =}\NormalTok{ n,}
+            \AttributeTok{size =}\NormalTok{ size\_curva,}
+            \AttributeTok{maxit =}\NormalTok{ maxit\_curva,}
+            \AttributeTok{decay =}\NormalTok{ cfg\_C}\SpecialCharTok{$}\NormalTok{decay,}
+            \AttributeTok{reltol =} \FloatTok{0.04}
+\NormalTok{          )}
+\NormalTok{        \} }\ControlFlowTok{else}\NormalTok{ \{}
+          \FunctionTok{entrenar\_nnet\_C}\NormalTok{(}
+\NormalTok{            train\_reg,}
+            \AttributeTok{n\_max =}\NormalTok{ n,}
+            \AttributeTok{size =}\NormalTok{ size\_curva,}
+            \AttributeTok{maxit =}\NormalTok{ maxit\_curva,}
+            \AttributeTok{decay =}\NormalTok{ cfg\_C}\SpecialCharTok{$}\NormalTok{decay,}
+            \AttributeTok{reltol =} \FloatTok{0.02}
+\NormalTok{          )}
+\NormalTok{        \}}
+\NormalTok{      \},}
+      \AttributeTok{error =} \ControlFlowTok{function}\NormalTok{(e) }\ConstantTok{NULL}\NormalTok{,}
+      \AttributeTok{finally =}\NormalTok{ \{}
+        \FunctionTok{setTimeLimit}\NormalTok{(}\AttributeTok{cpu =} \ConstantTok{Inf}\NormalTok{, }\AttributeTok{elapsed =} \ConstantTok{Inf}\NormalTok{, }\AttributeTok{transient =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{      \}}
+\NormalTok{    )}
+
+    \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.null}\NormalTok{(m\_tmp)) \{}
+      \FunctionTok{return}\NormalTok{(}\FunctionTok{tibble}\NormalTok{(}\AttributeTok{n =}\NormalTok{ n, }\AttributeTok{RMSE\_train =} \ConstantTok{NA\_real\_}\NormalTok{, }\AttributeTok{RMSE\_test =} \ConstantTok{NA\_real\_}\NormalTok{))}
+\NormalTok{    \}}
+
+\NormalTok{    pred\_prueba }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{predict}\NormalTok{(m\_tmp, }\AttributeTok{newdata =}\NormalTok{ x\_test\_reg\_base))}
+    \FunctionTok{tibble}\NormalTok{(}
+      \AttributeTok{n =}\NormalTok{ n,}
+      \AttributeTok{RMSE\_train =} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{(stats}\SpecialCharTok{::}\FunctionTok{residuals}\NormalTok{(m\_tmp)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)),}
+      \AttributeTok{RMSE\_test  =} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{mean}\NormalTok{((price\_test }\SpecialCharTok{{-}}\NormalTok{ pred\_prueba)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{))}
+\NormalTok{    )}
+\NormalTok{  \})}
+
+  \FunctionTok{saveRDS}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\AttributeTok{curva =}\NormalTok{ curva, }\AttributeTok{meta =}\NormalTok{ meta\_curva), ruta\_curva\_C)}
+\NormalTok{\}}
+
+\NormalTok{curva\_larga }\OtherTok{\textless{}{-}}\NormalTok{ tidyr}\SpecialCharTok{::}\FunctionTok{pivot\_longer}\NormalTok{(}
+\NormalTok{  curva,}
+  \AttributeTok{cols =} \FunctionTok{c}\NormalTok{(RMSE\_train, RMSE\_test),}
+  \AttributeTok{names\_to =} \StringTok{"conjunto"}\NormalTok{,}
+  \AttributeTok{values\_to =} \StringTok{"RMSE"}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{conjunto =} \FunctionTok{case\_when}\NormalTok{(}
+\NormalTok{      conjunto }\SpecialCharTok{==} \StringTok{"RMSE\_train"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Entrenamiento"}\NormalTok{,}
+\NormalTok{      conjunto }\SpecialCharTok{==} \StringTok{"RMSE\_test"} \SpecialCharTok{\textasciitilde{}} \StringTok{"Prueba"}\NormalTok{,}
+      \ConstantTok{TRUE} \SpecialCharTok{\textasciitilde{}}\NormalTok{ conjunto}
+\NormalTok{    )}
+\NormalTok{  )}
+
+\FunctionTok{ggplot}\NormalTok{(curva\_larga, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ n, }\AttributeTok{y =}\NormalTok{ RMSE, }\AttributeTok{color =}\NormalTok{ conjunto)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{linewidth =} \DecValTok{1}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Curva de aprendizaje – Modelo C (regresión)"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Tamaño del conjunto de entrenamiento"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"RMSE"}\NormalTok{,}
+    \AttributeTok{color =} \StringTok{"Conjunto"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Lab9_files/figure-latex/curva-aprendizaje-reg-1.pdf}
+
+Una brecha amplia entre RMSE train y RMSE test indica sobreajuste: el
+modelo memorizó el conjunto de entrenamiento sin generalizar a datos
+nuevos. Cuando ambas curvas convergen a medida que crece el número de
+observaciones, el comportamiento es esperado y la red generaliza de
+forma razonable. Si ambos RMSE permanecen elevados independientemente
+del tamaño de la muestra, existe subajuste, lo que indicaría que la
+arquitectura carece de capacidad suficiente para capturar la complejidad
+del precio.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{punto-13-ajuste-fino-del-mejor-modelo-de-regresiuxf3n}{%
+\subsection{Punto 13 -- Ajuste fino del mejor modelo de
+regresión}\label{punto-13-ajuste-fino-del-mejor-modelo-de-regresiuxf3n}}
+
+Se toma el Modelo C ---basado en \texttt{nnet}, que trabaja sobre todos
+los predictores escalados--- como candidato para el ajuste fino mediante
+validación cruzada con 5 folds, explorando distintas combinaciones de
+neuronas en la capa oculta y tasa de regularización.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# caret entrena (k folds × n combinaciones) redes nnet sobre train\_reg; en Windows}
+\CommentTok{\# es muy pesado. modo\_rapido: pocos folds, rejilla mínima, maxit/reltol bajos + RDS.}
+\FunctionTok{dir.create}\NormalTok{(}\StringTok{"artefactos"}\NormalTok{, }\AttributeTok{showWarnings =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{recursive =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{ruta\_tuned\_reg }\OtherTok{\textless{}{-}} \StringTok{"artefactos/modelo\_tuned\_reg.rds"}
+
+\NormalTok{k\_reg }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) 2L }\ControlFlowTok{else}\NormalTok{ 5L}
+\NormalTok{k\_reg }\OtherTok{\textless{}{-}} \FunctionTok{as.integer}\NormalTok{(}\FunctionTok{min}\NormalTok{(}\FunctionTok{max}\NormalTok{(2L, k\_reg), }\FunctionTok{nrow}\NormalTok{(train\_reg)))}
+\NormalTok{grupo\_precio }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(dplyr}\SpecialCharTok{::}\FunctionTok{ntile}\NormalTok{(train\_reg}\SpecialCharTok{$}\NormalTok{price, }\FunctionTok{max}\NormalTok{(2L, k\_reg)))}
+\NormalTok{idx\_reg\_cv }\OtherTok{\textless{}{-}} \FunctionTok{createFolds}\NormalTok{(grupo\_precio, }\AttributeTok{k =}\NormalTok{ k\_reg, }\AttributeTok{list =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{returnTrain =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{ctrl\_reg }\OtherTok{\textless{}{-}} \FunctionTok{trainControl}\NormalTok{(}
+  \AttributeTok{method =} \StringTok{"cv"}\NormalTok{,}
+  \AttributeTok{number =}\NormalTok{ k\_reg,}
+  \AttributeTok{index =}\NormalTok{ idx\_reg\_cv,}
+  \AttributeTok{allowParallel =} \ConstantTok{FALSE}
+\NormalTok{)}
+
+\NormalTok{grid\_reg }\OtherTok{\textless{}{-}} \FunctionTok{expand.grid}\NormalTok{(}
+  \AttributeTok{size =} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) }\FunctionTok{c}\NormalTok{(5L, 7L) }\ControlFlowTok{else} \FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{12}\NormalTok{),}
+  \AttributeTok{decay =} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) }\FloatTok{0.05} \ControlFlowTok{else} \FunctionTok{c}\NormalTok{(}\FloatTok{0.001}\NormalTok{, }\FloatTok{0.01}\NormalTok{, }\FloatTok{0.1}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{maxit\_tune }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) 45L }\ControlFlowTok{else}\NormalTok{ 220L}
+\NormalTok{reltol\_tune }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (modo\_rapido) }\FloatTok{0.05} \ControlFlowTok{else} \FloatTok{0.02}
+
+\NormalTok{meta\_tuned\_reg }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}
+  \AttributeTok{version =}\NormalTok{ 2L,}
+  \AttributeTok{nrow\_train =} \FunctionTok{nrow}\NormalTok{(train\_reg),}
+  \AttributeTok{modo\_rapido =}\NormalTok{ modo\_rapido,}
+  \AttributeTok{k\_reg =}\NormalTok{ k\_reg,}
+  \AttributeTok{grid =}\NormalTok{ grid\_reg,}
+  \AttributeTok{maxit\_tune =}\NormalTok{ maxit\_tune,}
+  \AttributeTok{reltol\_tune =}\NormalTok{ reltol\_tune}
+\NormalTok{)}
+
+\NormalTok{modelo\_tuned\_reg }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\NormalTok{tiempo\_tuned\_reg }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{elapsed =} \ConstantTok{NA\_real\_}\NormalTok{)}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{file.exists}\NormalTok{(ruta\_tuned\_reg)) \{}
+\NormalTok{  blob }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(ruta\_tuned\_reg)}
+  \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.list}\NormalTok{(blob) }\SpecialCharTok{\&\&} \SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(blob}\SpecialCharTok{$}\NormalTok{meta) }\SpecialCharTok{\&\&} \SpecialCharTok{!}\FunctionTok{is.null}\NormalTok{(blob}\SpecialCharTok{$}\NormalTok{modelo)) \{}
+    \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{isTRUE}\NormalTok{(}\FunctionTok{all.equal}\NormalTok{(blob}\SpecialCharTok{$}\NormalTok{meta, meta\_tuned\_reg))) \{}
+\NormalTok{      modelo\_tuned\_reg }\OtherTok{\textless{}{-}}\NormalTok{ blob}\SpecialCharTok{$}\NormalTok{modelo}
+\NormalTok{      tiempo\_tuned\_reg }\OtherTok{\textless{}{-}}\NormalTok{ blob}\SpecialCharTok{$}\NormalTok{tiempo}
+\NormalTok{    \}}
+\NormalTok{  \} }\ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{inherits}\NormalTok{(blob, }\StringTok{"train"}\NormalTok{)) \{}
+\NormalTok{    modelo\_tuned\_reg }\OtherTok{\textless{}{-}}\NormalTok{ blob}
+\NormalTok{  \}}
+\NormalTok{\}}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{is.null}\NormalTok{(modelo\_tuned\_reg)) \{}
+  \FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{  tiempo\_tuned\_reg }\OtherTok{\textless{}{-}} \FunctionTok{system.time}\NormalTok{(\{}
+\NormalTok{    modelo\_tuned\_reg }\OtherTok{\textless{}{-}} \FunctionTok{train}\NormalTok{(}
+\NormalTok{      price }\SpecialCharTok{\textasciitilde{}}\NormalTok{ .,}
+      \AttributeTok{data      =}\NormalTok{ train\_reg,}
+      \AttributeTok{method    =} \StringTok{"nnet"}\NormalTok{,}
+      \AttributeTok{tuneGrid  =}\NormalTok{ grid\_reg,}
+      \AttributeTok{trControl =}\NormalTok{ ctrl\_reg,}
+      \AttributeTok{linout    =} \ConstantTok{TRUE}\NormalTok{,}
+      \AttributeTok{trace     =} \ConstantTok{FALSE}\NormalTok{,}
+      \AttributeTok{maxit     =}\NormalTok{ maxit\_tune,}
+      \AttributeTok{MaxNWts   =} \DecValTok{20000}\NormalTok{,}
+      \AttributeTok{reltol    =}\NormalTok{ reltol\_tune}
+\NormalTok{    )}
+\NormalTok{  \})}
+  \FunctionTok{saveRDS}\NormalTok{(}
+    \FunctionTok{list}\NormalTok{(}\AttributeTok{modelo =}\NormalTok{ modelo\_tuned\_reg, }\AttributeTok{meta =}\NormalTok{ meta\_tuned\_reg, }\AttributeTok{tiempo =}\NormalTok{ tiempo\_tuned\_reg),}
+\NormalTok{    ruta\_tuned\_reg}
+\NormalTok{  )}
+\NormalTok{\}}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{all}\NormalTok{(}\FunctionTok{is.na}\NormalTok{(tiempo\_tuned\_reg[}\StringTok{"elapsed"}\NormalTok{]))) \{}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"Modelo tuned (regresión) cargado desde"}\NormalTok{, ruta\_tuned\_reg, }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"Tiempo tuning regresión (s):"}\NormalTok{, }\FunctionTok{round}\NormalTok{(tiempo\_tuned\_reg[}\StringTok{"elapsed"}\NormalTok{], }\DecValTok{2}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Tiempo tuning regresión (s): 34.42
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# plot.train() de caret suele ser lento o trabarse al compilar el Rmd en Windows;}
+\CommentTok{\# el resumen CV ya está en $results (tabla pequeña).}
+\NormalTok{res\_tune }\OtherTok{\textless{}{-}}\NormalTok{ modelo\_tuned\_reg}\SpecialCharTok{$}\NormalTok{results}
+\NormalTok{p\_cv }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (dplyr}\SpecialCharTok{::}\FunctionTok{n\_distinct}\NormalTok{(res\_tune}\SpecialCharTok{$}\NormalTok{decay) }\SpecialCharTok{==}\NormalTok{ 1L) \{}
+  \FunctionTok{ggplot}\NormalTok{(res\_tune, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{factor}\NormalTok{(size), }\AttributeTok{y =}\NormalTok{ RMSE)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_col}\NormalTok{(}\AttributeTok{fill =} \StringTok{"steelblue"}\NormalTok{, }\AttributeTok{width =} \FloatTok{0.65}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}
+      \AttributeTok{title =} \StringTok{"RMSE (CV) por tamaño de capa oculta"}\NormalTok{,}
+      \AttributeTok{x =} \StringTok{"size (neuronas)"}\NormalTok{,}
+      \AttributeTok{y =} \StringTok{"RMSE"}
+\NormalTok{    ) }\SpecialCharTok{+}
+    \FunctionTok{theme\_minimal}\NormalTok{()}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+  \FunctionTok{ggplot}\NormalTok{(res\_tune, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{factor}\NormalTok{(decay), }\AttributeTok{y =} \FunctionTok{factor}\NormalTok{(size), }\AttributeTok{fill =}\NormalTok{ RMSE)) }\SpecialCharTok{+}
+    \FunctionTok{geom\_tile}\NormalTok{(}\AttributeTok{color =} \StringTok{"white"}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{scale\_fill\_viridis\_c}\NormalTok{(}\AttributeTok{option =} \StringTok{"C"}\NormalTok{, }\AttributeTok{end =} \FloatTok{0.95}\NormalTok{) }\SpecialCharTok{+}
+    \FunctionTok{labs}\NormalTok{(}
+      \AttributeTok{title =} \StringTok{"RMSE (CV): decay × size"}\NormalTok{,}
+      \AttributeTok{x =} \StringTok{"decay"}\NormalTok{,}
+      \AttributeTok{y =} \StringTok{"size"}\NormalTok{,}
+      \AttributeTok{fill =} \StringTok{"RMSE"}
+\NormalTok{    ) }\SpecialCharTok{+}
+    \FunctionTok{theme\_minimal}\NormalTok{()}
+\NormalTok{\}}
+\FunctionTok{print}\NormalTok{(p\_cv)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Lab9_files/figure-latex/tuning-reg-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(modelo\_tuned\_reg}\SpecialCharTok{$}\NormalTok{bestTune)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   size decay
+## 2    7  0.05
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nd\_test\_reg }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(x\_test\_reg\_base)}
+\NormalTok{pred\_tuned\_reg }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{predict}\NormalTok{(modelo\_tuned\_reg, }\AttributeTok{newdata =}\NormalTok{ nd\_test\_reg))}
+
+\FunctionTok{bind\_rows}\NormalTok{(}
+  \FunctionTok{metricas\_reg}\NormalTok{(price\_test, pred\_C, }\StringTok{"Modelo C – original"}\NormalTok{),}
+  \FunctionTok{metricas\_reg}\NormalTok{(price\_test, pred\_tuned\_reg, }\StringTok{"Modelo C – tuned"}\NormalTok{)}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{kable}\NormalTok{(}\AttributeTok{digits =} \DecValTok{4}\NormalTok{, }\AttributeTok{caption =} \StringTok{"Original vs Tuned – regresión RNA"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lrrr@{}}
+\caption{Original vs Tuned -- regresión RNA}\tabularnewline
+\toprule\noalign{}
+Modelo & RMSE & MAE & R2 \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+Modelo & RMSE & MAE & R2 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Modelo C -- original & 3995.759 & 1647.9092 & 0.1815 \\
+Modelo C -- tuned & 4442.885 & 927.1419 & -0.0119 \\
+\end{longtable}
+
+El ajuste fino mediante validación cruzada identifica la combinación
+óptima de neuronas y regularización. Una tasa de decay mayor reduce el
+sobreajuste a costa de mayor sesgo, mientras que más neuronas
+incrementan la capacidad del modelo pero aumentan el riesgo de
+memorización. La configuración seleccionada corresponde al punto de
+equilibrio entre capacidad de ajuste y generalización, evaluado
+sistemáticamente sobre los folds de validación cruzada. Si el RMSE del
+modelo tuned es inferior al del Modelo C original, el ajuste fino habrá
+aportado una mejora real sobre el conjunto de prueba.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{exportaciuxf3n-de-artefactos}{%
+\subsection{Exportación de
+artefactos}\label{exportaciuxf3n-de-artefactos}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{save}\NormalTok{(}
+\NormalTok{  modelo\_A, modelo\_B,}
+\NormalTok{  modelo\_C, modelo\_D, modelo\_tuned\_reg,}
+\NormalTok{  train\_base, test\_base,}
+\NormalTok{  train\_nn, test\_nn,}
+\NormalTok{  x\_train\_pca, x\_test\_pca,}
+\NormalTok{  pca\_model,}
+\NormalTok{  y\_train, y\_test,}
+\NormalTok{  niveles, nombres\_respuesta, nombres\_predictores, formula\_rna,}
+\NormalTok{  tiempo\_A, tiempo\_B,}
+\NormalTok{  pred\_A, pred\_B,}
+\NormalTok{  cm\_A, cm\_B,}
+\NormalTok{  tabla\_resumen\_clf,}
+\NormalTok{  price\_train, price\_test,}
+\NormalTok{  pred\_C, pred\_D, pred\_tuned\_reg,}
+\NormalTok{  tabla\_reg,}
+\NormalTok{  x\_train\_reg\_pca\_D, x\_test\_reg\_pca\_D,}
+  \AttributeTok{file =} \StringTok{"artefactos/modelos\_rna.RData"}
+\NormalTok{)}
+
+\FunctionTok{save}\NormalTok{(cm\_A, cm\_B, pred\_A, pred\_B, tabla\_resumen\_clf,}
+     \AttributeTok{file =} \StringTok{"artefactos/resultados\_clasificacion.RData"}\NormalTok{)}
+
+\FunctionTok{save}\NormalTok{(}
+\NormalTok{  tabla\_comparacion, sobreajuste, resultados\_tuning,}
+\NormalTok{  resumen\_seleccion, mejor\_modelo,}
+\NormalTok{  modelo\_tuned, cm\_tuned,}
+  \AttributeTok{file =} \StringTok{"artefactos/analisis\_final\_clasificacion.RData"}
+\NormalTok{)}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Artefactos guardados en artefactos/}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Artefactos guardados en artefactos/
+\end{verbatim}
+
+\end{document}

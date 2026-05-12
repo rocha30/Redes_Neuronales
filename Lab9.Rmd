@@ -3,23 +3,17 @@ title: "Laboratorio 9 – Redes Neuronales Artificiales"
 subtitle: "Clasificación de precios Airbnb | Integrante 1: Datos y Modelos RNA"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    toc: true
-    toc_depth: '3'
   html_document:
     toc: true
     toc_depth: 3
+  pdf_document:
+    toc: true
+    toc_depth: '3'
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
-
-## Link de Repositorio
-
-<!-- Agregar link del repositorio aquí -->
-
----
 
 ## Preparación del entorno
 
@@ -35,6 +29,31 @@ for (pkg in paquetes) {
 
 set.seed(123)
 modo_rapido <- TRUE  # Cambiar a FALSE para entrenamiento completo
+
+indices_estratificados <- function(y, n_max, seed = 123) {
+  set.seed(seed)
+  y <- droplevels(as.factor(y))
+  n_max <- min(as.integer(n_max), length(y))
+  if (n_max >= length(y)) {
+    return(seq_along(y))
+  }
+  lv <- levels(y)
+  base <- max(1L, floor(n_max / length(lv)))
+  out <- integer(0)
+  for (lev in lv) {
+    w <- which(y == lev)
+    if (length(w)) {
+      out <- c(out, sample(w, min(length(w), base)))
+    }
+  }
+  out <- unique(out)
+  rest <- setdiff(seq_along(y), out)
+  if (length(out) < n_max && length(rest) > 0L) {
+    take <- min(n_max - length(out), length(rest))
+    out <- c(out, sample(rest, take))
+  }
+  out
+}
 ```
 
 ---
@@ -243,6 +262,11 @@ formula_rna <- as.formula(paste(
 ))
 
 cat("Respuestas one-hot:", nombres_respuesta, "\n")
+
+clase_desde_onehot <- function(df, cols = nombres_respuesta, niveles_ord = niveles) {
+  j <- max.col(as.matrix(df[, cols, drop = FALSE]), ties.method = "first")
+  factor(niveles_ord[j], levels = niveles_ord)
+}
 ```
 
 ### Modelo A – Una capa oculta, activación logística (`nnet`)
@@ -260,9 +284,9 @@ if (file.exists(ruta_mA)) {
 } else {
   train_mA <- train_base
   if (modo_rapido) {
-    set.seed(123)
-    idx_mA   <- sample(seq_len(nrow(train_base)), min(3000, nrow(train_base)))
-    train_mA <- train_base[idx_mA, ]
+    idx_mA <- indices_estratificados(train_base$price_category, min(3000, nrow(train_base)), 123)
+    train_mA <- train_base[idx_mA, , drop = FALSE]
+    train_mA$price_category <- factor(train_mA$price_category, levels = levels(train_base$price_category))
   }
 
   set.seed(123)
@@ -298,38 +322,105 @@ plotnet(modelo_A, main = "Modelo A – nnet (1 capa, logística)")
 
 ```{r modelo-B, cache=TRUE}
 ruta_mB <- "artefactos/modelo_B_neuralnet.rds"
+tiempo_B <- c(elapsed = NA_real_)
+modelo_B <- NULL
+vars_entrada_B <- character(0)
 
 if (file.exists(ruta_mB)) {
   modelo_B <- readRDS(ruta_mB)
-  tiempo_B <- c(elapsed = NA_real_)
+  vars_entrada_B <- attr(modelo_B, "variables_entrada")
+  if (is.null(vars_entrada_B) || length(vars_entrada_B) == 0) {
+    vars_entrada_B <- intersect(names(x_train_pca), colnames(modelo_B$data))
+  }
+  if (length(vars_entrada_B) == 0) {
+    vars_entrada_B <- names(x_train_pca)
+  }
+  x_train_pca_B <- x_train_pca %>% select(all_of(vars_entrada_B))
+  x_test_pca_B <- x_test_pca %>% select(all_of(vars_entrada_B))
   cat("Modelo B cargado desde artefacto.\n")
 } else {
-  train_mB <- train_nn
+  max_comp_B <- if (modo_rapido) min(12, ncol(x_train_pca)) else min(25, ncol(x_train_pca))
+  vars_entrada_B <- names(x_train_pca)[seq_len(max_comp_B)]
+  x_train_pca_B <- x_train_pca %>% select(all_of(vars_entrada_B))
+  x_test_pca_B <- x_test_pca %>% select(all_of(vars_entrada_B))
+
+  train_nn_B <- cbind(x_train_pca_B, oh_train)
+  formula_rna_B <- as.formula(
+    paste(paste(nombres_respuesta, collapse = " + "), "~", paste(vars_entrada_B, collapse = " + "))
+  )
+
+  train_mB_full <- train_nn_B
   if (modo_rapido) {
-    set.seed(123)
-    idx_mB   <- sample(seq_len(nrow(train_nn)), min(3000, nrow(train_nn)))
-    train_mB <- train_nn[idx_mB, ]
+    idx_mB <- indices_estratificados(y_train, min(1200, nrow(train_nn_B)), 123)
+    train_mB_full <- train_nn_B[idx_mB, , drop = FALSE]
+  } else {
+    idx_mB <- indices_estratificados(y_train, min(4500, nrow(train_nn_B)), 123)
+    train_mB_full <- train_nn_B[idx_mB, , drop = FALSE]
   }
 
-  set.seed(123)
-  tiempo_B <- system.time({
-    modelo_B <- neuralnet(
-      formula_rna,
-      data          = train_mB,
-      hidden        = c(10, 5),  # 2 capas ocultas
-      act.fct       = "tanh",
-      linear.output = FALSE,
-      err.fct       = "sse",     # SSE compatible con tanh (salida en [-1,1])
-      threshold     = 0.1,
-      stepmax       = 5e5
+  configs_B <- if (modo_rapido) {
+    list(
+      list(hidden = c(4), stepmax = 2e4, threshold = 0.25),
+      list(hidden = c(5, 2), stepmax = 4e4, threshold = 0.2)
     )
-  })
+  } else {
+    list(
+      list(hidden = c(8, 4), stepmax = 1.2e5, threshold = 0.12),
+      list(hidden = c(10, 5), stepmax = 1.8e5, threshold = 0.1)
+    )
+  }
+
+  for (cfg in configs_B) {
+    train_mB <- train_mB_full
+    if (length(cfg$hidden) > 1 && nrow(train_mB) > 2500) {
+      yb <- clase_desde_onehot(train_mB, nombres_respuesta, niveles)
+      idx_sub <- indices_estratificados(yb, 2500, 321)
+      train_mB <- train_mB[idx_sub, , drop = FALSE]
+    }
+
+    set.seed(123)
+    tiempo_tmp <- system.time({
+      modelo_tmp <- tryCatch(
+        {
+          setTimeLimit(elapsed = if (modo_rapido) 70 else 140, transient = TRUE)
+          neuralnet(
+            formula_rna_B,
+            data = train_mB,
+            hidden = cfg$hidden,
+            act.fct = "tanh",
+            linear.output = FALSE,
+            err.fct = "sse",
+            threshold = cfg$threshold,
+            stepmax = cfg$stepmax,
+            lifesign = "minimal"
+          )
+        },
+        error = function(e) NULL,
+        finally = {
+          setTimeLimit(cpu = Inf, elapsed = Inf, transient = FALSE)
+        }
+      )
+    })
+
+    if (!is.null(modelo_tmp)) {
+      modelo_B <- modelo_tmp
+      tiempo_B <- tiempo_tmp
+      break
+    }
+  }
+
+  if (is.null(modelo_B)) {
+    stop("No fue posible entrenar Modelo B con los recursos actuales. Activa modo_rapido=TRUE o borra artefactos viejos.")
+  }
+
+  attr(modelo_B, "variables_entrada") <- vars_entrada_B
   saveRDS(modelo_B, ruta_mB)
 }
 
 cat("Tiempo Modelo B:", round(tiempo_B["elapsed"], 2), "s\n")
 cat("Error final:", round(modelo_B$result.matrix["error", 1], 6), "\n")
 cat("Pasos hasta convergencia:", modelo_B$result.matrix["steps", 1], "\n")
+cat("Variables usadas por Modelo B:", length(vars_entrada_B), "\n")
 ```
 
 ```{r arquitectura-modelo-B}
@@ -377,7 +468,7 @@ head(data.frame(Real = y_test, Pred_A = pred_A), 10)
 `neuralnet` devuelve una matriz de probabilidades por clase (una columna por neurona de salida). Se selecciona la clase con mayor activación.
 
 ```{r predicciones-B}
-prob_B <- predict(modelo_B, newdata = x_test_pca)
+prob_B <- predict(modelo_B, newdata = x_test_pca_B)
 
 # Cada columna corresponde a: precio_barata, precio_media, precio_cara
 idx_max <- apply(prob_B, 1, which.max)
@@ -525,7 +616,7 @@ pred_A_train <- predict(modelo_A, newdata = train_base, type = "class")
 pred_A_train <- factor(pred_A_train, levels = niveles)
 acc_A_train  <- mean(pred_A_train == y_train)
 
-prob_B_train <- predict(modelo_B, newdata = x_train_pca)
+prob_B_train <- predict(modelo_B, newdata = x_train_pca_B)
 pred_B_train <- factor(niveles[apply(prob_B_train, 1, which.max)], levels = niveles)
 acc_B_train  <- mean(pred_B_train == y_train)
 
@@ -589,34 +680,45 @@ cat("Modelo seleccionado para tuning:", mejor_modelo, "\n")
 
 ```{r punto-8-tuning, cache=TRUE}
 resultados_tuning <- tibble()
+cm_tuned <- NULL
+pred_tuned <- NULL
 
 if (mejor_modelo == "A") {
   grid_nnet <- expand.grid(
-    size  = c(3, 5, 8, 10),
-    decay = c(0, 0.001, 0.01, 0.1)
+    size = if (modo_rapido) c(3, 5) else c(3, 5, 8, 10),
+    decay = if (modo_rapido) c(0.001, 0.01) else c(0, 0.001, 0.01, 0.1)
   )
 
-  ctrl <- trainControl(method = "cv", number = 5)
-
+  k_cv <- if (modo_rapido) 3L else 5L
   train_tune <- train_base
   if (modo_rapido) {
-    set.seed(123)
-    idx_tune <- sample(seq_len(nrow(train_base)), min(4000, nrow(train_base)))
-    train_tune <- train_base[idx_tune, ]
+    idx_tune <- indices_estratificados(train_base$price_category, min(2500, nrow(train_base)), 123)
+    train_tune <- train_base[idx_tune, , drop = FALSE]
+    train_tune$price_category <- factor(train_tune$price_category, levels = levels(train_base$price_category))
   }
 
+  idx_cv <- createFolds(train_tune$price_category, k = k_cv, list = TRUE, returnTrain = TRUE)
+  ctrl <- trainControl(method = "cv", number = k_cv, index = idx_cv)
+
   set.seed(123)
-  modelo_tuned <- train(
-    price_category ~ .,
-    data      = train_tune,
-    method    = "nnet",
-    tuneGrid  = grid_nnet,
-    trControl = ctrl,
-    metric    = "Accuracy",
-    MaxNWts   = 20000,
-    trace     = FALSE,
-    maxit     = 500
+  modelo_tuned <- tryCatch(
+    train(
+      price_category ~ .,
+      data = train_tune,
+      method = "nnet",
+      tuneGrid = grid_nnet,
+      trControl = ctrl,
+      metric = "Accuracy",
+      MaxNWts = 20000,
+      trace = FALSE,
+      maxit = if (modo_rapido) 200 else 500
+    ),
+    error = function(e) NULL
   )
+
+  if (is.null(modelo_tuned)) {
+    stop("El tuning del modelo A falló. Reduce tuneGrid o activa modo_rapido=TRUE.")
+  }
 
   resultados_tuning <- modelo_tuned$results %>%
     arrange(desc(Accuracy)) %>%
@@ -624,93 +726,121 @@ if (mejor_modelo == "A") {
     mutate(Modelo = "A (nnet tuned)")
 
   pred_tuned <- predict(modelo_tuned, newdata = test_base)
-  cm_tuned   <- confusionMatrix(pred_tuned, y_test)
-
+  cm_tuned <- confusionMatrix(pred_tuned, y_test)
 } else {
-  configuraciones <- list(
-    list(hidden = c(8, 4),  act = "tanh",     thr = 0.10),
-    list(hidden = c(10, 5), act = "tanh",     thr = 0.10),
-    list(hidden = c(12, 6), act = "tanh",     thr = 0.05),
-    list(hidden = c(10, 5), act = "logistic", thr = 0.10),
-    list(hidden = c(15, 8), act = "tanh",     thr = 0.05)
+  vars_tune_B <- if (exists("vars_entrada_B")) vars_entrada_B else names(x_train_pca)
+  x_train_tune_B <- x_train_pca %>% select(all_of(vars_tune_B))
+  x_test_tune_B <- x_test_pca %>% select(all_of(vars_tune_B))
+  train_nn_tune <- cbind(x_train_tune_B, oh_train)
+
+  formula_rna_tune_B <- as.formula(
+    paste(paste(nombres_respuesta, collapse = " + "), "~", paste(vars_tune_B, collapse = " + "))
   )
 
-  train_tune_nn <- train_nn
+  configuraciones <- if (modo_rapido) {
+    list(
+      list(hidden = c(4), act = "tanh", thr = 0.25, step = 2e4),
+      list(hidden = c(5, 2), act = "tanh", thr = 0.2, step = 4e4)
+    )
+  } else {
+    list(
+      list(hidden = c(8, 4), act = "tanh", thr = 0.12, step = 1.2e5),
+      list(hidden = c(10, 5), act = "tanh", thr = 0.1, step = 1.8e5),
+      list(hidden = c(10, 5), act = "logistic", thr = 0.1, step = 1.8e5)
+    )
+  }
+
+  train_tune_nn <- train_nn_tune
   if (modo_rapido) {
-    set.seed(123)
-    idx_tune <- sample(seq_len(nrow(train_nn)), min(4000, nrow(train_nn)))
-    train_tune_nn <- train_nn[idx_tune, ]
+    idx_tune <- indices_estratificados(y_train, min(2000, nrow(train_nn_tune)), 123)
+    train_tune_nn <- train_nn_tune[idx_tune, , drop = FALSE]
+  } else if (nrow(train_nn_tune) > 5000) {
+    idx_tune <- indices_estratificados(y_train, min(5000, nrow(train_nn_tune)), 123)
+    train_tune_nn <- train_nn_tune[idx_tune, , drop = FALSE]
   }
 
   resultados_lista <- list()
+  modelos_lista <- list()
 
   for (i in seq_along(configuraciones)) {
     cfg <- configuraciones[[i]]
     err_fun <- if (cfg$act == "logistic") "ce" else "sse"
 
     set.seed(123 + i)
-    m <- neuralnet(
-      formula_rna,
-      data          = train_tune_nn,
-      hidden        = cfg$hidden,
-      act.fct       = cfg$act,
-      linear.output = FALSE,
-      err.fct       = err_fun,
-      threshold     = cfg$thr,
-      stepmax       = 5e5
+    m <- tryCatch(
+      {
+        setTimeLimit(elapsed = if (modo_rapido) 60 else 120, transient = TRUE)
+        neuralnet(
+          formula_rna_tune_B,
+          data = train_tune_nn,
+          hidden = cfg$hidden,
+          act.fct = cfg$act,
+          linear.output = FALSE,
+          err.fct = err_fun,
+          threshold = cfg$thr,
+          stepmax = cfg$step,
+          lifesign = "minimal"
+        )
+      },
+      error = function(e) NULL,
+      finally = {
+        setTimeLimit(cpu = Inf, elapsed = Inf, transient = FALSE)
+      }
     )
 
-    prob <- predict(m, newdata = x_test_pca)
+    if (is.null(m)) next
+
+    prob <- predict(m, newdata = x_test_tune_B)
     pred <- factor(niveles[apply(prob, 1, which.max)], levels = niveles)
-    acc  <- mean(pred == y_test)
+    acc <- mean(pred == y_test)
 
     resultados_lista[[i]] <- tibble(
-      Topologia  = paste(cfg$hidden, collapse = "-"),
+      Topologia = paste(cfg$hidden, collapse = "-"),
       Activacion = cfg$act,
-      Threshold  = cfg$thr,
-      Accuracy   = round(acc, 4),
-      Modelo     = "B (neuralnet tuned)"
+      Threshold = cfg$thr,
+      Accuracy = round(acc, 4),
+      Modelo = "B (neuralnet tuned)"
     )
+    modelos_lista[[i]] <- m
+  }
+
+  if (length(resultados_lista) == 0) {
+    stop("No se pudo completar tuning de Modelo B con los límites actuales.")
   }
 
   resultados_tuning <- bind_rows(resultados_lista) %>%
     arrange(desc(Accuracy))
 
-  best_cfg <- configuraciones[[which.max(resultados_tuning$Accuracy)]]
-  best_err <- if (best_cfg$act == "logistic") "ce" else "sse"
-
-  set.seed(123)
-  modelo_tuned <- neuralnet(
-    formula_rna,
-    data          = train_tune_nn,
-    hidden        = best_cfg$hidden,
-    act.fct       = best_cfg$act,
-    linear.output = FALSE,
-    err.fct       = best_err,
-    threshold     = best_cfg$thr,
-    stepmax       = 5e5
-  )
-
-  prob_tuned <- predict(modelo_tuned, newdata = x_test_pca)
+  idx_best <- which.max(resultados_tuning$Accuracy)
+  modelo_tuned <- modelos_lista[[idx_best]]
+  prob_tuned <- predict(modelo_tuned, newdata = x_test_tune_B)
   pred_tuned <- factor(niveles[apply(prob_tuned, 1, which.max)], levels = niveles)
-  cm_tuned   <- confusionMatrix(pred_tuned, y_test)
+  cm_tuned <- confusionMatrix(pred_tuned, y_test)
 }
 ```
 
 ```{r punto-8-resultados}
 kable(resultados_tuning, digits = 4,
       caption = "Punto 8 – Resultados de tuning del modelo seleccionado")
-print(cm_tuned)
+if (!is.null(cm_tuned)) {
+  cat("Accuracy tuned:", round(as.numeric(cm_tuned$overall["Accuracy"]), 4), "\n")
+  cat("Kappa tuned:", round(as.numeric(cm_tuned$overall["Kappa"]), 4), "\n")
+} else {
+  cat("No se generó cm_tuned.\n")
+}
 ```
 
 ```{r punto-8-conclusion, results='asis'}
-acc_tuned <- as.numeric(cm_tuned$overall["Accuracy"])
-f1_tuned  <- mean(cm_tuned$byClass[, "F1"], na.rm = TRUE)
-
-cat("Conclusión del tuning:\n\n")
-cat("- Accuracy del modelo afinado:", round(acc_tuned, 4), "\n")
-cat("- F1 macro del modelo afinado:", round(f1_tuned, 4), "\n")
-cat("- El modelo afinado se usa como candidato RNA final para la comparación global del laboratorio.\n")
+if (!is.null(cm_tuned)) {
+  acc_tuned <- as.numeric(cm_tuned$overall["Accuracy"])
+  f1_tuned <- mean(cm_tuned$byClass[, "F1"], na.rm = TRUE)
+  cat("Conclusión del tuning:\n\n")
+  cat("- Accuracy del modelo afinado:", round(acc_tuned, 4), "\n")
+  cat("- F1 macro del modelo afinado:", round(f1_tuned, 4), "\n")
+  cat("- El modelo afinado se usa como candidato RNA final para la comparación global del laboratorio.\n")
+} else {
+  cat("No hay métricas de tuning disponibles (cm_tuned ausente).\n")
+}
 ```
 
 ---
@@ -748,12 +878,86 @@ if (!"price_category" %in% names(datos_precio)) {
 
 set.seed(123)
 idx_reg     <- createDataPartition(datos_precio$price_category, p = 0.8, list = FALSE)
-price_train <- datos_precio$price[idx_reg]
-price_test  <- datos_precio$price[-idx_reg]
+train_reg_raw <- datos_precio[idx_reg, ]
+test_reg_raw  <- datos_precio[-idx_reg, ]
+
+price_train <- train_reg_raw$price
+price_test  <- test_reg_raw$price
+
+patron_excluir_reg <- "(^id$|_id$|url|name$|description|about|picture|thumbnail|host_url|listing_url|scrape_id|calendar_last_scraped)"
+cols_patron_reg <- names(train_reg_raw)[str_detect(names(train_reg_raw), regex(patron_excluir_reg, ignore_case = TRUE))]
+cols_all_na_reg <- names(train_reg_raw)[sapply(train_reg_raw, function(x) all(is.na(x)))]
+cat_cols_reg <- names(train_reg_raw)[sapply(train_reg_raw, function(x) is.character(x) || is.factor(x))]
+alta_card_reg <- cat_cols_reg[sapply(train_reg_raw[cat_cols_reg], function(x) n_distinct(x, na.rm = TRUE) > 100)]
+excluir_reg <- unique(c(cols_patron_reg, cols_all_na_reg, alta_card_reg))
+
+train_reg_model <- train_reg_raw %>% select(-any_of(excluir_reg))
+test_reg_model  <- test_reg_raw %>% select(-any_of(excluir_reg))
+
+x_train_reg_raw <- train_reg_model %>% select(-any_of(c("price", "price_category")))
+x_test_reg_raw  <- test_reg_model  %>% select(-any_of(c("price", "price_category")))
+
+x_train_reg_raw <- as.data.frame(x_train_reg_raw)
+x_test_reg_raw <- as.data.frame(x_test_reg_raw)
+
+for (nm in names(x_train_reg_raw)) {
+  if (is.character(x_train_reg_raw[[nm]])) {
+    x_train_reg_raw[[nm]] <- factor(x_train_reg_raw[[nm]])
+    if (nm %in% names(x_test_reg_raw)) {
+      x_test_reg_raw[[nm]] <- factor(x_test_reg_raw[[nm]], levels = levels(x_train_reg_raw[[nm]]))
+    }
+  }
+}
+
+for (nm in names(x_train_reg_raw)) {
+  if (is.factor(x_train_reg_raw[[nm]])) {
+    x_train_reg_raw[[nm]] <- droplevels(x_train_reg_raw[[nm]])
+  }
+}
+
+cols_mal_dummy <- sapply(names(x_train_reg_raw), function(nm) {
+  x <- x_train_reg_raw[[nm]]
+  if (is.factor(x)) {
+    return(nlevels(x) < 2L)
+  }
+  n_distinct(x, na.rm = TRUE) < 2L
+})
+
+if (any(cols_mal_dummy)) {
+  cat(
+    "Predictores omitidos (constantes o factor con un solo nivel): ",
+    paste(names(x_train_reg_raw)[cols_mal_dummy], collapse = ", "),
+    "\n"
+  )
+  x_train_reg_raw <- x_train_reg_raw[, !cols_mal_dummy, drop = FALSE]
+  x_test_reg_raw <- x_test_reg_raw[, names(x_train_reg_raw), drop = FALSE]
+}
+
+if (ncol(x_train_reg_raw) == 0L) {
+  stop("No quedaron columnas predictoras para dummyVars en regresión.")
+}
+
+dummy_reg <- dummyVars(~ ., data = x_train_reg_raw, fullRank = TRUE)
+x_train_reg <- predict(dummy_reg, x_train_reg_raw) %>% as.data.frame()
+x_test_reg  <- predict(dummy_reg, x_test_reg_raw)  %>% as.data.frame()
+
+cols_faltantes_reg <- setdiff(names(x_train_reg), names(x_test_reg))
+for (col in cols_faltantes_reg) x_test_reg[[col]] <- 0
+x_test_reg <- x_test_reg[, names(x_train_reg), drop = FALSE]
+
+pre_reg <- preProcess(x_train_reg, method = c("medianImpute", "center", "scale"))
+x_train_reg_base <- predict(pre_reg, x_train_reg)
+x_test_reg_base  <- predict(pre_reg, x_test_reg)
+
+pca_reg <- preProcess(x_train_reg_base, method = "pca", thresh = 0.95)
+x_train_reg_pca <- predict(pca_reg, x_train_reg_base)
+x_test_reg_pca  <- predict(pca_reg, x_test_reg_base)
 
 cat("Rango price_train:", range(price_train, na.rm = TRUE), "\n")
 cat("Rango price_test :", range(price_test,  na.rm = TRUE), "\n")
 cat("Observaciones train:", length(price_train), "| test:", length(price_test), "\n")
+cat("Predictores regresión (base):", ncol(x_train_reg_base), "\n")
+cat("Componentes PCA regresión:", ncol(x_train_reg_pca), "\n")
 ```
 
 ```{r histograma-precio}
@@ -764,6 +968,18 @@ tibble(price   = c(price_train, price_test),
   scale_x_log10() +
   labs(title = "Distribución del precio (escala log)", x = "Precio (USD)", y = "Frecuencia") +
   theme_minimal()
+```
+
+```{r metricas-reg-helper, include=FALSE}
+metricas_reg <- function(real, pred, nombre) {
+  tibble(
+    Modelo = nombre,
+    RMSE = sqrt(mean((real - pred)^2, na.rm = TRUE)),
+    MAE = mean(abs(real - pred), na.rm = TRUE),
+    R2 = 1 - sum((real - pred)^2, na.rm = TRUE) /
+      sum((real - mean(real))^2, na.rm = TRUE)
+  )
+}
 ```
 
 El precio muestra una distribución fuertemente sesgada hacia la derecha, con la mayoría de las propiedades concentradas en rangos bajos pero con valores extremos superiores que elevan considerablemente el rango total. En escala logarítmica la distribución se aproxima a la normal, lo que sugiere que una transformación logarítmica podría mejorar el ajuste; sin embargo, para conservar la interpretabilidad de los errores en la escala original (USD) y mantener coherencia con las instrucciones del laboratorio, los modelos se entrenan directamente sobre el precio sin transformar.
@@ -777,7 +993,7 @@ Se construyen dos arquitecturas de red neuronal para predecir el precio como var
 | | Modelo C | Modelo D |
 |---|---|---|
 | **Paquete** | `nnet` | `neuralnet` |
-| **Topología** | 1 capa oculta, 8 neuronas | 2 capas ocultas, 12–6 neuronas |
+| **Topología** | 1 capa oculta (8 neuronas; menos en `modo_rapido`) | En `modo_rapido`: red más pequeña y menos PCA; en modo completo: 12–6 |
 | **Activación oculta** | Logística | Tanh |
 | **Salida** | Lineal (`linout = TRUE`) | Lineal (`linear.output = TRUE`) |
 | **Datos entrada** | Predictores escalados | Componentes PCA |
@@ -785,65 +1001,178 @@ Se construyen dos arquitecturas de red neuronal para predecir el precio como var
 ### Modelo C – `nnet` para regresión
 
 ```{r modelo-C-reg, cache=TRUE}
-train_reg <- x_train_base %>% mutate(price = price_train)
-test_reg  <- x_test_base  %>% mutate(price = price_test)
+train_reg <- x_train_reg_base %>% mutate(price = price_train)
+test_reg <- x_test_reg_base %>% mutate(price = price_test)
 
 ruta_mC <- "artefactos/modelo_C_reg.rds"
+tiempo_C <- c(elapsed = NA_real_)
+
+entrenar_nnet_C <- function(df, n_max, size, maxit, decay, maxwts = 20000L, ...) {
+  n_max <- min(as.integer(n_max), nrow(df))
+  idx <- if (n_max < nrow(df)) {
+    g_precio <- factor(dplyr::ntile(df$price, min(15L, max(5L, n_max %/% 250L))))
+    indices_estratificados(g_precio, n_max, 123)
+  } else {
+    seq_len(nrow(df))
+  }
+  sub <- df[idx, , drop = FALSE]
+  nnet(
+    price ~ .,
+    data = sub,
+    size = size,
+    decay = decay,
+    linout = TRUE,
+    maxit = maxit,
+    MaxNWts = maxwts,
+    trace = FALSE,
+    ...
+  )
+}
 
 if (file.exists(ruta_mC)) {
   modelo_C <- readRDS(ruta_mC)
-  tiempo_C <- c(elapsed = NA_real_)
 } else {
+  configs_C <- if (modo_rapido) {
+    list(
+      list(n = min(4500L, nrow(train_reg)), size = 5L, maxit = 120L, decay = 0.01, tlim = 90),
+      list(n = min(3000L, nrow(train_reg)), size = 4L, maxit = 80L, decay = 0.05, tlim = 75),
+      list(n = min(2000L, nrow(train_reg)), size = 3L, maxit = 60L, decay = 0.1, tlim = 60)
+    )
+  } else {
+    list(
+      list(n = nrow(train_reg), size = 8L, maxit = 500L, decay = 0.01, tlim = 900)
+    )
+  }
+
+  modelo_C <- NULL
   set.seed(123)
   tiempo_C <- system.time({
-    modelo_C <- nnet(
-      price ~ .,
-      data    = train_reg,
-      size    = 8,
-      decay   = 0.01,
-      linout  = TRUE,
-      maxit   = 500,
-      MaxNWts = 20000,
-      trace   = FALSE
-    )
+    for (cfg in configs_C) {
+      modelo_C <- tryCatch(
+        {
+          setTimeLimit(elapsed = cfg$tlim, transient = TRUE)
+          entrenar_nnet_C(
+            train_reg,
+            n_max = cfg$n,
+            size = cfg$size,
+            maxit = cfg$maxit,
+            decay = cfg$decay
+          )
+        },
+        error = function(e) NULL,
+        finally = {
+          setTimeLimit(cpu = Inf, elapsed = Inf, transient = FALSE)
+        }
+      )
+      if (!is.null(modelo_C)) {
+        attr(modelo_C, "config_C") <- cfg
+        break
+      }
+    }
   })
+
+  if (is.null(modelo_C)) {
+    stop("Modelo C (nnet): no convergió con las configuraciones definidas. Activa modo_rapido o reduce columnas.")
+  }
   saveRDS(modelo_C, ruta_mC)
 }
 
 cat("Tiempo Modelo C:", round(tiempo_C["elapsed"], 2), "s\n")
 cat("Pesos totales:", length(modelo_C$wts), "\n")
+if (!is.null(attr(modelo_C, "config_C"))) {
+  cat("Config usada (n filas / size / maxit):", attr(modelo_C, "config_C")$n, "/",
+      attr(modelo_C, "config_C")$size, "/", attr(modelo_C, "config_C")$maxit, "\n")
+}
 ```
 
 ### Modelo D – `neuralnet` para regresión
 
 ```{r modelo-D-reg, cache=TRUE}
-formula_reg <- as.formula(paste("price ~", paste(names(x_train_pca), collapse = " + ")))
-
-train_reg_pca <- x_train_pca %>% mutate(price = price_train)
-test_reg_pca  <- x_test_pca  %>% mutate(price = price_test)
-
 ruta_mD <- "artefactos/modelo_D_reg.rds"
+tiempo_D <- c(elapsed = NA_real_)
+modelo_D <- NULL
+pca_cols_D <- character(0)
 
 if (file.exists(ruta_mD)) {
   modelo_D <- readRDS(ruta_mD)
-  tiempo_D <- c(elapsed = NA_real_)
+  pca_cols_D <- attr(modelo_D, "pca_cols_D")
+  if (is.null(pca_cols_D) || length(pca_cols_D) == 0) {
+    pca_cols_D <- intersect(names(x_train_reg_pca), colnames(modelo_D$data))
+    pca_cols_D <- setdiff(pca_cols_D, "price")
+  }
+  if (length(pca_cols_D) == 0L) {
+    pca_cols_D <- names(x_train_reg_pca)
+  }
 } else {
+  n_comp <- if (modo_rapido) min(18L, ncol(x_train_reg_pca)) else ncol(x_train_reg_pca)
+  pca_cols_D <- names(x_train_reg_pca)[seq_len(n_comp)]
+
+  formula_reg <- as.formula(paste("price ~", paste(pca_cols_D, collapse = " + ")))
+  train_full_D <- x_train_reg_pca %>%
+    dplyr::select(dplyr::all_of(pca_cols_D)) %>%
+    mutate(price = price_train)
+
+  configs_D <- if (modo_rapido) {
+    list(
+      list(n = min(2000L, nrow(train_full_D)), hidden = c(6, 3), thr = 0.25, step = 4e4L, tlim = 120),
+      list(n = min(1500L, nrow(train_full_D)), hidden = c(4L), thr = 0.3, step = 2e4L, tlim = 90),
+      list(n = min(1200L, nrow(train_full_D)), hidden = c(3L), thr = 0.35, step = 15000L, tlim = 75)
+    )
+  } else {
+    list(
+      list(n = nrow(train_full_D), hidden = c(12, 6), thr = 0.1, step = 2e5L, tlim = 600)
+    )
+  }
+
   set.seed(123)
   tiempo_D <- system.time({
-    modelo_D <- neuralnet(
-      formula_reg,
-      data          = train_reg_pca,
-      hidden        = c(12, 6),
-      act.fct       = "tanh",
-      linear.output = TRUE,
-      threshold     = 0.1,
-      stepmax       = 5e5
-    )
+    for (cfg in configs_D) {
+      n_grp <- min(12L, max(4L, as.integer(cfg$n %/% 200L)))
+      g_nt <- factor(dplyr::ntile(train_full_D$price, n_grp))
+      idx <- indices_estratificados(g_nt, cfg$n, 123L)
+      train_sub <- train_full_D[idx, , drop = FALSE]
+
+      modelo_try <- tryCatch(
+        {
+          setTimeLimit(elapsed = cfg$tlim, transient = TRUE)
+          neuralnet(
+            formula_reg,
+            data = train_sub,
+            hidden = cfg$hidden,
+            act.fct = "tanh",
+            linear.output = TRUE,
+            threshold = cfg$thr,
+            stepmax = cfg$step,
+            lifesign = "minimal"
+          )
+        },
+        error = function(e) NULL,
+        finally = {
+          setTimeLimit(cpu = Inf, elapsed = Inf, transient = FALSE)
+        }
+      )
+
+      if (!is.null(modelo_try)) {
+        modelo_D <- modelo_try
+        attr(modelo_D, "pca_cols_D") <- pca_cols_D
+        break
+      }
+    }
   })
+
+  if (is.null(modelo_D)) {
+    stop("Modelo D (neuralnet): no entrenó. Activa modo_rapido=TRUE o borra artefactos viejos.")
+  }
   saveRDS(modelo_D, ruta_mD)
 }
 
+x_train_reg_pca_D <- x_train_reg_pca %>% dplyr::select(dplyr::all_of(pca_cols_D))
+x_test_reg_pca_D <- x_test_reg_pca %>% dplyr::select(dplyr::all_of(pca_cols_D))
+train_reg_pca <- x_train_reg_pca_D %>% mutate(price = price_train)
+test_reg_pca <- x_test_reg_pca_D %>% mutate(price = price_test)
+
 cat("Tiempo Modelo D:", round(tiempo_D["elapsed"], 2), "s\n")
+cat("Componentes PCA usadas (Modelo D):", length(pca_cols_D), "\n")
 cat("Error final:", round(modelo_D$result.matrix["error", 1], 4), "\n")
 ```
 
@@ -854,17 +1183,8 @@ cat("Error final:", round(modelo_D$result.matrix["error", 1], 4), "\n")
 ### Predicciones y métricas
 
 ```{r predicciones-reg}
-pred_C <- as.numeric(predict(modelo_C, newdata = x_test_base))
-pred_D <- as.numeric(predict(modelo_D, newdata = x_test_pca))
-
-metricas_reg <- function(real, pred, nombre) {
-  tibble(
-    Modelo = nombre,
-    RMSE   = sqrt(mean((real - pred)^2, na.rm = TRUE)),
-    MAE    = mean(abs(real - pred), na.rm = TRUE),
-    R2     = 1 - sum((real - pred)^2, na.rm = TRUE) / sum((real - mean(real))^2, na.rm = TRUE)
-  )
-}
+pred_C <- as.numeric(predict(modelo_C, newdata = x_test_reg_base))
+pred_D <- as.numeric(predict(modelo_D, newdata = x_test_reg_pca_D))
 
 tabla_reg <- bind_rows(
   metricas_reg(price_test, pred_C, "Modelo C – nnet (1 capa, logística)"),
@@ -902,8 +1222,8 @@ Se compara el RMSE en entrenamiento y en prueba para detectar si los modelos mem
 ### RMSE en train vs test
 
 ```{r sobreajuste-reg}
-pred_C_train <- as.numeric(predict(modelo_C, newdata = x_train_base))
-pred_D_train <- as.numeric(predict(modelo_D, newdata = x_train_pca))
+pred_C_train <- as.numeric(predict(modelo_C, newdata = x_train_reg_base))
+pred_D_train <- as.numeric(predict(modelo_D, newdata = x_train_reg_pca_D))
 
 rmse_C_train <- sqrt(mean((price_train - pred_C_train)^2))
 rmse_D_train <- sqrt(mean((price_train - pred_D_train)^2))
@@ -922,29 +1242,117 @@ tibble(
 ### Curva de aprendizaje (Modelo C)
 
 ```{r curva-aprendizaje-reg, cache=TRUE}
-tamanos <- floor(seq(0.2, 1.0, by = 0.2) * nrow(train_reg))
+# En muchos equipos Windows, setTimeLimit no corta nnet (optimización en C): el
+# tiempo real lo mandan maxit, tamaño de red y filas. Aquí: caché en RDS,
+# hiperparámetros más livianos que el modelo final y parada temprana (reltol).
+dir.create("artefactos", showWarnings = FALSE, recursive = TRUE)
+ruta_curva_C <- "artefactos/curva_aprendizaje_C_reg.rds"
 
-curva <- map_dfr(tamanos, function(n) {
-  set.seed(123)
-  idx   <- sample(nrow(train_reg), n)
-  sub   <- train_reg[idx, ]
-  m_tmp <- nnet(price ~ ., data = sub, size = 8, decay = 0.01,
-                linout = TRUE, maxit = 300, trace = FALSE, MaxNWts = 20000)
-  p_train <- as.numeric(predict(m_tmp, newdata = sub))
-  p_test  <- as.numeric(predict(m_tmp, newdata = x_test_base))
-  tibble(
-    n          = n,
-    RMSE_train = sqrt(mean((sub$price - p_train)^2)),
-    RMSE_test  = sqrt(mean((price_test - p_test)^2))
+cfg_C <- attr(modelo_C, "config_C")
+if (is.null(cfg_C)) {
+  cfg_C <- list(
+    size = 8L, maxit = 300L, decay = 0.01,
+    tlim = if (modo_rapido) 90 else 600
   )
-})
+}
 
-curva %>%
-  pivot_longer(c(RMSE_train, RMSE_test), names_to = "conjunto", values_to = "RMSE") %>%
-  ggplot(aes(x = n, y = RMSE, color = conjunto)) +
-  geom_line(linewidth = 1) + geom_point() +
-  labs(title = "Curva de aprendizaje – Modelo C (regresión)",
-       x = "Tamaño del conjunto de entrenamiento", y = "RMSE") +
+fracciones <- if (modo_rapido) c(0.45, 1.0) else seq(0.2, 1.0, by = 0.2)
+tamanos <- unique(pmin(as.integer(ceiling(fracciones * nrow(train_reg))), nrow(train_reg)))
+
+meta_curva <- list(
+  version = 2L,
+  nrow_train = nrow(train_reg),
+  modo_rapido = modo_rapido,
+  tamanos = tamanos
+)
+
+curva <- NULL
+if (file.exists(ruta_curva_C)) {
+  guardado <- readRDS(ruta_curva_C)
+  if (isTRUE(all.equal(guardado$meta, meta_curva))) {
+    curva <- guardado$curva
+  }
+}
+
+if (is.null(curva)) {
+  maxit_curva <- if (modo_rapido) {
+    35L
+  } else {
+    as.integer(min(200L, max(100L, cfg_C$maxit)))
+  }
+  size_curva <- if (modo_rapido) {
+    max(2L, min(4L, as.integer(cfg_C$size)))
+  } else {
+    as.integer(cfg_C$size)
+  }
+  curva <- purrr::map_dfr(tamanos, function(n) {
+    m_tmp <- tryCatch(
+      {
+        setTimeLimit(elapsed = cfg_C$tlim, transient = TRUE)
+        if (modo_rapido) {
+          entrenar_nnet_C(
+            train_reg,
+            n_max = n,
+            size = size_curva,
+            maxit = maxit_curva,
+            decay = cfg_C$decay,
+            reltol = 0.04
+          )
+        } else {
+          entrenar_nnet_C(
+            train_reg,
+            n_max = n,
+            size = size_curva,
+            maxit = maxit_curva,
+            decay = cfg_C$decay,
+            reltol = 0.02
+          )
+        }
+      },
+      error = function(e) NULL,
+      finally = {
+        setTimeLimit(cpu = Inf, elapsed = Inf, transient = FALSE)
+      }
+    )
+
+    if (is.null(m_tmp)) {
+      return(tibble(n = n, RMSE_train = NA_real_, RMSE_test = NA_real_))
+    }
+
+    pred_prueba <- as.numeric(predict(m_tmp, newdata = x_test_reg_base))
+    tibble(
+      n = n,
+      RMSE_train = sqrt(mean(stats::residuals(m_tmp)^2, na.rm = TRUE)),
+      RMSE_test  = sqrt(mean((price_test - pred_prueba)^2, na.rm = TRUE))
+    )
+  })
+
+  saveRDS(list(curva = curva, meta = meta_curva), ruta_curva_C)
+}
+
+curva_larga <- tidyr::pivot_longer(
+  curva,
+  cols = c(RMSE_train, RMSE_test),
+  names_to = "conjunto",
+  values_to = "RMSE"
+) %>%
+  mutate(
+    conjunto = case_when(
+      conjunto == "RMSE_train" ~ "Entrenamiento",
+      conjunto == "RMSE_test" ~ "Prueba",
+      TRUE ~ conjunto
+    )
+  )
+
+ggplot(curva_larga, aes(x = n, y = RMSE, color = conjunto)) +
+  geom_line(linewidth = 1, na.rm = TRUE) +
+  geom_point(na.rm = TRUE) +
+  labs(
+    title = "Curva de aprendizaje – Modelo C (regresión)",
+    x = "Tamaño del conjunto de entrenamiento",
+    y = "RMSE",
+    color = "Conjunto"
+  ) +
   theme_minimal()
 ```
 
@@ -957,40 +1365,119 @@ Una brecha amplia entre RMSE train y RMSE test indica sobreajuste: el modelo mem
 Se toma el Modelo C —basado en `nnet`, que trabaja sobre todos los predictores escalados— como candidato para el ajuste fino mediante validación cruzada con 5 folds, explorando distintas combinaciones de neuronas en la capa oculta y tasa de regularización.
 
 ```{r tuning-reg, cache=TRUE}
-ctrl_reg <- trainControl(method = "cv", number = 5)
+# caret entrena (k folds × n combinaciones) redes nnet sobre train_reg; en Windows
+# es muy pesado. modo_rapido: pocos folds, rejilla mínima, maxit/reltol bajos + RDS.
+dir.create("artefactos", showWarnings = FALSE, recursive = TRUE)
+ruta_tuned_reg <- "artefactos/modelo_tuned_reg.rds"
 
-grid_reg <- expand.grid(
-  size  = c(5, 8, 12, 15),
-  decay = c(0.001, 0.01, 0.1)
+k_reg <- if (modo_rapido) 2L else 5L
+k_reg <- as.integer(min(max(2L, k_reg), nrow(train_reg)))
+grupo_precio <- factor(dplyr::ntile(train_reg$price, max(2L, k_reg)))
+idx_reg_cv <- createFolds(grupo_precio, k = k_reg, list = TRUE, returnTrain = TRUE)
+ctrl_reg <- trainControl(
+  method = "cv",
+  number = k_reg,
+  index = idx_reg_cv,
+  allowParallel = FALSE
 )
 
-set.seed(123)
-tiempo_tuned_reg <- system.time({
-  modelo_tuned_reg <- train(
-    price ~ .,
-    data      = train_reg,
-    method    = "nnet",
-    tuneGrid  = grid_reg,
-    trControl = ctrl_reg,
-    linout    = TRUE,
-    trace     = FALSE,
-    maxit     = 300,
-    MaxNWts   = 20000
-  )
-})
+grid_reg <- expand.grid(
+  size = if (modo_rapido) c(5L, 7L) else c(5, 8, 12),
+  decay = if (modo_rapido) 0.05 else c(0.001, 0.01, 0.1)
+)
 
-plot(modelo_tuned_reg)
+maxit_tune <- if (modo_rapido) 45L else 220L
+reltol_tune <- if (modo_rapido) 0.05 else 0.02
+
+meta_tuned_reg <- list(
+  version = 2L,
+  nrow_train = nrow(train_reg),
+  modo_rapido = modo_rapido,
+  k_reg = k_reg,
+  grid = grid_reg,
+  maxit_tune = maxit_tune,
+  reltol_tune = reltol_tune
+)
+
+modelo_tuned_reg <- NULL
+tiempo_tuned_reg <- c(elapsed = NA_real_)
+
+if (file.exists(ruta_tuned_reg)) {
+  blob <- readRDS(ruta_tuned_reg)
+  if (is.list(blob) && !is.null(blob$meta) && !is.null(blob$modelo)) {
+    if (isTRUE(all.equal(blob$meta, meta_tuned_reg))) {
+      modelo_tuned_reg <- blob$modelo
+      tiempo_tuned_reg <- blob$tiempo
+    }
+  } else if (inherits(blob, "train")) {
+    modelo_tuned_reg <- blob
+  }
+}
+
+if (is.null(modelo_tuned_reg)) {
+  set.seed(123)
+  tiempo_tuned_reg <- system.time({
+    modelo_tuned_reg <- train(
+      price ~ .,
+      data      = train_reg,
+      method    = "nnet",
+      tuneGrid  = grid_reg,
+      trControl = ctrl_reg,
+      linout    = TRUE,
+      trace     = FALSE,
+      maxit     = maxit_tune,
+      MaxNWts   = 20000,
+      reltol    = reltol_tune
+    )
+  })
+  saveRDS(
+    list(modelo = modelo_tuned_reg, meta = meta_tuned_reg, tiempo = tiempo_tuned_reg),
+    ruta_tuned_reg
+  )
+}
+
+if (all(is.na(tiempo_tuned_reg["elapsed"]))) {
+  cat("Modelo tuned (regresión) cargado desde", ruta_tuned_reg, "\n")
+} else {
+  cat("Tiempo tuning regresión (s):", round(tiempo_tuned_reg["elapsed"], 2), "\n")
+}
+
+# plot.train() de caret suele ser lento o trabarse al compilar el Rmd en Windows;
+# el resumen CV ya está en $results (tabla pequeña).
+res_tune <- modelo_tuned_reg$results
+p_cv <- if (dplyr::n_distinct(res_tune$decay) == 1L) {
+  ggplot(res_tune, aes(x = factor(size), y = RMSE)) +
+    geom_col(fill = "steelblue", width = 0.65) +
+    labs(
+      title = "RMSE (CV) por tamaño de capa oculta",
+      x = "size (neuronas)",
+      y = "RMSE"
+    ) +
+    theme_minimal()
+} else {
+  ggplot(res_tune, aes(x = factor(decay), y = factor(size), fill = RMSE)) +
+    geom_tile(color = "white") +
+    scale_fill_viridis_c(option = "C", end = 0.95) +
+    labs(
+      title = "RMSE (CV): decay × size",
+      x = "decay",
+      y = "size",
+      fill = "RMSE"
+    ) +
+    theme_minimal()
+}
+print(p_cv)
+
 print(modelo_tuned_reg$bestTune)
 
-pred_tuned_reg <- as.numeric(predict(modelo_tuned_reg, newdata = x_test_base))
+nd_test_reg <- as.data.frame(x_test_reg_base)
+pred_tuned_reg <- as.numeric(predict(modelo_tuned_reg, newdata = nd_test_reg))
 
 bind_rows(
   metricas_reg(price_test, pred_C, "Modelo C – original"),
   metricas_reg(price_test, pred_tuned_reg, "Modelo C – tuned")
 ) %>%
   kable(digits = 4, caption = "Original vs Tuned – regresión RNA")
-
-saveRDS(modelo_tuned_reg, "artefactos/modelo_tuned_reg.rds")
 ```
 
 El ajuste fino mediante validación cruzada identifica la combinación óptima de neuronas y regularización. Una tasa de decay mayor reduce el sobreajuste a costa de mayor sesgo, mientras que más neuronas incrementan la capacidad del modelo pero aumentan el riesgo de memorización. La configuración seleccionada corresponde al punto de equilibrio entre capacidad de ajuste y generalización, evaluado sistemáticamente sobre los folds de validación cruzada. Si el RMSE del modelo tuned es inferior al del Modelo C original, el ajuste fino habrá aportado una mejora real sobre el conjunto de prueba.
@@ -1016,6 +1503,7 @@ save(
   price_train, price_test,
   pred_C, pred_D, pred_tuned_reg,
   tabla_reg,
+  x_train_reg_pca_D, x_test_reg_pca_D,
   file = "artefactos/modelos_rna.RData"
 )
 
